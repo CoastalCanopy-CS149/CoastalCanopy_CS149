@@ -18,7 +18,7 @@ import "./index.css";
 const App = () => {
   return (
     <Router>
-      <div className="flex flex-col h-screen text-center">
+      <div>
         <Navbar />
         <div>
           <Routes>
