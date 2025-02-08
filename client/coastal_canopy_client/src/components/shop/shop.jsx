@@ -4,18 +4,18 @@ import CartList from './cartList';
 
 const Shop = () => {
   const items = [
-    { id: 1, description: 'Thermal Long Sleeve Jersey', price: 'Rs. 1500.00', image: '/Images/jersey.png' },
-    { id: 2, description: 'Shirt', price: 'Rs. 1000.00', image: '/Images/shirt.png' },
-    { id: 3, description: 'Green Cap', price: 'Rs. 500.00', image: '/Images/green_cap.png' },
-    { id: 4, description: 'Silicon Wristband', price: 'Rs. 200.00', image: '/Images/wristband.png' },
-    { id: 5, description: 'Resin Key Tag', price: 'Rs. 100.00', image: '/Images/keytag.png' },
-    { id: 6, description: 'Tote Bag Set', price: 'Rs. 750.00', image: '/Images/bagset.png' },
-    { id: 7, description: 'Earth Day Keychain', price: 'Rs. 110.00', image: '/Images/keychain.jpg' },
-    { id: 8, description: 'Tote Bag Shoulder Hand Bag', price: 'Rs. 500.00', image: '/Images/bag.png' },
-    { id: 9, description: 'Environmental Sticker Pack', price: 'Rs. 100.00', image: '/Images/pack1.jpg' },
-    { id: 10, description: 'Sticker Pack 1', price: 'Rs. 120.00', image: '/Images/pack2.png' },
-    { id: 11, description: 'Sticker Pack 3', price: 'Rs. 100.00', image: '/Images/pack4.png' },
-    { id: 12, description: 'Sticker Pack 4', price: 'Rs. 100.00', image: '/Images/pack3.jpg' },
+    { id: 1, description: 'Thermal Long Sleeve Jersey', price: 'Rs. 1500.00', image: '/imgs/shop/jersey.png' },
+    { id: 2, description: 'Shirt', price: 'Rs. 1000.00', image: '/imgs/shop/shirt.png' },
+    { id: 3, description: 'Green Cap', price: 'Rs. 500.00', image: '/imgs/shop/green_cap.png' },
+    { id: 4, description: 'Silicon Wristband', price: 'Rs. 200.00', image: '/imgs/shop/wristband.png' },
+    { id: 5, description: 'Resin Key Tag', price: 'Rs. 100.00', image: '/imgs/shop/keytag.png' },
+    { id: 6, description: 'Tote Bag Set', price: 'Rs. 750.00', image: '/imgs/shop/bagset.png' },
+    { id: 7, description: 'Earth Day Keychain', price: 'Rs. 110.00', image: '/imgs/shop/keychain.jpg' },
+    { id: 8, description: 'Tote Bag Shoulder Hand Bag', price: 'Rs. 500.00', image: '/imgs/shop/bag.png' },
+    { id: 9, description: 'Environmental Sticker Pack', price: 'Rs. 100.00', image: '/imgs/shop/pack1.jpg' },
+    { id: 10, description: 'Sticker Pack 1', price: 'Rs. 120.00', image: '/imgs/shop/pack2.png' },
+    { id: 11, description: 'Sticker Pack 3', price: 'Rs. 100.00', image: '/imgs/shop/pack4.png' },
+    { id: 12, description: 'Sticker Pack 4', price: 'Rs. 100.00', image: '/imgs/shop/pack3.jpg' },
   ];
 
   const [showCart, setShowCart] = useState(false);
@@ -51,7 +51,7 @@ const Shop = () => {
       <div 
         className="absolute inset-0 w-screen min-h-screen"
         style={{
-          backgroundImage: "url('/Images/mangrove_background.jpg')", 
+          backgroundImage: "url('/imgs/shop/mangrove_background.jpg')", 
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
