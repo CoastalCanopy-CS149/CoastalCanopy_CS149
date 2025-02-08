@@ -66,7 +66,7 @@ const Shop = () => {
       <div className="relative z-10 flex flex-col items-center justify-start py-16 px-4">
         <div className="bg-green-100 bg-opacity-25 backdrop-blur-sm p-8 rounded-3xl w-11/12 md:w-4/5 max-w-7xl flex flex-col items-center my-12">
           <h1 className="text-4xl font-bold mb-4 text-green-900">
-            {showCart ? 'Your Shopping Cart' : 'Shop Now !'}
+            {showCart ? 'Guarding Green Roots 🍃' : 'Hope Grows With Every Click !'}
           </h1>
 
           <h5 className="text-2xl font-semibold mb-4 text-white">
