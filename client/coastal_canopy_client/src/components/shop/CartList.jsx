@@ -39,7 +39,7 @@ const cartList = ({ cartItems, setCartItems }) => {
       {cartItems.length === 0 ? (
         <p className="text-center text-lg text-white">Your cart is empty</p>
       ) : (
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto"> {/* Increased max-width */}
           <div className="flex justify-end mb-4">
             <button className="bg-red-500 text-white p-3 rounded-md hover:bg-red-600" onClick={clearCart}>
               Clear All
@@ -50,7 +50,7 @@ const cartList = ({ cartItems, setCartItems }) => {
             {cartItems.map((item, index) => (
               <div key={index} className="flex items-center justify-between">
                 <div className="flex items-center mb-5">
-                  <img src={item.image} alt={item.description} className="w-12 h-12 object-cover mr-4 rounded-md" />
+                  <img src={item.image} alt={item.description} className="w-12 h-12 object-cover mr-5 rounded-md" />
                   <div>
                     <h3 className="text-md text-black">{item.description}</h3>
                     <p className="text-green-700 font-bold">{item.price}</p>

@@ -5,6 +5,8 @@ const Payment = ({ cartItems, totalAmount }) => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
+    address: '',
+    contactNo: '',
     paymentMethod: 'credit_card',
     cardHolderName: '',
     cardNumber: '',
@@ -29,7 +31,7 @@ const Payment = ({ cartItems, totalAmount }) => {
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 p-6">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl"> {/* Increased max-width */}
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl"> {/* Increased max-width */}
         <h2 className="text-2xl font-bold mb-4 text-green-700 text-center mb-10">Payment Form</h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -42,6 +44,18 @@ const Payment = ({ cartItems, totalAmount }) => {
             <div className="w-1/2">
               <label className="block text-gray-700">Email</label>
               <input type="email" name="email" className="w-full p-2 border rounded" required onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="flex space-x-4"> {/* Flex layout for two fields in one row */}
+            <div className="w-1/2">
+              <label className="block text-gray-700">Address</label>
+              <input type="text" name="address" className="w-full p-2 border rounded" required onChange={handleChange} />
+            </div>
+
+            <div className="w-1/2">
+              <label className="block text-gray-700">Contact No</label>
+              <input type="text" name="contactNo" className="w-full p-2 border rounded" required onChange={handleChange} />
             </div>
           </div>
 
