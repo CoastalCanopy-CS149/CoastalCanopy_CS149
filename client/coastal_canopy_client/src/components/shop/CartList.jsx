@@ -2,32 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import Payment from './Payment';  // Import Payment component
 
-const cartList = ({ cartItems, setCartItems }) => {
+const CartList = ({ cartItems, setCartItems }) => {
   const [showPayment, setShowPayment] = useState(false); // Toggle payment form
-
-  const saveToLocalStorage = (items) => {
-    localStorage.setItem('cartItems', JSON.stringify(items));
-  };
 
   const removeItem = (id, index) => {
     const updatedCartItems = cartItems.filter((item, i) => !(item.id === id && i === index));
     setCartItems(updatedCartItems);
-    saveToLocalStorage(updatedCartItems);
   };
 
   const clearCart = () => {
     setCartItems([]);
-    localStorage.removeItem('cartItems');
   };
 
   const totalAmount = cartItems.reduce((total, item) => {
     const price = parseFloat(item.price.replace('Rs. ', '').replace(',', '').replace('.00', ''));
     return total + price;
   }, 0).toFixed(2);
-
-  useEffect(() => {
-    saveToLocalStorage(cartItems);
-  }, [cartItems]);
 
   // If showPayment is true, display Payment.jsx instead of cart
   if (showPayment) {
@@ -82,4 +72,4 @@ const cartList = ({ cartItems, setCartItems }) => {
   );
 };
 
-export default cartList;
+export default CartList;

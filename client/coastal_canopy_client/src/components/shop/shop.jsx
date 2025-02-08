@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, ChevronRight } from "lucide-react";  // Import ChevronRight icon for right arrow
-import CartList from './cartList';
+import CartList from './CartList';
 
 const Shop = () => {
   const items = [
@@ -22,18 +22,9 @@ const Shop = () => {
   const [cartItems, setCartItems] = useState([]);
   const [showSuccessMessage, setShowSuccessMessage] = useState(null);  // Track which item was added
 
-  useEffect(() => {
-    const savedCartItems = localStorage.getItem('cartItems');
-    if (savedCartItems) {
-      setCartItems(JSON.parse(savedCartItems));
-    }
-  }, []);
-
   const addToCart = (item) => {
     setCartItems((prevCartItems) => {
-      const updatedCartItems = [...prevCartItems, item];
-      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));  // Save to localStorage
-      return updatedCartItems;
+      return [...prevCartItems, item];
     });
 
     // Show success message next to the added item
