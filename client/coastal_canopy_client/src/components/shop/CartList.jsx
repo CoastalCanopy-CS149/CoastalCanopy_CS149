@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import Payment from './Payment';  // Import Payment component
 
-const CartList = ({ cartItems, setCartItems }) => {
+const cartList = ({ cartItems, setCartItems }) => {
   const [showPayment, setShowPayment] = useState(false); // Toggle payment form
 
   const saveToLocalStorage = (items) => {
@@ -82,4 +82,4 @@ const CartList = ({ cartItems, setCartItems }) => {
   );
 };
 
-export default CartList;
+export default cartList;
