@@ -37,7 +37,7 @@ const cartList = ({ cartItems, setCartItems }) => {
   return (
     <div className="mt-8 w-full">
       {cartItems.length === 0 ? (
-        <p className="text-center text-lg text-white-700">Your cart is empty</p>
+        <p className="text-center text-lg text-white">Your cart is empty</p>
       ) : (
         <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex justify-end mb-4">

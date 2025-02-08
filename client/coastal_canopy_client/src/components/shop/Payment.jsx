@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import ThankYou from './thankyou';
 
 const Payment = ({ cartItems, totalAmount }) => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const Payment = ({ cartItems, totalAmount }) => {
     cardExpiration: '',
   });
 
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -17,8 +20,12 @@ const Payment = ({ cartItems, totalAmount }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Payment Successful!');
+    setPaymentSuccess(true);
   };
+
+  if (paymentSuccess) {
+    return <ThankYou />;
+  }
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100 p-6">
@@ -89,7 +96,7 @@ const Payment = ({ cartItems, totalAmount }) => {
             </>
           )}
 
-          <button type="submit" className="w-full bg-green-500 text-white text-lg p-3 rounded-md hover:bg-green-600">
+          <button type="submit" className="w-full bg-green-500 text-white text-lg p-3 rounded-md hover:bg-green-600 mb-4 mt-5 transform transition-transform duration-300">
             Confirm Payment
           </button>
         </form>

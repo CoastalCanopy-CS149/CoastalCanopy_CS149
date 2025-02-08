@@ -71,7 +71,7 @@ const Shop = () => {
 
           <h5 className="text-2xl font-semibold mb-4 text-white">
             {showCart
-              ? 'Review and manage your items here'
+              ? ''
               : 'Every purchase plants a seed of hope - support mangroves, sustain life'
             }
           </h5>
