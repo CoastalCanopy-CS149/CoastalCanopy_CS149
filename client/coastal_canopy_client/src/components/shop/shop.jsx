@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingCart, ChevronRight } from "lucide-react";  // Import ChevronRight icon for right arrow
 import CartList from './CartList';
 
-const Shop = () => {
+const shop = () => {
   const items = [
     { id: 1, description: 'Thermal Long Sleeve Jersey', price: 'Rs. 1500.00', image: '/imgs/shop/jersey.png' },
     { id: 2, description: 'Shirt', price: 'Rs. 1000.00', image: '/imgs/shop/shirt.png' },
@@ -118,4 +118,4 @@ const Shop = () => {
   );
 };
 
-export default Shop;
+export default shop;
