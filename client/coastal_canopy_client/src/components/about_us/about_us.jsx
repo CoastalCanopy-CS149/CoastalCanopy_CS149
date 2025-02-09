@@ -109,7 +109,7 @@ export default function AboutUs() {
         <div className="grid grid-rows-1 mt-10">
           <h1 className="text-4xl font-bold text-center text-black mb-12">Journey To The Success</h1>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
 
           <div className="border-2 rounded-lg w-full">
               <Carousel images={coastalD}  className=""/>
