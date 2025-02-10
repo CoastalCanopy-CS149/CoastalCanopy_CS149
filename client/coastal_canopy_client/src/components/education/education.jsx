@@ -4,6 +4,8 @@ import { motion } from "framer-motion"; // Import motion for animations
 const mangroveBackground = "/imgs/education/mangrove-forest.jpg";
 const mangrovesrilanka = "/imgs/education/mangrovesrilanka.jpg";
 const mangroveThumbnail = "/imgs/education/mangrove-thumbnail.jpg";
+import {ArrowLeft} from "lucide-react";
+
 
 const EducationSection = () => {
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const EducationSection = () => {
           </p>
           <p className="text-gray-600">In Sri Lanka, these ecosystems...</p>
           <button
-            onClick={() => navigate("/education-content")}
+            onClick={() => navigate("/education/education-content")}
             className="mt-16 bg-green-500 text-white px-4 py-2 rounded-md"
           >
             Learn More
@@ -60,7 +62,7 @@ const EducationSection = () => {
           />
           <p className="text-gray-600 text-xs text-left">16 February 2024.</p>
           <button
-            onClick={() => navigate("/education-news")}
+            onClick={() => navigate("/education/education-news")}
             className="mt-7 bg-green-500 text-white px-4 py-2 rounded-md"
           >
             See More
@@ -90,7 +92,7 @@ const EducationSection = () => {
             Do you want to Play Quiz and earn points?
           </p>
           <button
-            onClick={() => navigate("/education-quiz")}
+            onClick={() => navigate("/education/education-quiz")}
             className="mt-4 bg-green-500 text-white px-6 py-2 rounded-md"
           >
             Click Here
@@ -133,7 +135,7 @@ const EducationContent = () => {
 
         <div className="flex justify-center">
           <div
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/education")}
             className="mt-[-25px] bg-green-500 text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer"
           >
             Back
@@ -177,7 +179,7 @@ const EducationNews = () => {
         </p>
         <div className="flex justify-center">
           <div
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/education")}
             className="mt-[-18px] bg-green-500 text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer"
           >
             Back
@@ -242,11 +244,12 @@ const EducationQuiz = () => {
       >
         <div className="p-8 bg-white bg-opacity-35 rounded-3xl backdrop-blur-sm w-11/12 max-w-5xl shadow-md mt-14">
           <h3 className="font-semibold text-center text-white text-4xl mb-5">Quiz</h3>
-          <div className="space-y-6">
-            {/* Question A */}
-            <div>
+          <div className="space-y-6 max-h-[400px] overflow-y-auto">
+            
+              {/* Question 1 */}
+              <div>
               <h2 className="font-semibold text-lg text-left mb-10">
-                A) Which of the following is a common species found in mangrove forests?
+                1) Which of the following is a common species found in mangrove forests?
               </h2>
               <div className="space-y-2">
                 {["Oak", "Rhizopora", "Pine", "Birch"].map((option, index) => (
@@ -265,10 +268,10 @@ const EducationQuiz = () => {
               </div>
             </div>
 
-            {/* Question B */}
+            {/* Question 2 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
-                B) How do mangroves help in combating climate change?
+                2) How do mangroves help in combating climate change?
               </h2>
               <div className="space-y-2">
                 {["By absorbing carbon dioxide", "By releasing carbon dioxide", "By absorbing oxygen", "By releasing oxygen"].map((option, index) => (
@@ -287,14 +290,198 @@ const EducationQuiz = () => {
               </div>
             </div>
 
-            <div className="mt-5 text-center">
-              <button
-                onClick={handleSubmit}
-                className="bg-green-500 text-white text-2xl px-16 py-2 rounded-3xl"
-              >
-                Submit
-              </button>
+            {/* Question 3 */}
+            <div>
+              <h2 className="font-semibold text-lg text-left mb-10">
+                3) What are mangroves primarily known for?
+              </h2>
+              <div className="space-y-2">
+                {["Producing hradwood for furniture", "Providing habitats for deep-sea creatures", "Protecting coastlines from erosion and storm surges", "Creating deserts"].map((option, index) => (
+                  <label key={index} className="block">
+                    <input
+                      type="radio"
+                      name="q3"
+                      value={option}
+                      checked={answers.q3 === option}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
               </div>
+            </div>
+
+            {/* Question 4 */}
+            <div>
+              <h2 className="font-semibold text-lg text-left mb-10">
+                4) Which of the following is a common feature of mangrove trees?
+              </h2>
+              <div className="space-y-2">
+                {["Needle-like leaves", "Thick, waxy leaves to reduce water loss", "Prop roots that rise above the water", "Deep underground tap roots"].map((option, index) => (
+                  <label key={index} className="block">
+                    <input
+                      type="radio"
+                      name="q4"
+                      value={option}
+                      checked={answers.q4 === option}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Question 5 */}
+            <div>
+              <h2 className="font-semibold text-lg text-left mb-10">
+                5) Mangroves are typically found in which type of environment?
+              </h2>
+              <div className="space-y-2">
+                {["Deserts", "freshwater lakes", "Coastal intertidal zones", "High-altitude mountain regions"].map((option, index) => (
+                  <label key={index} className="block">
+                    <input
+                      type="radio"
+                      name="q5"
+                      value={option}
+                      checked={answers.q5 === option}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            {/* Question 6 */}
+            <div>
+              <h2 className="font-semibold text-lg text-left mb-10">
+                6) Why are mangroves important for marine biodiversity?
+              </h2>
+              <div className="space-y-2">
+                {["They attract only a single type of fish", "They provide shelter and breeding grounds for various marine species", "They reduce the oxygen levels in the water", "They block sunlight,limiting plant growth"].map((option, index) => (
+                  <label key={index} className="block">
+                    <input
+                      type="radio"
+                      name="q6"
+                      value={option}
+                      checked={answers.q6 === option}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            {/* Question 7 */}
+            <div>
+              <h2 className="font-semibold text-lg text-left mb-10">
+                7) What is the primary threat to mangrove forests?
+              </h2>
+              <div className="space-y-2">
+                {["Rising sea levels", "invasive desert plants", "Deforestation and land reclamation", "Overproduction of oxygen"].map((option, index) => (
+                  <label key={index} className="block">
+                    <input
+                      type="radio"
+                      name="q7"
+                      value={option}
+                      checked={answers.q7 === option}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Question 8 */}
+            <div>
+              <h2 className="font-semibold text-lg text-left mb-10">
+                8) Which country has the largest area of mangrove forests in the world?
+              </h2>
+              <div className="space-y-2">
+                {["Brazil", "India", "Indonesia", "Australia"].map((option, index) => (
+                  <label key={index} className="block">
+                    <input
+                      type="radio"
+                      name="q8"
+                      value={option}
+                      checked={answers.q8 === option}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Question 9 */}
+            <div>
+              <h2 className="font-semibold text-lg text-left mb-10">
+                9) How do mangroves help combat climate change?
+              </h2>
+              <div className="space-y-2">
+                {["By increasing ocean temparatures", "By absorbing and storing large amounts of carbon dioxide", "by reflecting sunlight back into the atmosphere", "By producing methane gas"].map((option, index) => (
+                  <label key={index} className="block">
+                    <input
+                      type="radio"
+                      name="q9"
+                      value={option}
+                      checked={answers.q9 === option}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Question 10 */}
+            <div>
+              <h2 className="font-semibold text-lg text-left mb-10">
+                10) Which of the  folowing is a significant ecologicl benefit of mangrove forests?
+              </h2>
+              <div className="space-y-2">
+                {["Creation of desert environments", "Filtering pollutatnts from water", "Increasing soil erosion", "reducing fish populations"].map((option, index) => (
+                  <label key={index} className="block">
+                    <input
+                      type="radio"
+                      name="q10"
+                      value={option}
+                      checked={answers.q10 === option}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {option}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+      <div className="relative mt-5">
+        <div
+          onClick={() => navigate("/education")}
+          className="absolute left-0  text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer flex items-center"
+        >
+          <ArrowLeft size={54} className="-ml-14"/>
+        </div>
+        <div className="text-center">
+          <button
+            onClick={handleSubmit}
+            className="bg-green-500 text-white text-2xl px-16 py-2 rounded-3xl mt-1"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
              
            
           </div>
@@ -337,7 +524,7 @@ const EducationQuiz = () => {
   );
 };
 
-const Education = () => {
+export default  function Education(){
   return (
     <Routes>
       <Route path="/" element={<EducationSection />} />
@@ -346,6 +533,6 @@ const Education = () => {
       <Route path="/education-quiz" element={<EducationQuiz />} />
     </Routes>
   );
-};
 
-export default Education;
+
+}
