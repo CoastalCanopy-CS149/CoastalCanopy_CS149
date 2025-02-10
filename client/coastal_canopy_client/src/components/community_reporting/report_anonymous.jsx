@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, Link } from "react-router-dom"
 import background from "/imgs/community_reporting/BgComRep.jpg"
 
 export default function CommunityReporting2() {
@@ -20,7 +20,20 @@ export default function CommunityReporting2() {
     const userAgent = navigator.userAgent
     const mobileOrTabletRegex = /Mobi|Android|iPhone|iPad|iPod/i
     setIsMobileOrTablet(mobileOrTabletRegex.test(userAgent))
-  }, [])
+
+    // Check if we have data from the identity page or preserved state
+    if (location.state) {
+      if (location.state.formData) {
+        setFormData((prevData) => ({
+          ...prevData,
+          ...location.state.formData,
+        }))
+      }
+      if (location.state.image) {
+        setImage(location.state.image)
+      }
+    }
+  }, [location.state])
 
   const startCamera = async () => {
     try {
@@ -66,12 +79,11 @@ export default function CommunityReporting2() {
   }
 
   const handleSubmit = async () => {
-    const { isAnonymous, formData: previousFormData } = location.state || {}
+    const { isAnonymous } = location.state || {}
     const completeFormData = {
-      ...previousFormData,
       ...formData,
       image,
-      isAnonymous,
+      isAnonymous: isAnonymous !== undefined ? isAnonymous : true,
     }
 
     if (isAnonymous) {
@@ -109,6 +121,7 @@ export default function CommunityReporting2() {
     >
       <div className="flex justify-center items-center bg-gray-50 bg-opacity-10 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto">
         <div className="w-6/12">
+
           {!isMobileOrTablet && (
             <div className="bg-red-500  p-3 text-center font-bold rounded">
               ⚠ Please access this application from a mobile phone or tablet to do a reporting
@@ -128,10 +141,10 @@ export default function CommunityReporting2() {
                     playsInline
                     className="mt-2 rounded-md max-h-full w-full object-cover border-2"
                   />
-                  
+
                   <button
                     onClick={startCamera}
-                    className="mt-2 bg-blue-500 hover:bg-blue-700  font-bold py-2 px-4 rounded"
+                    className="mt-2 bg-green-500 hover:bg-green-700  font-bold py-2 px-4 rounded"
                     // disabled={!isMobileOrTablet}
                   >
                     Start Camera
@@ -173,13 +186,25 @@ export default function CommunityReporting2() {
               </select>
             </div>
 
-            <button
-              onClick={handleSubmit}
-              className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
-              // disabled={!isMobileOrTablet || !image}
-            >
-              Submit
-            </button>
+
+            <div>
+              {location.state && location.state.fromIdentityPage && (
+              <Link
+                to="../report-identity"
+                state={{ formData, image }}
+                className="mr-4 inline-block bg-blue-500 hover:bg-blue-600  py-2 px-4 rounded"
+              >
+                Go Back
+              </Link>
+            )}
+              <button
+                onClick={handleSubmit}
+                className="inlin-block bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded"
+                // disabled={!isMobileOrTablet || !image}
+              >
+                Submit
+              </button>
+            </div>
           </div>
         </div>
       </div>

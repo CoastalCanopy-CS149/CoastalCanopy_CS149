@@ -16,12 +16,14 @@ export default function CommunityReportingMain() {
           <div className="space-y-4">
             <Link
               to="report-anonymous"
+              state={{ isAnonymous: true }}
               className="block w-full bg-green-600 hover:bg-green-700 text-white rounded-full p-6 text-lg transition-colors duration-200"
             >
               Report Anonymously
             </Link>
             <Link
               to="report-identity"
+              state={{ isAnonymous: false }}
               className="block w-full bg-green-600 hover:bg-green-700 text-white rounded-full p-6 text-lg transition-colors duration-200"
             >
               Report With Identity
