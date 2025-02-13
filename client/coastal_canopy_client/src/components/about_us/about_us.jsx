@@ -10,6 +10,9 @@ import DevinImage from "/imgs/about_us/Devin_Nanayakkara.png"
 import LawanyaImage from "/imgs/about_us/Lawanya_Malawige.png"
 import background from "/imgs/about_us/bg.jpg"
 
+import Navbar from "../navbar/navbar"
+import Footer from "../footer/footer"
+
 const teamMembers = [
   {
     name: "Dilki Wathsala(Leader)",
@@ -81,11 +84,12 @@ export default function AboutUs() {
       className="bg-cover min-h-screen flex justify-center items-center bg-fixed py-10"
       style={{ backgroundImage: `url(${background})` }}
     >
+      <Navbar />
       <div className="bg-gray-50 bg-opacity-25 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto grid">
         <div className="max-w-7xl mx-auto grid grid-rows-1">
-            <h1 className="text-4xl font-bold text-center text-wrap text-black mb-12">
-                Meet The Team
-            </h1>
+          <h1 className="text-4xl font-bold text-center text-wrap text-black mb-12">
+            Meet The Team
+          </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             {teamMembers.map((member, index) => (
               <div
@@ -111,7 +115,7 @@ export default function AboutUs() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
 
-          <div className="border-2 rounded-lg w-full">
+            <div className="border-2 rounded-lg w-full">
               <Carousel images={coastalD}  className=""/>
               <h1 className="text-xl font-semibold text-black p-4 rounded-b-md bg-gray-50">
                 Went to Coast Conservation and Coastal Resource Management Department, and Forest department to get some
@@ -121,23 +125,24 @@ export default function AboutUs() {
             </div>
 
             <div className="border-2 rounded-lg w-full">
-                <Carousel images={cwImages} />
-                <h1 className="text-xl font-semibold text-black p-4 rounded-b-md bg-gray-50">
-                    Finished Coursework I submiting the project report and facing the viva exam Successfully.<br/>
-                    Date : 2024-12-20
-                </h1>
+              <Carousel images={cwImages} />
+              <h1 className="text-xl font-semibold text-black p-4 rounded-b-md bg-gray-50">
+                Finished Coursework I submiting the project report and facing the viva exam Successfully.<br/>
+                Date : 2024-12-20
+              </h1>
             </div>
 
             <div className="border-2 rounded-lg w-full">
               <Carousel images={coastalD}  className=""/>
               <h1 className="text-xl font-semibold text-black p-4 rounded-b-md bg-gray-50">
-                Went to Forest Department to collect a dataset(mangrove distribution map in srilanka) from them then went to "Sobadam piyasa NGO" to get an evaluation from them on our project.<br />
-                Date : 2025-02-11
+              Went to Forest Department to collect a dataset(mangrove distribution map in srilanka) from them then went to "Sobadam piyasa NGO" to get an evaluation from them on our project.<br />
+              Date : 2025-02-11
               </h1>
             </div>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }
