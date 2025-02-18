@@ -8,7 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate()
 
   const menuItems = [
-    { name: "Home", path: "/home" },
+    { name: "Home", path: "/" },
     { name: "Monitoring", path: "/monitoring" },
     { name: "Reporting", path: "/reporting" },
     { name: "Learn", path: "/learn" },
@@ -20,14 +20,14 @@ const Navbar = () => {
   ]
 
   const isCurrentPath = (path) => {
-    if (path === "/home" && location.pathname === "/home") return true
-    if (path !== "/home" && location.pathname.startsWith(path)) return true
+    if (path === "/" && location.pathname === "/") return true
+    if (path !== "/" && location.pathname.startsWith(path)) return true
     return false
   }
 
   return (
     <div className="w-full">
-      <nav className="max-w-[1440px] mx-auto mt-4">
+      <nav className="max-w-full mx-auto">
         <div className="relative flex items-center justify-between px-8 py-4 bg-black/40 backdrop-blur-sm">
           <Link to="/home" className="flex items-center gap-3">
             <img src="/imgs/navbar/logo.png" alt="CoastalCanopy Logo" className="h-16 w-16 rounded-full" />
