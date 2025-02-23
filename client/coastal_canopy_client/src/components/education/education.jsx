@@ -192,7 +192,7 @@ const EducationNews = () => {
 
 const EducationQuiz = () => {
   const navigate = useNavigate();
-  const [answers, setAnswers] = useState({ q1: "", q2: "" });
+  const [answers, setAnswers] = useState({ q1: "", q2: "", q3: "", q4: "", q5: "", q6: "", q7: "", q8: "", q9: "", q10: "" });
   const [score, setScore] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -200,6 +200,15 @@ const EducationQuiz = () => {
   const correctAnswers = {
     q1: "Rhizopora",
     q2: "By absorbing carbon dioxide",
+    q3: "Protecting coastlines from erosion and storm surges",
+    q4: "Prop roots that rise above the water",
+    q5: "Coastal intertidal zones",
+    q6: "They provide shelter and breeding grounds for various marine species",
+    q7: "Deforestation and land reclamation",
+    q8: "Indonesia",
+    q9: "By absorbing and storing large amounts of carbon dioxide",
+    q10: "Filtering pollutants from water",
+
   };
 
   const handleChange = (e) => {
@@ -207,7 +216,7 @@ const EducationQuiz = () => {
   };
 
   const handleSubmit = () => {
-    if (!answers.q1 || !answers.q2) {
+    if (!answers.q1 || !answers.q2 || !answers.q3 || !answers.q4 || !answers.q5 || !answers.q6 || !answers.q7 || !answers.q8 || !answers.q9 || !answers.q10) {
       setModalMessage("Please answer all questions before submitting.");
       setShowModal(true);
       return;
@@ -216,6 +225,14 @@ const EducationQuiz = () => {
     let totalScore = 0;
     if (answers.q1 === correctAnswers.q1) totalScore += 10;
     if (answers.q2 === correctAnswers.q2) totalScore += 10;
+    if (answers.q3 === correctAnswers.q3) totalScore += 10;
+    if (answers.q4 === correctAnswers.q4) totalScore += 10;
+    if (answers.q5 === correctAnswers.q5) totalScore += 10;
+    if (answers.q6 === correctAnswers.q6) totalScore += 10;
+    if (answers.q7 === correctAnswers.q7) totalScore += 10;
+    if (answers.q8 === correctAnswers.q8) totalScore += 10;
+    if (answers.q9 === correctAnswers.q9) totalScore += 10;
+    if (answers.q10 === correctAnswers.q10) totalScore += 10;
 
     if (totalScore === 0) {
       setModalMessage("❌ Oops! You answered both questions wrong. Please try again.");
