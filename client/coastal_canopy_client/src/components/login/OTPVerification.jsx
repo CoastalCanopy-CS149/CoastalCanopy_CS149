@@ -5,6 +5,9 @@ import { useNavigate, useLocation } from "react-router-dom"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
+import "@fontsource/aclonica"
+import "@fontsource/comfortaa"
+
 const OTPVerification = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -109,7 +112,7 @@ const OTPVerification = () => {
     <div
       className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
       style={{
-        backgroundImage: `url('/login/imgs/Background.jpg')`,
+        backgroundImage: `url('/imgs/login/Background.jpg')`,
       }}
     >
       <Navbar />
@@ -118,7 +121,7 @@ const OTPVerification = () => {
         <div className="relative w-[1000px] h-[700px] bg-black/40 backdrop-blur-sm">
           <div className="flex flex-col items-center justify-center h-full">
             <h1 className="font-['Aclonica'] text-white text-[48px] text-center mb-4">OTP Verification</h1>
-            <div className="text-[#BDBDBD] font-comfortaa text-[24px] text-center max-w-[800px] mb-8">
+            <div className="text-[#BDBDBD] font-['comfortaa'] text-[24px] text-center max-w-[800px] mb-8">
               <p>OTP has been sent to your registered email.</p>
               <p>Please enter it below to verify your account.</p>
               <p>For your security, OTPs are valid for {formatTime(timeLeft)} only.</p>
@@ -135,23 +138,23 @@ const OTPVerification = () => {
                     value={digit}
                     onChange={(e) => handleInputChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-[94px] h-[102px] bg-white/40 rounded-[20px] text-center text-white text-4xl font-comfortaa focus:outline-none focus:ring-2 focus:ring-white/60"
+                    className="w-[94px] h-[102px] bg-white/40 rounded-[20px] text-center text-white text-4xl font-['comfortaa'] focus:outline-none focus:ring-2 focus:ring-white/60"
                   />
                 ))}
               </div>
 
-              {error && <p className="text-red-500 text-center font-comfortaa text-sm">{error}</p>}
+              {error && <p className="text-red-500 text-center font-['comfortaa'] text-sm">{error}</p>}
 
               <div className="flex flex-col items-center gap-4">
                 <button
                   type="submit"
-                  className="w-[539px] h-[82px] rounded-[50px] bg-white/50 text-white font-comfortaa text-[32px] hover:bg-white/60 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-[539px] h-[82px] rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[32px] hover:bg-white/60 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isExpired}
                 >
                   Verify
                 </button>
 
-                <p className="text-white font-comfortaa text-[20px] text-center">
+                <p className="text-white font-['comfortaa'] text-[20px] text-center">
                   Didn't you receive the OTP? Check your Spam folder or{" "}
                   <button type="button" onClick={handleResendOTP} className="underline hover:text-gray-200">
                     Resend OTP

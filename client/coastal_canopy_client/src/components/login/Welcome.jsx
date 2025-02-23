@@ -2,6 +2,10 @@ import { useNavigate } from "react-router-dom"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
+import "@fontsource/aclonica"
+import "@fontsource/comfortaa"
+import "@fontsource/adamina"
+
 const Welcome = () => {
   const navigate = useNavigate()
 
@@ -9,7 +13,7 @@ const Welcome = () => {
     <div
       className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
       style={{
-        backgroundImage: `url('/login/imgs/Background.jpg')`,
+        backgroundImage: `url('/imgs/login/Background.jpg')`,
       }}
     >
       <Navbar />
@@ -22,14 +26,14 @@ const Welcome = () => {
 
             <button
               onClick={() => navigate("/login")}
-              className="w-[539px] h-[82px] rounded-[50px] bg-white/30 text-white font-comfortaa text-[36px] font-bold hover:bg-white/40 transition-colors shadow-lg mb-8"
+              className="w-[539px] h-[82px] rounded-[50px] bg-white/30 text-white font-['comfortaa'] text-[36px] font-bold hover:bg-white/40 transition-colors shadow-lg mb-8"
             >
               Sign In
             </button>
 
             <button
               onClick={() => navigate("/signup")}
-              className="text-white font-comfortaa text-[32px] underline hover:text-gray-200"
+              className="text-white font-['comfortaa'] text-[32px] underline hover:text-gray-200"
             >
               Create an account
             </button>

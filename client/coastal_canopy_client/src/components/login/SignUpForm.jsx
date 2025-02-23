@@ -6,6 +6,9 @@ import { Eye, EyeOff, Facebook, Apple, User, Mail, Lock, Check } from "lucide-re
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
+import "@fontsource/aclonica"
+import "@fontsource/comfortaa"
+
 const SignUp = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -128,7 +131,7 @@ const SignUp = () => {
     <div
       className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
       style={{
-        backgroundImage: `url('/login/imgs/Background.jpg')`,
+        backgroundImage: `url('/imgs/login/Background.jpg')`,
       }}
     >
       <Navbar />
@@ -137,7 +140,7 @@ const SignUp = () => {
         <div className="relative w-[1000px] h-[700px] bg-black/40 backdrop-blur-sm">
           <div className="flex flex-col items-center justify-center h-full">
             <h1 className="font-['Aclonica'] text-white text-[40px] text-center mb-2">Register</h1>
-            <p className="font-comfortaa text-white text-[18px] text-center mb-6">Create your own account</p>
+            <p className="font-['comfortaa'] text-white text-[18px] text-center mb-6">Create your own account</p>
 
             <form onSubmit={handleSubmit} className="space-y-4 w-[800px]">
               <div className="grid grid-cols-2 gap-4">
@@ -149,7 +152,7 @@ const SignUp = () => {
                     placeholder="First Name"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className="w-full h-[60px] pl-12 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-comfortaa text-[18px] shadow-lg"
+                    className="w-full h-[60px] pl-12 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[18px] shadow-lg"
                   />
                   {errors.firstName && <p className="text-red-500 mt-1 ml-4 text-xs">{errors.firstName}</p>}
                 </div>
@@ -161,7 +164,7 @@ const SignUp = () => {
                     placeholder="Last Name"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className="w-full h-[60px] pl-12 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-comfortaa text-[18px] shadow-lg"
+                    className="w-full h-[60px] pl-12 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[18px] shadow-lg"
                   />
                   {errors.lastName && <p className="text-red-500 mt-1 ml-4 text-xs">{errors.lastName}</p>}
                 </div>
@@ -176,7 +179,7 @@ const SignUp = () => {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full h-[60px] pl-12 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-comfortaa text-[18px] shadow-lg"
+                    className="w-full h-[60px] pl-12 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[18px] shadow-lg"
                   />
                   {errors.email && <p className="text-red-500 mt-1 ml-4 text-xs">{errors.email}</p>}
                 </div>
@@ -188,7 +191,7 @@ const SignUp = () => {
                     placeholder="Username"
                     value={formData.username}
                     onChange={handleInputChange}
-                    className="w-full h-[60px] pl-12 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-comfortaa text-[18px] shadow-lg"
+                    className="w-full h-[60px] pl-12 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[18px] shadow-lg"
                   />
                   {errors.username && <p className="text-red-500 mt-1 ml-4 text-xs">{errors.username}</p>}
                 </div>
@@ -203,7 +206,7 @@ const SignUp = () => {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="w-full h-[60px] pl-12 pr-12 rounded-[50px] bg-white/30 text-white placeholder-white font-comfortaa text-[18px] shadow-lg"
+                    className="w-full h-[60px] pl-12 pr-12 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[18px] shadow-lg"
                   />
                   <button
                     type="button"
@@ -222,7 +225,7 @@ const SignUp = () => {
                     placeholder="Re-enter Password"
                     value={formData.reenterPassword}
                     onChange={handleInputChange}
-                    className="w-full h-[60px] pl-12 pr-12 rounded-[50px] bg-white/30 text-white placeholder-white font-comfortaa text-[18px] shadow-lg"
+                    className="w-full h-[60px] pl-12 pr-12 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[18px] shadow-lg"
                   />
                   <button
                     type="button"
@@ -254,13 +257,13 @@ const SignUp = () => {
 
               <button
                 type="submit"
-                className="w-[539px] h-[60px] mx-auto block rounded-[50px] bg-white/50 text-white font-comfortaa text-[24px] hover:bg-white/60 transition-colors shadow-lg mt-4"
+                className="w-[539px] h-[60px] mx-auto block rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[24px] hover:bg-white/60 transition-colors shadow-lg mt-4"
               >
                 Sign Up
               </button>
             </form>
 
-            <div className="mt-6 text-center text-white font-comfortaa text-[18px]">
+            <div className="mt-6 text-center text-white font-['comfortaa'] text-[18px]">
               <p className="mb-4">Or</p>
               <div className="flex justify-center gap-8 mb-6">
                 <button

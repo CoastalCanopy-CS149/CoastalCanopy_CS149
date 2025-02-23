@@ -2,6 +2,10 @@ import { useNavigate } from "react-router-dom"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
+import "@fontsource/comfortaa"
+import "@fontsource/acme"
+import "@fontsource/afacad"
+
 const VerificationSuccess = () => {
   const navigate = useNavigate()
 
@@ -9,7 +13,7 @@ const VerificationSuccess = () => {
     <div
       className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
       style={{
-        backgroundImage: `url('/login/imgs/Background.jpg')`,
+        backgroundImage: `url('/imgs/login/Background.jpg')`,
       }}
     >
       <Navbar />
@@ -24,7 +28,7 @@ const VerificationSuccess = () => {
 
             <button
               onClick={() => navigate("/login")}
-              className="w-[539px] h-[82px] rounded-[50px] bg-white/50 text-white font-comfortaa text-[36px] font-bold hover:bg-white/60 transition-colors shadow-lg mb-12"
+              className="w-[539px] h-[82px] rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[36px] font-bold hover:bg-white/60 transition-colors shadow-lg mb-12"
             >
               Login
             </button>

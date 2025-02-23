@@ -6,6 +6,9 @@ import { Eye, EyeOff, Facebook, Apple, User, Lock } from "lucide-react"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
+import "@fontsource/aclonica"
+import "@fontsource/comfortaa"
+
 const Login = () => {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
@@ -56,7 +59,7 @@ const Login = () => {
     <div
       className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
       style={{
-        backgroundImage: `url('/login/imgs/Background.jpg')`,
+        backgroundImage: `url('/imgs/login/Background.jpg')`,
       }}
     >
       <Navbar />
@@ -65,7 +68,7 @@ const Login = () => {
         <div className="relative w-[1000px] h-[700px] bg-black/40 backdrop-blur-sm">
           <div className="flex flex-col items-center justify-center h-full">
             <h1 className="font-['Aclonica'] text-[#BDBDBD] text-[40px] text-center mb-2">Welcome Back</h1>
-            <p className="font-comfortaa text-white text-[16px] text-center mb-8">Login to your account</p>
+            <p className="font-['comfortaa'] text-white text-[16px] text-center mb-8">Login to your account</p>
 
             <form onSubmit={handleSubmit} className="space-y-6 w-[535px]">
               <div className="relative">
@@ -75,7 +78,7 @@ const Login = () => {
                   placeholder="Username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full h-[75px] pl-16 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-comfortaa text-[22px]"
+                  className="w-full h-[75px] pl-16 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[22px]"
                 />
                 {errors.username && <p className="text-red-500 mt-1 ml-4 text-sm">{errors.username}</p>}
               </div>
@@ -87,7 +90,7 @@ const Login = () => {
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-[75px] pl-16 pr-12 rounded-[50px] bg-white/30 text-white placeholder-white font-comfortaa text-[22px]"
+                  className="w-full h-[75px] pl-16 pr-12 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[22px]"
                 />
                 <button
                   type="button"
@@ -99,7 +102,7 @@ const Login = () => {
                 {errors.password && <p className="text-red-500 mt-1 ml-4 text-sm">{errors.password}</p>}
               </div>
 
-              <div className="flex items-center justify-between text-white font-comfortaa text-[18px]">
+              <div className="flex items-center justify-between text-white font-['comfortaa'] text-[18px]">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <div
                     className={`w-6 h-6 rounded-full border-2 border-white flex items-center justify-center
@@ -126,13 +129,13 @@ const Login = () => {
 
               <button
                 type="submit"
-                className="w-[539px] h-[82px] rounded-[50px] bg-white/50 text-white font-comfortaa text-[32px] hover:bg-white/60 transition-colors shadow-lg"
+                className="w-[539px] h-[82px] rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[32px] hover:bg-white/60 transition-colors shadow-lg"
               >
                 Login
               </button>
             </form>
 
-            <div className="mt-6 text-center text-white font-comfortaa text-[18px]">
+            <div className="mt-6 text-center text-white font-['comfortaa'] text-[18px]">
               <p className="mb-4">Or</p>
               <div className="flex justify-center gap-8 mb-6">
                 <button
