@@ -27,7 +27,7 @@ const VerificationSuccess = () => {
             <p className="font-['Acme'] text-[#BDBDBD] text-4xl md:text-5xl text-center mb-12">Now you can Login</p>
 
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("../login")}
               className="w-[539px] h-[82px] rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[36px] font-bold hover:bg-white/60 transition-colors shadow-lg mb-12"
             >
               Login

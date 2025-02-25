@@ -21,7 +21,7 @@ const OTPVerification = () => {
 
   useEffect(() => {
     if (!formData) {
-      navigate("/signup")
+      navigate("./signup")
       return
     }
 
@@ -89,7 +89,7 @@ const OTPVerification = () => {
     // Here you would typically verify the OTP with your backend
     console.log("Verifying OTP:", otpValue)
     // Navigate to success page
-    navigate("/verification-success")
+    navigate("../verification-success")
   }
 
   const handleResendOTP = () => {
@@ -164,7 +164,7 @@ const OTPVerification = () => {
             </form>
 
             <button
-              onClick={() => navigate("/signup", { state: { formData } })}
+              onClick={() => navigate("../signup", { state: { formData } })}
               className="absolute left-8 bottom-8 w-10 h-10 rounded-full bg-white flex items-center justify-center"
             >
               <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">

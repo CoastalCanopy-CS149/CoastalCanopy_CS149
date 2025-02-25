@@ -176,14 +176,14 @@ const Login = () => {
               </div>
               <div className="flex items-center gap-2 justify-center">
                 <p>Don't have an account?</p>
-                <Link to="/signup" className="underline hover:text-gray-200">
+                <Link to="../signup" className="underline hover:text-gray-200">
                   Sign Up
                 </Link>
               </div>
             </div>
 
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("../")}
               className="absolute left-8 bottom-8 w-10 h-10 rounded-full bg-white flex items-center justify-center"
             >
               <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
@@ -191,7 +191,7 @@ const Login = () => {
               </svg>
             </button>
             <button
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("../signup")}
               className="absolute right-8 bottom-8 w-10 h-10 rounded-full bg-white flex items-center justify-center"
             >
               <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">

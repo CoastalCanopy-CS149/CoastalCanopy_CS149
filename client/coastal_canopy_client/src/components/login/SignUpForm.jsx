@@ -110,7 +110,7 @@ const SignUp = () => {
     }
 
     // Navigate to OTP verification with form data
-    navigate("/verify", { state: { formData } })
+    navigate("../verify", { state: { formData } })
   }
 
   const handleSocialLogin = (platform) => {
@@ -304,14 +304,14 @@ const SignUp = () => {
               </div>
               <div className="flex items-center gap-2 justify-center">
                 <p>Already have an account?</p>
-                <Link to="/login" className="underline hover:text-gray-200">
+                <Link to="../login" className="underline hover:text-gray-200">
                   Sign In
                 </Link>
               </div>
             </div>
 
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("../login")}
               className="absolute left-8 bottom-8 w-10 h-10 rounded-full bg-white flex items-center justify-center"
             >
               <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">

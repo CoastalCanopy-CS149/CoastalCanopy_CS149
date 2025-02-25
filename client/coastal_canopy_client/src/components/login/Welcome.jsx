@@ -25,14 +25,14 @@ const Welcome = () => {
             <p className="font-['Adamina'] text-[#BDBDBD] text-[32px] text-center mb-12">Login. Protect. Preserve</p>
 
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("./login")}
               className="w-[539px] h-[82px] rounded-[50px] bg-white/30 text-white font-['comfortaa'] text-[36px] font-bold hover:bg-white/40 transition-colors shadow-lg mb-8"
             >
               Sign In
             </button>
 
             <button
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("./signup")}
               className="text-white font-['comfortaa'] text-[32px] underline hover:text-gray-200"
             >
               Create an account
@@ -40,7 +40,7 @@ const Welcome = () => {
 
             <div className="absolute bottom-32 left-0 right-0 flex justify-between px-8">
               <button
-                onClick={() => navigate("/home")}
+                onClick={() => navigate("../..")}
                 className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
               >
                 <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
@@ -54,7 +54,7 @@ const Welcome = () => {
                 </svg>
               </button>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("./login")}
                 className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
               >
                 <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
