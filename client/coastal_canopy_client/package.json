@@ -10,6 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/aclonica": "^5.1.1",
+    "@fontsource/acme": "^5.1.1",
+    "@fontsource/actor": "^5.1.1",
+    "@fontsource/adamina": "^5.1.1",
+    "@fontsource/afacad": "^5.1.1",
+    "@fontsource/comfortaa": "^5.1.1",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
