@@ -11,12 +11,12 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Monitoring", path: "/monitoring" },
     { name: "Reporting", path: "/reporting" },
-    { name: "Learn", path: "/learn" },
-    { name: "AR View", path: "/ar-view" },
-    { name: "Eco Act", path: "/eco-act" },
-    { name: "Social Hub", path: "/social-hub" },
+    { name: "Learn", path: "/education" },
+    { name: "AR View", path: "/ar" },
+    { name: "Eco Act", path: "/gamification" },
+    { name: "Social Hub", path: "/socialMedia" },
     { name: "Shop", path: "/shop" },
-    { name: "About Us", path: "/about" },
+    { name: "About Us", path: "/aboutUs" },
   ]
 
   const isCurrentPath = (path) => {
@@ -40,7 +40,7 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   to={item.path}
-                  className={`text-white font-comfortaa text-[18px] font-bold hover:opacity-80 ${
+                  className={`text-white font-['comfortaa'] text-[18px] font-bold hover:opacity-80 ${
                     isCurrentPath(item.path) ? "opacity-100" : "opacity-80"
                   }`}
                 >
@@ -56,7 +56,7 @@ const Navbar = () => {
             >
               <Menu size={24} />
             </button>
-            <button className="text-white" onClick={() => navigate("/welcome")}>
+            <button className="text-white" onClick={() => navigate("/login")}>
               <User size={24} />
             </button>
           </div>
