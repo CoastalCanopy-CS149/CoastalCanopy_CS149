@@ -94,7 +94,7 @@ export default function CommunityReporting2() {
     }
 
     try {
-      const response = await fetch("/api/submit-report", {
+      const response = await fetch("http://localhost:5000/reports/submit-report", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +104,7 @@ export default function CommunityReporting2() {
 
       if (response.ok) {
         alert("Thank you for reporting!")
-        navigate("/")
+        navigate("/reporting")
       } else {
         throw new Error("Failed to submit report")
       }

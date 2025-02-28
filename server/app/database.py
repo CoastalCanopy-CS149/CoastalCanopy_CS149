@@ -1,9 +1,11 @@
-from flask_pymongo import PyMongo
-from flask import Flask
-from app.config import MONGO_URI
+from flask import current_app, g
+from pymongo import MongoClient
+from app.config import MONGO_URI, DATABASE_NAME
 
-mongo = PyMongo()
+def init_db(app):
+    client = MongoClient(MONGO_URI)
+    app.db = client[DATABASE_NAME]
 
-def init_db(app: Flask):
-    app.config["MONGO_URI"] = MONGO_URI
-    mongo.init_app(app)
+#Gets reference to the 'Reports' collection in MongoDB
+def get_reports_collection():
+    return g.get('reports_collection') or current_app.db['Reports']
