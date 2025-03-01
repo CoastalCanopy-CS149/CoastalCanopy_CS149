@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Eye, EyeOff, Facebook, Apple, User, Lock } from "lucide-react"
+import { Eye, EyeOff, Facebook, Lock, Mail } from "lucide-react"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
@@ -12,7 +12,7 @@ import "@fontsource/comfortaa"
 const Login = () => {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
-  const [username, setUsername] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
   const [errors, setErrors] = useState({})
@@ -21,7 +21,7 @@ const Login = () => {
     e.preventDefault()
     const newErrors = {}
 
-    if (!username) newErrors.username = "Username is required"
+    if (!email) newErrors.email = "Email is required"
     if (!password) newErrors.password = "Password is required"
 
     if (Object.keys(newErrors).length > 0) {
@@ -30,15 +30,15 @@ const Login = () => {
     }
 
     if (rememberMe) {
-      localStorage.setItem("username", username)
+      localStorage.setItem("email", email)
       localStorage.setItem("rememberMe", "true")
     } else {
-      localStorage.removeItem("username")
+      localStorage.removeItem("email")
       localStorage.removeItem("rememberMe")
     }
 
     // Handle login logic here
-    console.log("Login submitted:", { username, password, rememberMe })
+    console.log("Login submitted:", { email, password, rememberMe })
   }
 
   const handleSocialLogin = (platform) => {
@@ -48,9 +48,6 @@ const Login = () => {
         break
       case "google":
         window.location.href = "https://accounts.google.com"
-        break
-      case "apple":
-        window.location.href = "https://appleid.apple.com"
         break
     }
   }
@@ -72,15 +69,15 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6 w-[535px]">
               <div className="relative">
-                <User className="absolute left-6 top-1/2 transform -translate-y-1/2 text-white" size={24} />
+                <Mail className="absolute left-6 top-1/2 transform -translate-y-1/2 text-white" size={24} />
                 <input
-                  type="text"
-                  placeholder="Username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full h-[75px] pl-16 pr-4 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[22px]"
                 />
-                {errors.username && <p className="text-red-500 mt-1 ml-4 text-sm">{errors.username}</p>}
+                {errors.email && <p className="text-red-500 mt-1 ml-4 text-sm">{errors.email}</p>}
               </div>
 
               <div className="relative">
@@ -166,12 +163,6 @@ const Login = () => {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     />
                   </svg>
-                </button>
-                <button
-                  onClick={() => handleSocialLogin("apple")}
-                  className="p-2 rounded-full bg-white/20 hover:bg-white/30"
-                >
-                  <Apple size={24} className="text-white" />
                 </button>
               </div>
               <div className="flex items-center gap-2 justify-center">
