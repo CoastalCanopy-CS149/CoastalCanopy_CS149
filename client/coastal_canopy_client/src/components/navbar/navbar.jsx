@@ -36,10 +36,14 @@ const Navbar = () => {
     return false
   }
 
-  // Handle hover events for menu
+  // Handle hover and click events for menu
   useEffect(() => {
     const handleMouseEnter = () => setIsMenuOpen(true)
-    const handleMouseLeave = () => setIsMenuOpen(false)
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false)
+      }
+    }
 
     const menuButton = menuButtonRef.current
     const menuElement = menuRef.current
@@ -48,22 +52,23 @@ const Navbar = () => {
       menuButton.addEventListener("mouseenter", handleMouseEnter)
     }
 
-    if (menuElement) {
-      menuElement.addEventListener("mouseleave", handleMouseLeave)
-    }
+    document.addEventListener("mousedown", handleClickOutside)
 
     return () => {
       if (menuButton) {
         menuButton.removeEventListener("mouseenter", handleMouseEnter)
       }
-      if (menuElement) {
-        menuElement.removeEventListener("mouseleave", handleMouseLeave)
-      }
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
 
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen)
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
   return (
-    <div className="w-full fixed top-0 z-50">
+    <div className="w-full top-0 z-50">
       <nav className="max-w-[1440px] mx-auto">
         <div className="relative flex items-center justify-between px-4 sm:px-8 py-4 bg-black/40 backdrop-blur-sm">
           <Link to="/" className="flex items-center gap-1">
@@ -72,7 +77,7 @@ const Navbar = () => {
               alt="CoastalCanopy Logo"
               className="h-12 w-12 sm:h-16 sm:w-16 rounded-full"
             />
-            <span className="font-['Aclonica'] text-2xl sm:text-[32px] text-white">CoastalCanopy</span>
+            <span className="font-['Aclonica'] text-lg sm:text-2xl text-white">CoastalCanopy</span>
           </Link>
 
           <div className="flex items-center gap-4 sm:gap-8">
@@ -95,7 +100,7 @@ const Navbar = () => {
                 className="text-white hover:text-gray-300 transition-colors"
                 aria-expanded={isMenuOpen}
                 aria-controls="menu-items"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                onClick={handleMenuToggle}
               >
                 <Menu size={24} />
               </button>

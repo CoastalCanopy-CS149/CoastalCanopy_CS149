@@ -46,9 +46,9 @@ const Footer = () => {
 
   return (
     <div className="w-full bg-[#82889880] backdrop-blur-sm">
-      <div className="max-w-[1440px] mx-auto min-h-[121px] flex flex-col justify-between py-4 px-4 sm:px-8">
+      <div className="max-w-[1440px] mx-auto py-4 px-4 sm:px-8">
         {/* Mobile layout */}
-        <div className="flex flex-col items-center gap-4 sm:hidden">
+        <div className="flex flex-col items-center gap-6 sm:hidden">
           <Link to="/" className="font-['Aclonica'] text-white text-2xl hover:text-gray-200">
             CoastalCanopy
           </Link>
@@ -76,20 +76,20 @@ const Footer = () => {
         {/* Desktop layout */}
         <div className="hidden sm:flex sm:flex-col sm:justify-between">
           <div className="flex justify-between items-center">
-            <Link to="/" className="font-['Aclonica'] text-white text-3xl hover:text-gray-200">
+            <Link to="/" className="font-['Aclonica'] text-white text-2xl hover:text-gray-200">
               CoastalCanopy
             </Link>
             <div className="flex items-center justify-end flex-1">
               <div className="w-[300px] flex justify-between">
                 <Link
                   to="/"
-                  className="text-white font-['comfortaa'] text-2xl font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
+                  className="text-white font-['comfortaa'] text-base sm:text-[20px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
                 >
                   Home
                 </Link>
                 <Link
                   to="/monitoring"
-                  className="text-white font-['comfortaa'] text-2xl font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
+                  className="text-white font-['comfortaa'] text-base sm:text-[20px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
                 >
                   Monitoring
                 </Link>
@@ -120,13 +120,13 @@ const Footer = () => {
               <div className="w-[300px] flex justify-between">
                 <Link
                   to="/reporting"
-                  className="text-white font-['comfortaa'] text-2xl font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
+                  className="text-white font-['comfortaa'] text-base sm:text-[20px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
                 >
                   Reporting
                 </Link>
                 <Link
                   to="/education"
-                  className="text-white font-['comfortaa'] text-2xl font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
+                  className="text-white font-['comfortaa'] text-base sm:text-[20px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
                 >
                   Map
                 </Link>
