@@ -1,77 +1,73 @@
 import React, { useState } from "react"; // Ensure to import useState
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // Import motion for animations
-const mangroveBackground = "/imgs/education/mangrove-forest.jpg";
-const mangrovesrilanka = "/imgs/education/mangrovesrilanka.jpg";
-const mangroveThumbnail = "/imgs/education/mangrove-thumbnail.jpg";
-import {ArrowLeft} from "lucide-react";
+import mangroveBackground from "/imgs/education/mangrove-forest.jpg";
+import mangrovesrilanka from "/imgs/education/mangrovesrilanka.jpg";
+import mangroveThumbnail from "/imgs/education/mangrove-thumbnail.jpg";
+import { ArrowLeft } from "lucide-react";
+import ReactPlayer from "react-player";
 
 
 const EducationSection = () => {
   const navigate = useNavigate();
   return (
     <div
+      className="min-h-screen flex justify-center items-start pt-12"
       style={{
         backgroundImage: `url(${mangroveBackground})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        display: "flex",
-        height: "100vh",
-        overflow: "hidden",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        paddingTop: "5vh",
+        
       }}
     >
-      <div className="grid grid-cols-3 gap-6 p-10 bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl w-11/12 max-w-7xl min-h-0">
-        {/* Education Card 1 */}
-        <div className="p-2 bg-white rounded-3xl max-w-2xl shadow-md text-center">
-          <h2 className="text-lg font-semibold">Education for Mangrove Conservation</h2>
-          <p className="text-gray-600">
+      <div className="bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl w-11/12 max-w-7xl -mt-6 ">
+      <h1 className="text-center text-3xl text-white font-bold mt-8 ">Mangrove Conservation & Ecosystem Awareness</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 lg:p-8 ">
+      
+         {/* Education Card 1 */}
+         
+        <div className="p-4 bg-white rounded-3xl flex flex-col justify-between shadow-md text-center">
+          
+         <h2 className="text-lg md:text-xl font-semibold">Education for Mangrove Conservation</h2>
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed">
             Educate on mangrove to protect coastlines, biodiversity, and climate.
             Mangroves protect coastlines from natural threats. They provide
-            habitats, supporting diverse thriving ecosystems.
-          </p>
-          <p className="text-gray-600">
-            Additionally, mangroves absorb and store significant amounts of
-            carbon, helping to mitigate climate change.
-          </p>
-          <p className="text-gray-600">
-            They also filter pollutants from coastal waters and support local
-            communities through sustainable fishing and eco-tourism
-            opportunities.
-          </p>
-          <p className="text-gray-600">In Sri Lanka, these ecosystems...</p>
+            habitats, supporting diverse thriving ecosystems.  <br></br>
+          </p>  
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed">Mangroves act as natural barries, reducing the impact of storms, erosion and rising sea levels.</p> 
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed">They absorb significant amounts of carbon dioxide, helping combat climate change.<br></br></p>
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed">Additionally, mangroves support local communities by providing resources like fish, wood, and medicinal plants.</p>
+          <p className="text-gray-600 text-sm md:text-base leading-relaxed">In Sri Lanka, these ecosystems...</p>
           <button
-            onClick={() => navigate("/education/education-content")}
-            className="mt-16 bg-green-500 text-white px-4 py-2 rounded-md"
+            onClick={() => navigate("../education-content")}
+            className="mt-4 md:mt-6 bg-green-500 text-white hover:bg-green-600 px-4 py-2 w-32 mx-auto rounded-md transition"
           >
             Learn More
           </button>
         </div>
 
         {/* Education Card 2 */}
-        <div className="p-2 bg-white rounded-3xl shadow-md max-w-2xl text-center">
-          <h2 className="text-lg font-semibold">
+        <div className="p-4 bg-white rounded-3xl shadow-md  text-center">
+          <h2 className="text-lg md:text-xl font-semibold">
             EcoUpdates: Latest News on Mangrove Conservation
           </h2>
           <img
             src={mangrovesrilanka}
             alt="Mangrove"
-            className="rounded-lg mx-auto mb-4"
+            className="rounded-lg mx-auto w-full h-auto mb-4"
           />
-          <p className="text-gray-600 text-xs text-left">16 February 2024.</p>
+          <p className="text-gray-600 md:text-sm text-xs text-left">16 February 2024.</p>
           <button
-            onClick={() => navigate("/education/education-news")}
-            className="mt-7 bg-green-500 text-white px-4 py-2 rounded-md"
+            onClick={() => navigate("../education-news")}
+            className="mt-8 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
           >
             See More
           </button>
         </div>
 
         {/* Video Card */}
-        <div className="p-2 bg-white rounded-3xl shadow-md max-w-2xl text-center">
-          <h2 className="text-lg font-semibold">
+        <div className="p-4 bg-white rounded-3xl shadow-md  text-center">
+          <h2 className="text-lg font-semibold ">
             The Crucial Role of Mangroves in Conservation
           </h2>
           <img
@@ -80,25 +76,27 @@ const EducationSection = () => {
             className="rounded-lg mx-auto mb-4"
           />
           <p className="text-gray-600">Watch this video to learn about the mangrove ecosystem.</p>
-          <button className="mt-2 bg-green-500 text-white px-4 py-2 rounded-md">
+          <button  onClick={() => navigate("../VideoCard")} className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
             Play
           </button>
         </div>
 
         {/* Quiz Section */}
-        <div className="flex justify-center">
-        <div className="mt-8 text-center bg-green-50 p-2 rounded-3xl max-w-2xl w-[90%]">
+        
+        <div className="col-span-1 md:col-span-2 text-center bg-green-50 p-4 rounded-3xl lg:col-span-3">
           <p className="text-lg font-medium">
             Do you want to Play Quiz and earn points?
           </p>
+          <p className=" text-lg font-medium md:text-xl">🚀<span>Join Now</span></p>
           <button
-            onClick={() => navigate("/education/education-quiz")}
-            className="mt-4 bg-green-500 text-white px-6 py-2 rounded-md"
+            onClick={() => navigate("../education-quiz")}
+            className="mt-8 bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition"
           >
             Click Here
           </button>
         </div>
-       </div>
+       
+      </div>
       </div>
     </div>
   );
@@ -120,7 +118,7 @@ const EducationContent = () => {
         paddingTop: "5vh",
       }}
     >
-      <div className="p-8 bg-white bg-opacity-45 rounded-3xl shadow-md mt-14 min-h-0">
+      <div className="p-8 bg-white bg-opacity-45 rounded-3xl shadow-md mt-6 min-h-0 ">
         <h3 className="font-semibold text-center text-white text-4xl mb-5">
           Education for Mangrove Conservation
         </h3>
@@ -136,7 +134,7 @@ const EducationContent = () => {
         <div className="flex justify-center">
           <div
             onClick={() => navigate("/education")}
-            className="mt-[-25px] bg-green-500 text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer"
+            className="mt-[-25px] bg-green-500 hover:bg-green-600 text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer"
           >
             Back
           </div>
@@ -162,7 +160,7 @@ const EducationNews = () => {
         paddingTop: "5vh",
       }}
     >
-      <div className="p-8 bg-white bg-opacity-35 rounded-3xl backdrop-blur-sm w-11/12 max-w-5xl shadow-md mt-14">
+      <div className="p-8 bg-white bg-opacity-35 rounded-3xl backdrop-blur-sm w-11/12 max-w-5xl shadow-md mt-8">
         <h3 className="font-semibold text-center text-white text-4xl mb-5">
           Sri Lanka gets global recognition by UN for rebuilding mangrove ecosystems
         </h3>
@@ -180,7 +178,7 @@ const EducationNews = () => {
         <div className="flex justify-center">
           <div
             onClick={() => navigate("/education")}
-            className="mt-[-18px] bg-green-500 text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer"
+            className="mt-[-18px] bg-green-500 hover:bg-green-600 text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer"
           >
             Back
           </div>
@@ -190,9 +188,42 @@ const EducationNews = () => {
   );
 };
 
+
+
+
+
+const VideoCard = () => {
+  const videoFile = "/imgs/education/5079225-uhd_3840_2160_24fps.mp4";
+  const navigate = useNavigate();
+
+return (
+    <div className="fixed inset-0 flex items-center justify-center bg-black z-50 ">
+      
+    <button
+        onClick={() => navigate(-1)}
+        className="absolute  top-4 right-4 text-white text-3xl font-bold hover:text-red-500"
+      >
+      &times;
+      </button>
+
+      <div className="w-full max-w-4xl aspect-video">
+        <ReactPlayer
+          url={videoFile}
+          playing={true}
+          controls={true}
+          width="100%"
+          height="100%"
+            />
+          </div>
+        </div>
+    
+   
+  );
+};
+
 const EducationQuiz = () => {
   const navigate = useNavigate();
-  const [answers, setAnswers] = useState({ q1: "", q2: "", q3: "", q4: "", q5: "", q6: "", q7: "", q8: "", q9: "", q10: "" });
+  const [answers, setAnswers] = useState({ q1: "", q2: "" });
   const [score, setScore] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -201,14 +232,13 @@ const EducationQuiz = () => {
     q1: "Rhizopora",
     q2: "By absorbing carbon dioxide",
     q3: "Protecting coastlines from erosion and storm surges",
-    q4: "Prop roots that rise above the water",
-    q5: "Coastal intertidal zones",
-    q6: "They provide shelter and breeding grounds for various marine species",
-    q7: "Deforestation and land reclamation",
-    q8: "Indonesia",
-    q9: "By absorbing and storing large amounts of carbon dioxide",
-    q10: "Filtering pollutants from water",
-
+    q4:"Prop roots that rise above the water",
+    q5:"Coastal intertidal zones",
+    q6:"They provide shelter and breeding grounds for various marine species",
+    q7:"Deforestation and land reclamation",
+    q8:"Indonesia",
+    q9:"By absorbing and storing large amounts of carbon dioxide",
+    q10:"Filtering pollutants from water",
   };
 
   const handleChange = (e) => {
@@ -216,7 +246,7 @@ const EducationQuiz = () => {
   };
 
   const handleSubmit = () => {
-    if (!answers.q1 || !answers.q2 || !answers.q3 || !answers.q4 || !answers.q5 || !answers.q6 || !answers.q7 || !answers.q8 || !answers.q9 || !answers.q10) {
+    if (!answers.q1 || !answers.q2 || !answers.q3 || !answers.q4  || !answers.q5 || !answers.q6 || !answers.q7 || !answers.q8 || !answers.q9 || !answers.q10) {
       setModalMessage("Please answer all questions before submitting.");
       setShowModal(true);
       return;
@@ -235,7 +265,7 @@ const EducationQuiz = () => {
     if (answers.q10 === correctAnswers.q10) totalScore += 10;
 
     if (totalScore === 0) {
-      setModalMessage("❌ Oops! You answered both questions wrong. Please try again.");
+      setModalMessage("❌ Oops! You answered all questions wrong. Please try again.");
     } else {
       setModalMessage(`🎉 Congratulations! 🎊 You've successfully completed the quiz and earned ${totalScore} points!`);
     }
@@ -261,10 +291,10 @@ const EducationQuiz = () => {
       >
         <div className="p-8 bg-white bg-opacity-35 rounded-3xl backdrop-blur-sm w-11/12 max-w-5xl shadow-md mt-14">
           <h3 className="font-semibold text-center text-white text-4xl mb-5">Quiz</h3>
-          <div className="space-y-6 max-h-[400px] overflow-y-auto">
-            
-              {/* Question 1 */}
-              <div>
+          <div className="space-y-6  max-h-[400px] overflow-y-auto">
+
+            {/* Question 1 */}
+            <div>
               <h2 className="font-semibold text-lg text-left mb-10">
                 1) Which of the following is a common species found in mangrove forests?
               </h2>
@@ -482,28 +512,25 @@ const EducationQuiz = () => {
                 ))}
               </div>
             </div>
-
-      <div className="relative mt-5">
-        <div
-          onClick={() => navigate("/education")}
-          className="absolute left-0  text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer flex items-center"
-        >
-          <ArrowLeft size={54} className="-ml-14"/>
-        </div>
-        <div className="text-center">
-          <button
-            onClick={handleSubmit}
-            className="bg-green-500 text-white text-2xl px-16 py-2 rounded-3xl mt-1"
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-             
-           
-          </div>
-        </div>
-      </div>
+         <div className="relative mt-5">
+  <div
+    onClick={() => navigate("/education")}
+    className="absolute left-0  text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit flex items-center cursor-pointer"
+  >
+   <ArrowLeft size={54} className="-ml-14" /> 
+  </div>
+  <div className="text-center">
+    <button
+      onClick={handleSubmit}
+      className="bg-green-500 hover:bg-green-600 text-white text-2xl px-16 py-2 rounded-3xl mt-1"
+    >
+      Submit
+    </button>
+   </div>
+  </div>
+ </div>
+ </div>
+ </div>
 
        {/* Modal for Messages */}
             {showModal && (
@@ -541,15 +568,16 @@ const EducationQuiz = () => {
   );
 };
 
-export default  function Education(){
+const Education = () => {
   return (
     <Routes>
       <Route path="/" element={<EducationSection />} />
       <Route path="/education-content" element={<EducationContent />} />
       <Route path="/education-news" element={<EducationNews />} />
       <Route path="/education-quiz" element={<EducationQuiz />} />
+      <Route path="/VideoCard" element={<VideoCard />} />
     </Routes>
   );
+};
 
-
-}
+export default Education;
