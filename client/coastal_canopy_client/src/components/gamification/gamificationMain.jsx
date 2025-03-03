@@ -1,4 +1,5 @@
 import bg from "/imgs/gamification/gamificationBg1.jpg";
+import user from "/imgs/gamification/woman.png";
 
 export default function gamificationMain() {
     const username = "Greeny_Granny's Lagoon"
@@ -7,6 +8,10 @@ export default function gamificationMain() {
     const treesPlanted = 10
     const progress = 80
     const profileImage = "/placeholder.svg?height=100&width=100"
+
+    const navigateLeaderboard = () => {
+        navigator.navigate("/leaderboard")
+    }
       
     return(
         <div
@@ -14,13 +19,13 @@ export default function gamificationMain() {
         style={{ backgroundImage: `url(${bg})` }}
       >
         
-        <div className="z-10 bg-gray-50 bg-opacity-25 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto flex justify-center items-center">
+        <div className="z-10 bg-gray-50 bg-opacity-25 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto flex justify-center">
         
   
         <div className="relative z-10 flex h-full flex-col items-center justify-start pt-8">
           {/* Top pills */}
-          <div className="mb-4 flex w-full max-w-md justify-between px-4">
-            <div className="rounded-full bg-green-500/80 px-4 py-2 text-white shadow-lg">
+          <div className="mb-20 flex w-full max-w-md justify-between px-4">
+            <div className="rounded-full bg-green-500/80 px-4 py-2  text-white shadow-lg">
               <span className="font-medium">{username}</span>
             </div>
             <div className="rounded-full bg-green-500/80 px-4 py-2 text-white shadow-lg">
@@ -29,12 +34,12 @@ export default function gamificationMain() {
           </div>
   
           {/* Profile picture */}
-          <div className="relative mb-4 h-24 w-24 overflow-hidden rounded-full border-4 border-yellow-400 bg-yellow-300">
-            <img src={profileImage || "/placeholder.svg"} alt="Profile" className="h-full w-full object-cover" />
+          <div className="relative mb-20 h-24 w-24 overflow-hidden rounded-full border-4 border-green-400 bg-green-300">
+            <img src={user || "/placeholder.svg"} alt="Profile" className="h-full w-full object-cover" />
           </div>
   
           {/* Stats card */}
-          <div className="w-full max-w-md rounded-lg bg-gray-800/60 p-6 text-white backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-lg bg-slate-200/15 p-6 text-black backdrop-blur-sm">
             <div className="mb-6 grid grid-cols-2 gap-4">
               <div>
                 <h3 className="text-lg font-medium">Rank</h3>
@@ -79,7 +84,7 @@ export default function gamificationMain() {
             </div>
   
             <div className="flex items-center justify-between">
-              <button className="flex items-center text-sm font-medium text-white/80 hover:text-white">
+              <button className="flex items-center text-sm font-medium text-white/80 hover:text-white" onclick={navigateLeaderboard}>
                 Leaderboard
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
