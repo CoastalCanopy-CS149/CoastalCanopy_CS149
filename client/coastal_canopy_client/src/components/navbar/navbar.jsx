@@ -69,7 +69,7 @@ const Navbar = () => {
 
   return (
     <div className="w-full top-0 z-50">
-      <nav className="max-w-[1440px] mx-auto">
+      <nav className="w-full">
         <div className="relative flex items-center justify-between px-4 sm:px-8 py-4 bg-black/40 backdrop-blur-sm">
           <Link to="/" className="flex items-center gap-1">
             <img
