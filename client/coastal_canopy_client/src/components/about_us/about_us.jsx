@@ -49,9 +49,22 @@ const cwImages = ["/imgs/about_us/cw1_1.jpg", "/imgs/about_us/cw1_2.jpg"]
 const coastalD = [
   "/imgs/about_us/coastalD_1.jpg",
   "/imgs/about_us/coastalD_2.jpg",
-  "/imgs/about_us/coastalD_3.jpg",
   "/imgs/about_us/coastalD_4.jpg",
   "/imgs/about_us/coastalD_5.jpg",
+]
+
+const diyatha = [
+  "/imgs/about_us/diyatha1.jpg",
+  "/imgs/about_us/diyatha2.jpg",
+  "/imgs/about_us/diyatha3.jpg",
+  "/imgs/about_us/diyatha4.jpg",
+  "/imgs/about_us/diyatha5.jpg",
+  "/imgs/about_us/diyatha6.jpg",
+  "/imgs/about_us/diyatha7.jpg",
+]
+
+const hultprize = [
+  
 ]
 
 const Carousel = ({ images }) => {
@@ -137,10 +150,17 @@ export default function AboutUs() {
               </div>
 
               <div className="border-2 rounded-lg w-full">
-                <Carousel images={coastalD}  className=""/>
+                <Carousel images={diyatha}  className=""/>
                 <h1 className="text-s font-semibold text-black p-4 rounded-b-md bg-gray-50">
-                Went to Forest Department to collect a dataset(mangrove distribution map in srilanka) from them then went to "Sobadam piyasa NGO" to get an evaluation from them on our project.<br />
+                Went to Diyatha park to collect some images and information about mangroves.<br />
                 Date : 2025-02-11
+                </h1>
+              </div>
+
+              <div className="border-2 rounded-lg w-full">
+                <Carousel images={hultprize}  className=""/>
+                <h1 className="text-s font-semibold text-black p-4 rounded-b-md bg-gray-50">
+                Compete in the Hult prize IIT competition and got some valueable feedbacks.<br />
                 </h1>
               </div>
             </div>
