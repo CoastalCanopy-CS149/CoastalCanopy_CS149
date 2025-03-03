@@ -54,22 +54,22 @@ const shop = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-start py-16 px-4">
-        <div className="bg-green-100 bg-opacity-25 backdrop-blur-sm p-8 rounded-3xl w-11/12 md:w-4/5 max-w-7xl flex flex-col items-center my-12">
-          <h1 className="text-4xl font-bold mb-4 text-green-900">
-            {showCart ? 'Guarding Green Roots 🍃' : 'Hope Grows With Every Click !'}
-          </h1>
+        <div className="relative z-10 flex flex-col items-center justify-start py-16 px-4">
+          <div className="bg-green-100 bg-opacity-25 backdrop-blur-sm p-8 rounded-3xl w-11/12 md:w-4/5 max-w-7xl flex flex-col items-center my-12">
+            <h1 className="text-3xl font-bold mb-4 text-white">
+          {showCart ? 'Guarding Green Roots 🍃' : 'Hope Grows With Every Click !'}
+            </h1>
 
-          <h5 className="text-2xl font-semibold mb-4 text-white">
-            {showCart
-              ? ''
-              : 'Every purchase plants a seed of hope - support mangroves, sustain life'
-            }
-          </h5>
+            <h5 className="text-2xl font-semibold mb-4 text-white">
+          {showCart
+            ? ''
+            : 'Every purchase plants a seed of hope - support mangroves, sustain life'
+          }
+            </h5>
 
-          <button 
-            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600 mb-4 mt-5 flex items-center transform transition-transform duration-300 hover:scale-105"
-            onClick={() => setShowCart(!showCart)}  // Toggle cart visibility
+            <button 
+          className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600 mb-4 mt-5 flex items-center transform transition-transform duration-300 hover:scale-105"
+          onClick={() => setShowCart(!showCart)}  // Toggle cart visibility
           >
             {showCart ? 'Go to Shop' : 'View Shopping Cart'}
             <ShoppingCart size={20} className="ml-2" />              
