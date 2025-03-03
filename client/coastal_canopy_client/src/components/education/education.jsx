@@ -1,12 +1,12 @@
 import React, { useState } from "react"; // Ensure to import useState
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // Import motion for animations
-import mangroveBackground from "../assets/mangrove-forest.jpg";
-import mangrovesrilanka from "../assets/mangrovesrilanka.jpg";
-import mangroveThumbnail from "../assets/mangrove-thumbnail.jpg";
+import mangroveBackground from "/imgs/education/mangrove-forest.jpg";
+import mangrovesrilanka from "/imgs/education/mangrovesrilanka.jpg";
+import mangroveThumbnail from "/imgs/education/mangrove-thumbnail.jpg";
 import { ArrowLeft } from "lucide-react";
 import ReactPlayer from "react-player";
-import videoFile from "../assets/5079225-uhd_3840_2160_24fps.mp4";
+
 
 const EducationSection = () => {
   const navigate = useNavigate();
@@ -20,10 +20,15 @@ const EducationSection = () => {
         
       }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 lg:p-8 bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl w-11/12 max-w-7xl -mt-6">
-        {/* Education Card 1 */}
+      <div className="bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl w-11/12 max-w-7xl -mt-6 ">
+      <h1 className="text-center text-3xl text-white font-bold mt-8 ">Mangrove Conservation & Ecosystem Awareness</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 lg:p-8 ">
+      
+         {/* Education Card 1 */}
+         
         <div className="p-4 bg-white rounded-3xl flex flex-col justify-between shadow-md text-center">
-          <h2 className="text-lg md:text-xl font-semibold">Education for Mangrove Conservation</h2>
+          
+         <h2 className="text-lg md:text-xl font-semibold">Education for Mangrove Conservation</h2>
           <p className="text-gray-600 text-sm md:text-base leading-relaxed">
             Educate on mangrove to protect coastlines, biodiversity, and climate.
             Mangroves protect coastlines from natural threats. They provide
@@ -34,7 +39,7 @@ const EducationSection = () => {
           <p className="text-gray-600 text-sm md:text-base leading-relaxed">Additionally, mangroves support local communities by providing resources like fish, wood, and medicinal plants.</p>
           <p className="text-gray-600 text-sm md:text-base leading-relaxed">In Sri Lanka, these ecosystems...</p>
           <button
-            onClick={() => navigate("/education-content")}
+            onClick={() => navigate("../education-content")}
             className="mt-4 md:mt-6 bg-green-500 text-white hover:bg-green-600 px-4 py-2 w-32 mx-auto rounded-md transition"
           >
             Learn More
@@ -53,7 +58,7 @@ const EducationSection = () => {
           />
           <p className="text-gray-600 md:text-sm text-xs text-left">16 February 2024.</p>
           <button
-            onClick={() => navigate("/education-news")}
+            onClick={() => navigate("../education-news")}
             className="mt-8 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
           >
             See More
@@ -71,7 +76,7 @@ const EducationSection = () => {
             className="rounded-lg mx-auto mb-4"
           />
           <p className="text-gray-600">Watch this video to learn about the mangrove ecosystem.</p>
-          <button  onClick={() => navigate("/VideoCard")} className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
+          <button  onClick={() => navigate("../VideoCard")} className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
             Play
           </button>
         </div>
@@ -84,13 +89,14 @@ const EducationSection = () => {
           </p>
           <p className=" text-lg font-medium md:text-xl">🚀<span>Join Now</span></p>
           <button
-            onClick={() => navigate("/education-quiz")}
+            onClick={() => navigate("../education-quiz")}
             className="mt-8 bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition"
           >
             Click Here
           </button>
         </div>
        
+      </div>
       </div>
     </div>
   );
@@ -127,7 +133,7 @@ const EducationContent = () => {
 
         <div className="flex justify-center">
           <div
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/education")}
             className="mt-[-25px] bg-green-500 hover:bg-green-600 text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer"
           >
             Back
@@ -171,7 +177,7 @@ const EducationNews = () => {
         </p>
         <div className="flex justify-center">
           <div
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/education")}
             className="mt-[-18px] bg-green-500 hover:bg-green-600 text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit cursor-pointer"
           >
             Back
@@ -187,7 +193,7 @@ const EducationNews = () => {
 
 
 const VideoCard = () => {
-  
+  const videoFile = "/imgs/education/5079225-uhd_3840_2160_24fps.mp4";
   const navigate = useNavigate();
 
 return (
@@ -215,12 +221,6 @@ return (
   );
 };
 
-
-
-
-
-
-              
 const EducationQuiz = () => {
   const navigate = useNavigate();
   const [answers, setAnswers] = useState({ q1: "", q2: "" });
@@ -514,7 +514,7 @@ const EducationQuiz = () => {
             </div>
          <div className="relative mt-5">
   <div
-    onClick={() => navigate("/")}
+    onClick={() => navigate("/education")}
     className="absolute left-0  text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit flex items-center cursor-pointer"
   >
    <ArrowLeft size={54} className="-ml-14" /> 
