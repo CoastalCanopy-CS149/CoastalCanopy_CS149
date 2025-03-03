@@ -9,3 +9,5 @@ def init_db(app):
 #Gets reference to the 'Reports' collection in MongoDB
 def get_reports_collection():
     return g.get('reports_collection') or current_app.db['Reports']
+    app.db = client[DATABASE_NAME]
+

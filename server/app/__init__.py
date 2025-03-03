@@ -14,7 +14,6 @@ def create_app():
     # Allows all routes from any origin
     CORS(app)
 
-
     init_db(app)
 
     # Register Blueprints (modular routes)
@@ -23,6 +22,4 @@ def create_app():
     # app.register_blueprint(gamification_bp, url_prefix="/gamification")
 
     return app
-
-
 
