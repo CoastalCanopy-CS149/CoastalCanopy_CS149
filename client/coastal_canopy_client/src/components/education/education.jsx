@@ -7,20 +7,26 @@ import mangroveThumbnail from "/imgs/education/mangrove-thumbnail.jpg";
 import { ArrowLeft } from "lucide-react";
 import ReactPlayer from "react-player";
 
+import Navbar from "../navbar/navbar";
+import Footer from "../footer/footer";
 
 const EducationSection = () => {
   const navigate = useNavigate();
   return (
     <div
-      className="min-h-screen flex justify-center items-start pt-12"
+      className="min-h-screen "
       style={{
         backgroundImage: `url(${mangroveBackground})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         
       }}
-    >
-      <div className="bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl w-11/12 max-w-7xl -mt-6 ">
+    > 
+      <div className="z-20 relative">
+      <Navbar/>
+      </div>
+    <div className="flex justify-center items-start pt-12">
+      <div className="bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl w-11/12 max-w-7xl -mt-6  mb-10">
       <h1 className="text-center text-3xl text-white font-bold mt-8 ">Mangrove Conservation & Ecosystem Awareness</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 lg:p-8 ">
       
@@ -98,6 +104,8 @@ const EducationSection = () => {
        
       </div>
       </div>
+    </div>
+    <Footer/>
     </div>
   );
 };
@@ -183,8 +191,10 @@ const EducationNews = () => {
             Back
           </div>
         </div>
+        
       </div>
-    </div>
+      </div>
+      
   );
 };
 
