@@ -1,5 +1,7 @@
 import os
+from dotenv import load_dotenv
 
-# connection string
-MONGO_URI = "mongodb+srv://malshaG:coastalCanopy-149-Malsha@cluster0.rqdby.mongodb.net/"
-DATABASE_NAME = "CoastalCanopy"
+load_dotenv()  # Load environment variables from .env file
+
+MONGO_URI = os.getenv("MONGO_URI")
+DATABASE_NAME = os.getenv("DATABASE_NAME")
