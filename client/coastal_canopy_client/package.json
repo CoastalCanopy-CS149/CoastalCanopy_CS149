@@ -17,6 +17,7 @@
     "@fontsource/afacad": "^5.1.1",
     "@fontsource/comfortaa": "^5.1.1",
     "framer-motion": "^12.4.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
