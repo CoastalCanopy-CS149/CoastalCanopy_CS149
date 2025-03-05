@@ -1,16 +1,32 @@
+import { Link, useNavigate } from "react-router-dom";
 import bg from "/imgs/gamification/gamificationBg1.jpg";
-import user from "/imgs/gamification/woman.png";
+import { motion } from "framer-motion"
+import { ArrowUpRight, Share2 } from 'lucide-react';
 
-export default function gamificationMain() {
+
+export default function GamificationMain() {
+    const navigate = useNavigate();
+
     const username = "Greeny_Granny's Lagoon"
     const points = 340
     const rank = "004"
     const treesPlanted = 10
     const progress = 80
-    const profileImage = "/placeholder.svg?height=100&width=100"
+    const profileImage = "/imgs/gamification/user4.png"
 
     const navigateLeaderboard = () => {
-        navigator.navigate("/leaderboard")
+      navigate("../leaderboard")
+    }
+
+    const rollAnimation = {
+      animate: {
+        rotateY: [0, 360],
+        transition: {
+          duration: 3,
+          ease: "linear",
+          repeat: Number.POSITIVE_INFINITY,
+        },
+      }
     }
       
     return(
@@ -25,21 +41,27 @@ export default function gamificationMain() {
         <div className="relative z-10 flex h-full flex-col items-center justify-start pt-8">
           {/* Top pills */}
           <div className="mb-20 flex w-full max-w-md justify-between px-4">
-            <div className="rounded-full bg-green-500/80 px-4 py-2  text-white shadow-lg">
+            <div className="rounded-full bg-green-500/80 border-2 border-green-600 px-4 py-2  text-white shadow-lg">
               <span className="font-medium">{username}</span>
             </div>
-            <div className="rounded-full bg-green-500/80 px-4 py-2 text-white shadow-lg">
+            <div className="rounded-full bg-green-500/80 border-2 border-green-600 px-4 py-2 text-white shadow-lg">
               <span className="font-medium">Points: {points}</span>
             </div>
           </div>
   
           {/* Profile picture */}
-          <div className="relative mb-20 h-24 w-24 overflow-hidden rounded-full border-4 border-green-400 bg-green-300">
-            <img src={user || "/placeholder.svg"} alt="Profile" className="h-full w-full object-cover" />
-          </div>
+          <motion.dev 
+          className="relative mb-20 h-24 w-24 overflow-hidden rounded-full border-4 border-green-400 bg-green-300" 
+          variants={rollAnimation}
+          animate="animate"
+          style={{ transformStyle: "preserve-3d" }}>
+
+            <img src={profileImage} alt="Profile" className="h-full w-full object-cover" />
+
+          </motion.dev>
   
           {/* Stats card */}
-          <div className="w-full max-w-md rounded-lg bg-slate-200/15 p-6 text-black backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-lg bg-green-500/80 border-2 border-green-600 shadow-lime-600 p-6 text-white">
             <div className="mb-6 grid grid-cols-2 gap-4">
               <div>
                 <h3 className="text-lg font-medium">Rank</h3>
@@ -83,43 +105,17 @@ export default function gamificationMain() {
               </div>
             </div>
   
-            <div className="flex items-center justify-between">
-              <button className="flex items-center text-sm font-medium text-white/80 hover:text-white" onclick={navigateLeaderboard}>
-                Leaderboard
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="ml-1"
-                >
-                  <path d="M7 17l9.2-9.2M17 17V7H7" />
-                </svg>
-              </button>
+            <div className="flex items-center justify-between mt-16">
+            <Link 
+              to="../leaderboard" 
+              className="text-zinc-950/60 hover:text-black inline-flex items-center gap-1"
+            >
+              Leaderboard
+              <ArrowUpRight className="inline-block" />
+            </Link>
   
-              <button className="text-white/80 hover:text-white">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="18" cy="5" r="3" />
-                  <circle cx="6" cy="12" r="3" />
-                  <circle cx="18" cy="19" r="3" />
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                </svg>
+              <button className="text-zinc-950/60 hover:text-black">
+                <Share2 />
               </button>
             </div>
           </div>
