@@ -106,14 +106,14 @@ const Carousel = ({ images }) => {
 export default function AboutUs() {
   return (
   <div
-  className="bg-cover min-h-screen  bg-fixed"
+  className="bg-cover min-h-screen bg-fixed"
   style={{ backgroundImage: `url(${background})` }}
   >
     <div className="z-20 relative">
       <Navbar />
     </div>
 
-    <div className="flex justify-center items-center  py-10">
+    <div className="flex justify-center items-center py-10 sm:py-5 m-5">
       <div className="bg-gray-50 bg-opacity-25 backdrop-blur-sm p-4 sm:p-6 md:p-10 rounded-3xl w-full max-w-7xl min-h-screen">
         {/* Team Members Section */}
         <section className="mb-12">
