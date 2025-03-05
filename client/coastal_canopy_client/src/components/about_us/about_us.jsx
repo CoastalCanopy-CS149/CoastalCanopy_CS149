@@ -2,9 +2,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import "swiper/css/pagination"
 import { Pagination, Autoplay } from "swiper/modules"
-import "../navbar/navbar"
-import "../footer/footer"
-
+import { Linkedin } from "lucide-react"
 
 import DinayaImage from "/imgs/about_us/Dinaya_Guruge.jpg"
 import MalshaImage from "/imgs/about_us/Malsha_Gamage.jpg"
@@ -13,34 +11,43 @@ import DevinImage from "/imgs/about_us/Devin.jpg"
 import LawanyaImage from "/imgs/about_us/Lawanya_Malawige.jpg"
 import background from "/imgs/about_us/bg.jpg"
 
-import Navbar from "../navbar/navbar"
-import Footer from "../footer/footer"
-
 const teamMembers = [
   {
-    name: "Dilki Wathsala(Leader)",
+    name: "Dilki Wathsala",
     bio: "A visionary leader driving the development of CoastalCanopy.lk, ensuring seamless collaboration and impactful outcomes.",
     imageUrl: DilkiImage,
+    role: "Leader/ Backend Developer",
+    linkedin: "https://www.linkedin.com/in/dilki-attanayake",
   },
   {
     name: "Devin Nanayakkara",
     bio: "An aspiring computer science enthusiast with a keen interest in environmental sustainability.",
     imageUrl: DevinImage,
+    role: "Frontend Developer",
+    linkedin:
+      "https://www.linkedin.com/in/devin-nanayakkara-2a134929b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
   {
     name: "Dinaya Guruge",
     bio: "A forward-thinking team member with expertise in project management and system integration.",
     imageUrl: DinayaImage,
+    role: "ML Engineer",
+    linkedin: "https://www.linkedin.com/in/dinaya-guruge",
   },
   {
     name: "Lawanya Malawige",
     bio: "A motivated team member with a passion for community engagement and environmental conservation.",
     imageUrl: LawanyaImage,
+    role: "Frontend Developer",
+    linkedin:
+      "https://www.linkedin.com/in/lawanya-malavige?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
   {
     name: "Malsha Gamage",
     bio: "A dedicated and passionate computer science student with a focus on software development and sustainable technologies.",
     imageUrl: MalshaImage,
+    role: "Backend Developer",
+    linkedin: "https://www.linkedin.com/in/malsha-gamage-633074293/",
   },
 ]
 
@@ -63,16 +70,14 @@ const diyatha = [
   "/imgs/about_us/diyatha7.jpg",
 ]
 
-const hultprize = [
-  
-]
+const hultprize = ["/imgs/about_us/hultprize1.jpg", "/imgs/about_us/hultprize2.jpg", "/imgs/about_us/hultprize3.png"]
 
 const Carousel = ({ images }) => {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <Swiper
         modules={[Pagination, Autoplay]}
-        spaceBetween={50}
+        spaceBetween={0}
         slidesPerView={1}
         pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
@@ -80,11 +85,12 @@ const Carousel = ({ images }) => {
       >
         {images.map((src, index) => (
           <SwiperSlide key={index}>
-            <div className="aspect-w-16 aspect-h-9">
+            <div className="w-full aspect-video">
               <img
                 src={src || "/placeholder.svg"}
                 alt={`Slide ${index + 1}`}
                 className="w-full h-full object-cover rounded-t-lg"
+                loading="lazy"
               />
             </div>
           </SwiperSlide>
@@ -96,78 +102,119 @@ const Carousel = ({ images }) => {
 
 export default function AboutUs() {
   return (
-    <div
-      className="bg-cover min-h-screen bg-fixed "
-      style={{ backgroundImage: `url(${background})` }}
-    >
-      <Navbar />
-      <div className="flex justify-center items-center py-10">
-        <div className="bg-gray-50 bg-opacity-25 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto grid">
-          <div className="max-w-7xl mx-auto grid grid-rows-1">
-            <h1 className="text-3xl font-bold text-center text-wrap text-black mb-12">
-              Meet The Team
-            </h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+    <div className="bg-cover min-h-screen bg-fixed" style={{ backgroundImage: `url(${background})` }}>
+      
+      <div className="flex justify-center items-center py-6 md:py-10 px-4">
+        <div className="bg-gray-50 bg-opacity-25 backdrop-blur-sm p-4 sm:p-6 md:p-10 rounded-3xl w-full max-w-7xl min-h-screen">
+          {/* Team Members Section */}
+          <section className="mb-12">
+            <h1 className="text-2xl md:text-3xl font-bold text-center text-white mb-6 md:mb-12">Meet The Team</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 justify-items-center">
               {teamMembers.map((member, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:scale-105 text-center w-full"
+                  className="bg-white rounded-lg shadow-md hover:scale-105 transition-transform duration-300 text-center w-full max-w-sm"
                 >
-                  <img
-                    src={member.imageUrl}
-                    alt={member.name}
-                    className="w-full h-64 object-cover"
-                  />
-                  <div className="p-6 border-t-2">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-2">{member.name}</h2>
-                    <p className="text-gray-600">{member.bio}</p>
+                  <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
+                    <img
+                      src={member.imageUrl || "/placeholder.svg"}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-4 md:p-6 border-t-2">
+                    <h2 className="text-lg md:text-xl font-semibold text-gray-900">{member.name}</h2>
+                    <p className="text-sm md:text-base text-gray-500 mb-2">{member.role}</p>
+                    <p className="text-xs md:text-sm text-gray-600 mb-3">{member.bio}</p>
+                    {member.linkedin && (
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center text-blue-600 hover:text-blue-800"
+                      >
+                        <Linkedin className="w-4 h-4 mr-1" />
+                        <span className="text-sm">LinkedIn</span>
+                      </a>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          <div className="grid grid-rows-1 mt-10">
-            <h1 className="text-4xl font-bold text-center text-black mb-12">Journey To The Success</h1>
+          {/* Journey Section */}
+          <section>
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-white mb-6 md:mb-12">
+              Journey To The Success
+            </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-
-              <div className="border-2 rounded-lg w-full">
-                <Carousel images={coastalD}  className=""/>
-                <h1 className="text-s font-semibold text-black p-4 rounded-b-md bg-gray-50">
-                  Went to Coast Conservation and Coastal Resource Management Department, and Forest department to get some
-                  geographical layers from them.<br />
-                  Date : 2024-11-07
-                </h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+              {/* Journey Card 1 */}
+              <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
+                <div className="rounded-t-lg">
+                  <Carousel images={coastalD} />
+                </div>
+                <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
+                  <p className="text-xs md:text-sm text-black font-serif">
+                    Went to Coast Conservation and Coastal Resource Management Department to get some geographical
+                    layers from them.
+                    <br />
+                    <span className="font-medium">Date: 2024-11-07</span>
+                  </p>
+                </div>
               </div>
 
-              <div className="border-2 rounded-lg w-full">
-                <Carousel images={cwImages} />
-                <h1 className="text-s font-semibold text-black p-4 rounded-b-md bg-gray-50">
-                  Finished Coursework I submiting the project report and facing the viva exam Successfully.<br/>
-                  Date : 2024-12-20
-                </h1>
+              {/* Journey Card 2 */}
+              <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
+                <div className="rounded-t-lg">
+                  <Carousel images={cwImages} />
+                </div>
+                <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
+                  <p className="text-xs md:text-sm text-black font-serif">
+                    Successfully submitted the project report and aced the viva examination, demonstrating understanding
+                    and hard work.
+                    <br />
+                    <span className="font-medium">Date: 2024-12-20</span>
+                  </p>
+                </div>
               </div>
 
-              <div className="border-2 rounded-lg w-full">
-                <Carousel images={diyatha}  className=""/>
-                <h1 className="text-s font-semibold text-black p-4 rounded-b-md bg-gray-50">
-                Went to Diyatha park to collect some images and information about mangroves.<br />
-                Date : 2025-02-11
-                </h1>
+              {/* Journey Card 3 */}
+              <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
+                <div className="rounded-t-lg">
+                  <Carousel images={diyatha} />
+                </div>
+                <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
+                  <p className="text-xs md:text-sm text-black font-serif">
+                    Visited Diyatha Park to collect detailed images, data, and valuable information about mangroves for
+                    the project.
+                    <br />
+                    <span className="font-medium">Date: 2025-02-11</span>
+                  </p>
+                </div>
               </div>
 
-              <div className="border-2 rounded-lg w-full">
-                <Carousel images={hultprize}  className=""/>
-                <h1 className="text-s font-semibold text-black p-4 rounded-b-md bg-gray-50">
-                Compete in the Hult prize IIT competition and got some valueable feedbacks.<br />
-                </h1>
+              {/* Journey Card 4 */}
+              <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
+                <div className="rounded-t-lg">
+                  <Carousel images={hultprize} />
+                </div>
+                <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
+                  <p className="text-xs md:text-sm text-black font-serif">
+                    Competed in the IIT Hult Prize Qualifier Round and received valuable feedback from the judging
+                    panel.
+                    <br />
+                    <span className="font-medium">Date: 2025-02-22</span>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
-      <Footer />
+      
     </div>
   )
 }
