@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import bg from "/imgs/gamification/gamificationBg1.jpg";
 import { motion } from "framer-motion"
-import { ArrowUpRight, Share2 } from 'lucide-react';
+import { ArrowUpRight, Share2, Coins } from 'lucide-react';
 
 
 export default function GamificationMain() {
@@ -40,11 +40,12 @@ export default function GamificationMain() {
   
         <div className="relative z-10 flex h-full flex-col items-center justify-start pt-8">
           {/* Top pills */}
-          <div className="mb-20 flex w-full max-w-md justify-between px-4">
-            <div className="rounded-full bg-green-500/80 border-2 border-green-600 px-4 py-2  text-white shadow-lg">
+          <div className="mb-20 flex w-full max-w-md justify-between px-4 ">
+            <div className="rounded-full bg-green-500/80 border-2 border-green-600 px-4 py-2  text-white shadow-lg hover:scale-105 transition-transform">
               <span className="font-medium">{username}</span>
             </div>
-            <div className="rounded-full bg-green-500/80 border-2 border-green-600 px-4 py-2 text-white shadow-lg">
+            <div className="rounded-full bg-green-500/80 border-2 border-green-600 px-4 py-2 text-white shadow-lg hover:scale-105 transition-transform">
+              <Coins className="inline-block mr-2 text-yellow-300" />
               <span className="font-medium">Points: {points}</span>
             </div>
           </div>
