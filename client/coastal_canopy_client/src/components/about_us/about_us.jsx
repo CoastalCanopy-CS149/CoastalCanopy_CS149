@@ -12,7 +12,7 @@ import MalshaImage from "/imgs/about_us/Malsha_Gamage.jpg"
 import DilkiImage from "/imgs/about_us/Dilki_Attanayake.jpg"
 import DevinImage from "/imgs/about_us/Devin.jpg"
 import LawanyaImage from "/imgs/about_us/Lawanya_Malawige.jpg"
-import background from "/imgs/about_us/bg.jpg"
+import background from "/imgs/about_us/background2.jpg"
 
 const teamMembers = [
   {
@@ -22,15 +22,6 @@ const teamMembers = [
     role: "Leader/ Backend Developer",
     linkedin: "https://www.linkedin.com/in/dilki-attanayake",
     github:"https://github.com/DilkiAttanayake",
-  },
-  {
-    name: "Devin Nanayakkara",
-    bio: "An aspiring computer science enthusiast with a keen interest in environmental sustainability.",
-    imageUrl: DevinImage,
-    role: "Frontend Developer",
-    linkedin:
-      "https://www.linkedin.com/in/devin-nanayakkara-2a134929b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-    github:"https://github.com/devinnanayakkara",
   },
   {
     name: "Dinaya Guruge",
@@ -56,6 +47,15 @@ const teamMembers = [
     role: "Backend Developer",
     linkedin: "https://www.linkedin.com/in/malsha-gamage-633074293/",
     github:"https://github.com/MalshaPG",
+  },
+  {
+    name: "Devin Nanayakkara",
+    bio: "An aspiring computer science enthusiast with a keen interest in environmental sustainability.",
+    imageUrl: DevinImage,
+    role: "Frontend Developer",
+    linkedin:
+      "https://www.linkedin.com/in/devin-nanayakkara-2a134929b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    github:"https://github.com/devinnanayakkara",
   },
 ]
 
@@ -122,7 +122,10 @@ export default function AboutUs() {
       <div className="bg-gray-50 bg-opacity-25 backdrop-blur-sm p-4 sm:p-6 md:p-10 rounded-3xl w-full max-w-7xl min-h-screen">
         {/* Team Members Section */}
         <section className="mb-12">
-          <h1 className="text-2xl md:text-3xl font-bold text-center text-white mb-6 md:mb-12">Meet The Team</h1>
+        <h1
+          className="text-3xl sm:text-4xl font-bold text-white mb-8 text-center"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >Meet The Team</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 justify-items-center">
             {teamMembers.map((member, index) => (
               <div
@@ -133,7 +136,7 @@ export default function AboutUs() {
                   <img
                     src={member.imageUrl || "/placeholder.svg"}
                     alt={member.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-lg"
                     loading="lazy"
                   />
                 </div>
@@ -170,7 +173,10 @@ export default function AboutUs() {
 
         {/* Journey Section */}
         <section>
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-white mb-6 md:mb-12">
+        <h1
+          className="text-3xl sm:text-4xl font-bold text-white mb-4 text-center"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
             Journey To The Success
           </h1>
 
