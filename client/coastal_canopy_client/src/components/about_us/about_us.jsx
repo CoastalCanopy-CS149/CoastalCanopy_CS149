@@ -2,7 +2,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 import "swiper/css"
 import "swiper/css/pagination"
 import { Pagination, Autoplay } from "swiper/modules"
-import { Linkedin } from "lucide-react"
+import { Linkedin, Github } from "lucide-react"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"  
 
@@ -21,6 +21,7 @@ const teamMembers = [
     imageUrl: DilkiImage,
     role: "Leader/ Backend Developer",
     linkedin: "https://www.linkedin.com/in/dilki-attanayake",
+    github:"https://github.com/DilkiAttanayake",
   },
   {
     name: "Devin Nanayakkara",
@@ -29,6 +30,7 @@ const teamMembers = [
     role: "Frontend Developer",
     linkedin:
       "https://www.linkedin.com/in/devin-nanayakkara-2a134929b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+    github:"https://github.com/devinnanayakkara",
   },
   {
     name: "Dinaya Guruge",
@@ -36,6 +38,7 @@ const teamMembers = [
     imageUrl: DinayaImage,
     role: "ML Engineer",
     linkedin: "https://www.linkedin.com/in/dinaya-guruge",
+    github:"https://github.com/Dinaya1",
   },
   {
     name: "Lawanya Malawige",
@@ -44,6 +47,7 @@ const teamMembers = [
     role: "Frontend Developer",
     linkedin:
       "https://www.linkedin.com/in/lawanya-malavige?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      github:"https://github.com/LawanyaMalavige",
   },
   {
     name: "Malsha Gamage",
@@ -51,6 +55,7 @@ const teamMembers = [
     imageUrl: MalshaImage,
     role: "Backend Developer",
     linkedin: "https://www.linkedin.com/in/malsha-gamage-633074293/",
+    github:"https://github.com/MalshaPG",
   },
 ]
 
@@ -136,17 +141,27 @@ export default function AboutUs() {
                   <h2 className="text-lg md:text-xl font-semibold text-gray-900">{member.name}</h2>
                   <p className="text-sm md:text-base text-gray-500 mb-2">{member.role}</p>
                   <p className="text-xs md:text-sm text-gray-600 mb-3">{member.bio}</p>
-                  {member.linkedin && (
-                    <a
-                      href={member.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center text-blue-600 hover:text-blue-800"
-                    >
-                      <Linkedin className="w-4 h-4 mr-1" />
-                      <span className="text-sm">LinkedIn</span>
-                    </a>
-                  )}
+                  
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-blue-600 hover:text-blue-800"
+                  >
+                    <Linkedin className="w-5 h-6 mx-3 text-blue-600 hover:text-blue-800" />
+                    
+                  </a>
+
+                  <a
+                  href={member.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-blue-600 hover:text-blue-800"
+                  >
+                  <Github className="w-5 h-6 mx-3 text-violet-600 hover:text-violet-800" />
+                  </a>
+
+                 
                 </div>
               </div>
             ))}
