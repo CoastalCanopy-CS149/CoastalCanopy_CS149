@@ -1,21 +1,38 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
-        apiKey: "AIzaSyBcSSO907vJ6w1LL0xdOa6yUDWhzRPA9nE",
-        authDomain: "coastalcanopy-auth-9156a.firebaseapp.com",
-        projectId: "coastalcanopy-auth-9156a",
-        storageBucket: "coastalcanopy-auth-9156a.firebasestorage.app",
-        messagingSenderId: "900247736533",
-        appId: "1:900247736533:web:45778ecb97922f61f8d25c",
-        measurementId: "G-JCLXKFLY7X"     
+  apiKey: "AIzaSyAnSZI7AnQ1exK5gPCMyhgrkDofw_n7H4w",
+  authDomain: "coastalcanopy-auth-731ef.firebaseapp.com",
+  projectId: "coastalcanopy-auth-731ef",
+  storageBucket: "coastalcanopy-auth-731ef.appspot.com",
+  messagingSenderId: "720040173391",
+  appId: "1:720040173391:web:86a90280ca2eb695e62f3a",
+  measurementId: "G-RSSP4PCP6H",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
-// Setup providers
 const googleProvider = new GoogleAuthProvider();
-const facebookProvider = new FacebookAuthProvider();
 
-export { auth, googleProvider, facebookProvider, signInWithPopup };
+// Google Sign-In Function
+const signInWithGoogle = async () => {
+        try {
+          const result = await signInWithPopup(auth, googleProvider);
+          console.log("User Info:", result.user);
+          return result.user; // Successfully signed in
+        } catch (error) {
+          if (error.code === "auth/popup-closed-by-user") {
+            console.log("User closed the popup before signing in.");
+            return null; // Gracefully handle user canceling sign-in
+          }
+      
+          console.error("Google Sign-In Error:", error.message);
+          return null; // Return null instead of throwing error
+        }
+      };
+      
+
+export { app, auth, googleProvider, signInWithGoogle };
+

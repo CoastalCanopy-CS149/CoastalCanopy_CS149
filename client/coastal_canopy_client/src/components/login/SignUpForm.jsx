@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Eye, EyeOff, Facebook, User, Mail, Lock, Check } from "lucide-react"
+import { Eye, EyeOff, User, Mail, Lock, Check } from "lucide-react"
+import { signInWithGoogle } from "./firebaseConfig"; 
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
@@ -113,16 +114,23 @@ const SignUp = () => {
     navigate("../verify", { state: { formData } })
   }
 
-  const handleSocialLogin = (platform) => {
-    switch (platform) {
-      case "facebook":
-        window.location.href = "https://facebook.com/login"
-        break
-      case "google":
-        window.location.href = "https://accounts.google.com"
-        break
+  const handleSocialLogin = async (platform) => {
+    if (platform === "google") {
+      try {
+        const user = await signInWithGoogle();
+        
+        if (!user) {
+          console.warn("Google Sign-Up was cancelled or failed.");
+          return; // Stop execution, don't redirect
+        }
+  
+        console.log("Logged in user:", user);
+        navigate("/"); // Redirect only on successful login
+      } catch (error) {
+        console.error("Google Sign-Up Failed:", error.message);
+      }
     }
-  }
+  }  
 
   return (
     <div
@@ -263,12 +271,6 @@ const SignUp = () => {
             <div className="mt-6 text-center text-white font-['comfortaa'] text-[18px]">
               <p className="mb-4">Or</p>
               <div className="flex justify-center gap-8 mb-6">
-                <button
-                  onClick={() => handleSocialLogin("facebook")}
-                  className="p-2 rounded-full bg-white/20 hover:bg-white/30"
-                >
-                  <Facebook size={24} className="text-white" />
-                </button>
                 <button
                   onClick={() => handleSocialLogin("google")}
                   className="p-2 rounded-full bg-white/20 hover:bg-white/30"
