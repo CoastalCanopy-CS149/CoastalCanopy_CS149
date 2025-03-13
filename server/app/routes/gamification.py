@@ -9,13 +9,28 @@ gamification_bp = Blueprint("users", __name__)
 def get_points():
     users_collection = get_users_collection()
 
-    leaderboard = users_collection.find({}, {"_id": 1, "username": 1, "points": 1}).sort("points", -1)
+    leaderboard = users_collection.find({}, {"_id": 1, "username": 1, "points": 1, "avatar": 1, "color": 1}).sort("points", -1)
 
-    # Convert cursor to a list with necessary fields
-    ranked_users = [
-        {"id": str(user["_id"]), "username": user["username"], "points": user["points"]}
-        for user in leaderboard
-    ]
+    ranked_users = []
+    rank = 1
+    previous_points = 0
+
+    for index, user in enumerate(leaderboard):
+        if previous_points != 0 and previous_points != user["points"]:
+            rank = index + 1
+
+        # Convert cursor to a list with necessary fields
+        ranked_users.append({
+            "rank": rank,
+            "points": user["points"],
+            "username": user["username"],
+            "avatar":user.get("avatar", "/imgs/gamification/user2.png?width=60&height=60"),
+            "color": user.get("color", "bg-yellow-300")
+
+        })
+
+        previous_points = user["points"]
+
 
     return jsonify({"leaderboard": ranked_users}), 200
 

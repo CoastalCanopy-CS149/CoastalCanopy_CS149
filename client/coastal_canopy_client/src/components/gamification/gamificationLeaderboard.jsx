@@ -1,67 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Trophy } from "lucide-react";
 import bg from "/imgs/gamification/gamificationBg1.jpg";
+import axios from "axios";
 
 export default function GamificationLeaderboard() {
-  // Sample data for top 7 users
-  const [users] = useState([
-    {
-      id: 1,
-      username: "EcoWarrior",
-      points: 450,
-      avatar: "/imgs/gamification/user1.png?height=60&width=60",
-      color: "bg-amber-400",
-    },
-    {
-      id: 2,
-      username: "Greeny_Granny",
-      points: 340,
-      avatar: "/imgs/gamification/user3.png?height=60&width=60",
-      color: "bg-sky-400",
-    },
-    {
-      id: 3,
-      username: "NatureFriend",
-      points: 320,
-      avatar: "/imgs/gamification/user7.png?height=60&width=60",
-      color: "bg-green-400",
-    },
-    {
-      id: 4,
-      username: "Greeny_Granny",
-      points: 340,
-      avatar: "/imgs/gamification/user4.png?height=60&width=60",
-      color: "bg-sky-500",
-    },
-    {
-      id: 5,
-      username: "Eco_Girl",
-      points: 310,
-      avatar: "/imgs/gamification/user5.png?height=60&width=60",
-      color: "bg-pink-400",
-    },
-    {
-      id: 6,
-      username: "CoastBuster3000",
-      points: 300,
-      avatar: "/imgs/gamification/user6.png?height=60&width=60",
-      color: "bg-purple-500",
-    },
-    {
-      id: 7,
-      username: "Eco_Avenger",
-      points: 270,
-      avatar: "/imgs/gamification/user8.png?height=60&width=60",
-      color: "bg-yellow-400",
-    },
-  ]);
+
+  const [leaderboard, setLeaderboard] = useState([]);
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:5000/gamification/getRanks")
+      .then((response) => setLeaderboard(response.data.leaderboard))
+      .catch((error) => console.error("Error fetching leaderboard:", error));
+  }, []);
 
   // Get top 3 users for the podium
-  const topThree = users.slice(0, 3);
+  const topThree = leaderboard.slice(0, 3);
 
   // Get users ranked 4-7
-  const otherUsers = users.slice(3, 7);
+  const otherUsers = leaderboard.slice(3, 7);
 
   // Animation variants for the rolling and floating effects
   const rollAnimation = {
@@ -88,6 +45,8 @@ export default function GamificationLeaderboard() {
       },
     },
   };
+
+
 
   return (
     <div
@@ -209,13 +168,13 @@ export default function GamificationLeaderboard() {
           >
             {otherUsers.map((user) => (
               <motion.div
-                key={user.id}
+                key={user.rank}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center gap-3 transition-transform"
               >
                 <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-slate-300 to-slate-400 rounded-lg font-bold text-lg text-white">
-                  {user.id}
+                  {user.rank}
                 </div>
                 <div
                   className={`flex-1 flex items-center p-3 rounded-full overflow-hidden ${user.color} bg-opacity-80`}
