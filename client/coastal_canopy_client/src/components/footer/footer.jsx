@@ -125,7 +125,7 @@ const Footer = () => {
                   Reporting
                 </Link>
                 <Link
-                  to="/education"
+                  to="/mapping"
                   className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
                 >
                   Map
