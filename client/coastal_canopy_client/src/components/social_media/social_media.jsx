@@ -168,7 +168,7 @@ export function UploadSection() {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
-                className="rounded-3xl p-6 sm:p-10 w-full max-w-2xl shadow-xl h-auto"
+                className="rounded-3xl p-6 sm:p-10 w-full max-w-5xl shadow-xl h-auto"
             >
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center">
                     Upload Image
@@ -207,10 +207,10 @@ export function UploadSection() {
                 )}
 
                 <div className="flex flex-col sm:flex-row gap-4 mt-6 sm:gap-6 w-full sm:w-auto">
-                    <button onClick={() => navigate(-1)} className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                    <button onClick={() => navigate(-1)} className="w-full sm:w-auto bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-600">
                         ← Back  
                     </button>
-                    <button onClick={() => navigate("/socialMedia/share")} className="w-full sm:w-auto bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                    <button onClick={() => navigate("/socialMedia/share")} className="w-full sm:w-auto bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-600">
                         Next →
                     </button>
                 </div>
