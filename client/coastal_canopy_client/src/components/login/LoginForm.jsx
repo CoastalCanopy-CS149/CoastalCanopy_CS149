@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Eye, EyeOff, Lock, Mail } from "lucide-react"
-import { signInWithGoogle } from "./firebaseConfig"; 
+import { signInWithGoogle } from "./firebaseConfig"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
@@ -45,21 +45,27 @@ const Login = () => {
   const handleSocialLogin = async (platform) => {
     if (platform === "google") {
       try {
-        const user = await signInWithGoogle();
-        
+        const user = await signInWithGoogle()
+
         if (!user) {
-          console.warn("Google Sign-In was cancelled or failed.");
-          return; // Stop execution, don't redirect
+          console.warn("Google Sign-In was cancelled or failed.")
+          return // Stop execution, don't redirect
         }
-  
-        console.log("Logged in user:", user);
-        navigate("/"); // Redirect only on successful login
+
+        console.log("Logged in user:", user)
+
+        // Check if user needs to set up a username
+        if (user.needsUsername) {
+          navigate("../username-setup") // Redirect to username setup
+        } else {
+          navigate("/") // Redirect to home if username already set
+        }
       } catch (error) {
-        console.error("Google Sign-In Failed:", error.message);
+        console.error("Google Sign-In Failed:", error.message)
       }
     }
-  }  
-  
+  }
+
   return (
     <div
       className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
