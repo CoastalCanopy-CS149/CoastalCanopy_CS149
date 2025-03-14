@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Eye, EyeOff, Facebook, Apple, User, Mail, Lock, Check } from "lucide-react"
+import { Eye, EyeOff, User, Mail, Lock, Check } from "lucide-react"
+import { signInWithGoogle } from "./firebaseConfig"; 
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
@@ -113,19 +114,23 @@ const SignUp = () => {
     navigate("../verify", { state: { formData } })
   }
 
-  const handleSocialLogin = (platform) => {
-    switch (platform) {
-      case "facebook":
-        window.location.href = "https://facebook.com/login"
-        break
-      case "google":
-        window.location.href = "https://accounts.google.com"
-        break
-      case "apple":
-        window.location.href = "https://appleid.apple.com"
-        break
+  const handleSocialLogin = async (platform) => {
+    if (platform === "google") {
+      try {
+        const user = await signInWithGoogle();
+        
+        if (!user) {
+          console.warn("Google Sign-Up was cancelled or failed.");
+          return; // Stop execution, don't redirect
+        }
+  
+        console.log("Logged in user:", user);
+        navigate("/"); // Redirect only on successful login
+      } catch (error) {
+        console.error("Google Sign-Up Failed:", error.message);
+      }
     }
-  }
+  }  
 
   return (
     <div
@@ -267,12 +272,6 @@ const SignUp = () => {
               <p className="mb-4">Or</p>
               <div className="flex justify-center gap-8 mb-6">
                 <button
-                  onClick={() => handleSocialLogin("facebook")}
-                  className="p-2 rounded-full bg-white/20 hover:bg-white/30"
-                >
-                  <Facebook size={24} className="text-white" />
-                </button>
-                <button
                   onClick={() => handleSocialLogin("google")}
                   className="p-2 rounded-full bg-white/20 hover:bg-white/30"
                 >
@@ -294,12 +293,6 @@ const SignUp = () => {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     />
                   </svg>
-                </button>
-                <button
-                  onClick={() => handleSocialLogin("apple")}
-                  className="p-2 rounded-full bg-white/20 hover:bg-white/30"
-                >
-                  <Apple size={24} className="text-white" />
                 </button>
               </div>
               <div className="flex items-center gap-2 justify-center">
