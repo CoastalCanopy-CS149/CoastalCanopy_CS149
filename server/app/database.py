@@ -1,9 +1,6 @@
-from flask_pymongo import PyMongo
-from flask import Flask
-from app.config import MONGO_URI
+from pymongo import MongoClient
+from app.config import MONGO_URI, DATABASE_NAME
 
-mongo = PyMongo()
-
-def init_db(app: Flask):
-    app.config["MONGO_URI"] = MONGO_URI
-    mongo.init_app(app)
+def init_db(app):
+    client = MongoClient(MONGO_URI)
+    app.db = client[DATABASE_NAME]
