@@ -2,13 +2,15 @@
 
 import { useState } from "react"
 import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Eye, EyeOff, User, Mail, Lock, Check } from "lucide-react"
+import { Eye, EyeOff, User, Mail, Lock, Check, X } from "lucide-react"
 import { signInWithGoogle } from "./firebaseConfig"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
 import "@fontsource/aclonica"
 import "@fontsource/comfortaa"
+import "@fontsource/acme"
+import "@fontsource/adamina"
 
 const SignUp = () => {
   const navigate = useNavigate()
@@ -27,6 +29,7 @@ const SignUp = () => {
   const [showReenterPassword, setShowReenterPassword] = useState(false)
   const [agreeToTerms, setAgreeToTerms] = useState(false)
   const [errors, setErrors] = useState({})
+  const [showTerms, setShowTerms] = useState(false)
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -117,33 +120,37 @@ const SignUp = () => {
   const handleSocialLogin = async (platform) => {
     if (platform === "google") {
       try {
-        const user = await signInWithGoogle();
-  
+        const user = await signInWithGoogle()
+
         if (!user) {
-          console.warn("Google Sign-Up was cancelled or failed.");
-          return;
+          console.warn("Google Sign-Up was cancelled or failed.")
+          return
         }
-  
-        console.log("Logged in user:", user);
-  
+
+        console.log("Logged in user:", user)
+
         // Save user to localStorage
-        localStorage.setItem("authUser", JSON.stringify(user));
-  
+        localStorage.setItem("authUser", JSON.stringify(user))
+
         // Check if username exists
-        const existingUsername = localStorage.getItem(`username_${user.uid}`);
-  
+        const existingUsername = localStorage.getItem(`username_${user.uid}`)
+
         if (existingUsername) {
-          console.log("Username found! Redirecting to home.");
-          navigate("/");
+          console.log("Username found! Redirecting to home.")
+          navigate("/")
         } else {
-          console.log("No username found. Redirecting to username setup.");
-          navigate("../username-setup");
+          console.log("No username found. Redirecting to username setup.")
+          navigate("../username-setup")
         }
       } catch (error) {
-        console.error("Google Sign-Up Failed:", error.message);
+        console.error("Google Sign-Up Failed:", error.message)
       }
     }
-  }  
+  }
+
+  const handleEmailClick = () => {
+    window.location.href = "mailto:coastalcanopy.lk@gmail.com"
+  }
 
   return (
     <div
@@ -154,13 +161,102 @@ const SignUp = () => {
     >
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center py-10">
+      <div className="flex-1 flex items-center justify-center py-10 relative">
+        {/* Existing Form Content */}
         <div className="relative w-[1000px] h-[700px] bg-black/40 backdrop-blur-sm">
+          {/* Terms and Conditions Modal */}
+          {showTerms && (
+            <>
+              <div className="absolute inset-0 bg-white/35 backdrop-blur-sm z-40 pointer-events-none"></div>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[650px] bg-white/90 rounded-[25px] z-50 shadow-lg overflow-y-auto">
+                <div className="absolute top-3 right-3 cursor-pointer" onClick={() => setShowTerms(false)}>
+                  <X size={35} />
+                </div>
+                <div className="w-[450px] h-[1120px] bg-white/85 mx-auto mt-6 p-6 border border-gray-200">
+                  <h1 className="font-['Aclonica'] text-[24px] text-black text-center mb-2">
+                    Welcome to CoastalCanopy.org.lk
+                  </h1>
+                  <h2 className="font-['Acme'] text-[18px] text-black text-center mb-4 whitespace-nowrap">
+                    Read Our Terms & Conditions Before Signing Up
+                  </h2>
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">01) Acceptance of Terms</h3>
+                      <p className="font-['Comfortaa'] text-[14px] text-black ml-4">
+                        • By signing up, you agree to follow these terms and conditions.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">02) User Responsibilities</h3>
+                      <div className="ml-4 font-['Comfortaa'] text-[14px] text-black space-y-1">
+                        <p>• Provide accurate and valid information during signup.</p>
+                        <p>• Do not misuse the platform (e.g., false reports, spam, harmful content).</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">03) Privacy & Data Protection</h3>
+                      <div className="ml-4 font-['Comfortaa'] text-[14px] text-black space-y-1">
+                        <p>• Your personal information (email, name, etc.) is securely stored.</p>
+                        <p>• We do not sell or share your data with third parties.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">04) Account Security</h3>
+                      <div className="ml-4 font-['Comfortaa'] text-[14px] text-black space-y-1">
+                        <p>• Never share your OTP with anyone.</p>
+                        <p>• You are responsible for keeping your login details secure.</p>
+                        <p>• Report any suspicious activity immediately.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">05) Content Ownership & Usage</h3>
+                      <div className="ml-4 font-['Comfortaa'] text-[14px] text-black space-y-1">
+                        <p>• Any reports, images, or data you submit remain your property.</p>
+                        <p>• By posting, you allow CoastalCanopy.org.lk to use it for conservation purposes.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">06) Prohibited Activities</h3>
+                      <div className="ml-4 font-['Comfortaa'] text-[14px] text-black space-y-1">
+                        <p>• No illegal, abusive, or harmful actions on the platform.</p>
+                        <p>• No unauthorized data access or security breaches.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">07) Account Suspension & Termination</h3>
+                      <p className="font-['Comfortaa'] text-[14px] text-black ml-4">
+                        • Violating these terms may result in account suspension or termination.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">08) Updates to Terms</h3>
+                      <div className="ml-4 font-['Comfortaa'] text-[14px] text-black space-y-1">
+                        <p>• We may update these terms from time to time.</p>
+                        <p>• Continued use of the platform means you accept any changes.</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-['Adamina'] text-[16px] text-black">09) Contact Information</h3>
+                      <p className="font-['Comfortaa'] text-[14px] text-black ml-4">
+                        • If you have any questions, contact us at{" "}
+                        <button onClick={handleEmailClick} className="text-blue-600 underline hover:text-blue-800">
+                          coastalcanopy.lk@gmail.com
+                        </button>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
           <div className="flex flex-col items-center justify-center h-full">
+            {/* Keep all the existing form content */}
             <h1 className="font-['Aclonica'] text-white text-[40px] text-center mb-2">Register</h1>
             <p className="font-['comfortaa'] text-white text-[18px] text-center mb-6">Create your own account</p>
 
             <form onSubmit={handleSubmit} className="space-y-4 w-[800px]">
+              {/* Keep all the existing form fields */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white" size={20} />
@@ -267,9 +363,9 @@ const SignUp = () => {
                   </div>
                   <span>Agree with terms & conditions</span>
                 </div>
-                <Link to="/terms" className="underline hover:text-gray-200">
+                <button type="button" onClick={() => setShowTerms(true)} className="underline hover:text-gray-200">
                   Terms & Conditions
-                </Link>
+                </button>
               </div>
               {errors.terms && <p className="text-red-500 text-center text-xs">{errors.terms}</p>}
 
