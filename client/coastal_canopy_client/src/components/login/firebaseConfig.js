@@ -19,32 +19,27 @@ const googleProvider = new GoogleAuthProvider()
 // Google Sign-In Function
 const signInWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, googleProvider)
-    const user = result.user
-    console.log("User Info:", user)
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
 
-    // Check if this user already has a username in localStorage
-    const usernames = localStorage.getItem("usernames")
-    const parsedUsernames = usernames ? JSON.parse(usernames) : []
+    console.log("User Signed In:", user);
 
-    // Store a unique identifier for this user
-    const userKey = `username_${user.uid}`
-    const hasUsername = localStorage.getItem(userKey)
+    // Check if username exists in localStorage
+    const userKey = `username_${user.uid}`;
+    const hasUsername = localStorage.getItem(userKey);
 
-    if (!hasUsername) {
-      // User needs to set up a username
-      return { ...user, needsUsername: true }
+    console.log(`Checking localStorage for key: ${userKey}, found:`, hasUsername);
+
+    if (!hasUsername || hasUsername === "undefined" || hasUsername === "null") {
+      console.log("No username found. Redirecting to username setup.");
+      return { ...user, needsUsername: true };
     }
 
-    return user // Successfully signed in
+    console.log("Username found. Redirecting to home.");
+    return user;
   } catch (error) {
-    if (error.code === "auth/popup-closed-by-user") {
-      console.log("User closed the popup before signing in.")
-      return null // Gracefully handle user canceling sign-in
-    }
-
-    console.error("Google Sign-In Error:", error.message)
-    return null // Return null instead of throwing error
+    console.error("Google Sign-In Error:", error.message);
+    return null;
   }
 }
 

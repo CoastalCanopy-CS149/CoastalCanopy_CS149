@@ -29,43 +29,46 @@ const UsernameSetup = () => {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-
-    // Check if username is empty
+    e.preventDefault();
+  
+    const storedUsernames = JSON.parse(localStorage.getItem("usernames") || "[]");
+  
     if (!username.trim()) {
-      setError("Username is required")
-      return
+      setError("Username is required");
+      return;
     }
-
-    // Validate username format
+  
     if (!validateUsername(username)) {
-      setError(
-        "Username must be 4-20 characters, start and end with letter/number, and can contain dots and underscores (not consecutive)",
-      )
-      return
+      setError("Username must be 4-20 characters, start and end with a letter/number, and can contain dots and underscores (not consecutive).");
+      return;
     }
-
-    // Check if username already exists
-    if (existingUsernames.includes(username)) {
-      setError("This username is already taken. Please choose another one.")
-      return
+  
+    if (storedUsernames.includes(username)) {
+      setError("This username is already taken. Please choose another one.");
+      return;
     }
-
-    // Save username to localStorage
-    const updatedUsernames = [...existingUsernames, username]
-    localStorage.setItem("usernames", JSON.stringify(updatedUsernames))
-
-    // Save the current user's username
-    const user = JSON.parse(localStorage.getItem("user") || "{}")
-    if (user.uid) {
-      localStorage.setItem(`username_${user.uid}`, username)
+  
+    // Get the authenticated user
+    const authUser = JSON.parse(localStorage.getItem("authUser") || "{}");
+  
+    if (!authUser.uid) {
+      console.error("ERROR: User UID not found in localStorage!");
+      return;
     }
-    localStorage.setItem("currentUsername", username)
-
-    // Redirect to home page
-    navigate("/")
-  }
-
+  
+    // Save the username for this user
+    const userKey = `username_${authUser.uid}`;
+    localStorage.setItem(userKey, username);
+    localStorage.setItem("currentUsername", username);
+  
+    // Update the global username list
+    const updatedUsernames = [...storedUsernames, username];
+    localStorage.setItem("usernames", JSON.stringify(updatedUsernames));
+  
+    console.log("Username saved successfully:", username);
+    navigate("/");
+  }  
+   
   return (
     <div
       className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"

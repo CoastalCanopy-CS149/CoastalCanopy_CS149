@@ -45,27 +45,34 @@ const Login = () => {
   const handleSocialLogin = async (platform) => {
     if (platform === "google") {
       try {
-        const user = await signInWithGoogle()
-
+        const user = await signInWithGoogle();
+  
         if (!user) {
-          console.warn("Google Sign-In was cancelled or failed.")
-          return // Stop execution, don't redirect
+          console.warn("Google Sign-In was cancelled or failed.");
+          return;
         }
-
-        console.log("Logged in user:", user)
-
-        // Check if user needs to set up a username
-        if (user.needsUsername) {
-          navigate("../username-setup") // Redirect to username setup
+  
+        console.log("Logged in user:", user);
+  
+        // Save user to localStorage
+        localStorage.setItem("authUser", JSON.stringify(user));
+  
+        // Check if username exists
+        const existingUsername = localStorage.getItem(`username_${user.uid}`);
+  
+        if (existingUsername) {
+          console.log("Username found! Redirecting to home.");
+          navigate("/");
         } else {
-          navigate("/") // Redirect to home if username already set
+          console.log("No username found. Redirecting to username setup.");
+          navigate("../username-setup");
         }
       } catch (error) {
-        console.error("Google Sign-In Failed:", error.message)
+        console.error("Google Sign-In Failed:", error.message);
       }
     }
-  }
-
+  }  
+  
   return (
     <div
       className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
