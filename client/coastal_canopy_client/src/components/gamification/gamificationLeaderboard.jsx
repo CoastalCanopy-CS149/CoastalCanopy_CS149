@@ -99,9 +99,9 @@ export default function GamificationLeaderboard() {
       <div className="relative z-20">
         <Navbar />
       </div>
-      
+
       <div className="flex justify-center items-center flex-grow">
-        <div className="z-10 bg-gray-50 bg-opacity-15 backdrop-blur-sm p-10 m-10 rounded-3xl w-11/12 max-w-7xl min-h-full">
+        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-full">
           <div className="w-full max-w-3xl mx-auto p-6 rounded-xl min-h-[600px] flex flex-col">
             {/* Title with Trophy */}
             <motion.div
@@ -110,7 +110,11 @@ export default function GamificationLeaderboard() {
               transition={{ type: "spring", stiffness: 300 }}
               className="text-center mb-8 flex justify-center items-center"
             >
-              <Trophy className="mr-4 text-amber-500" size={48} strokeWidth={2} />
+              <Trophy
+                className="mr-4 text-amber-500"
+                size={48}
+                strokeWidth={2}
+              />
               <h1
                 className="inline-block px-8 py-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-500"
                 style={{ fontFamily: "Playfair Display, serif" }}
@@ -229,7 +233,9 @@ export default function GamificationLeaderboard() {
                   >
                     <div className="w-10 h-10 rounded-full overflow-hidden mr-3 shadow-md">
                       <img
-                        src={user.avatar || "/placeholder.svg?height=40&width=40"}
+                        src={
+                          user.avatar || "/placeholder.svg?height=40&width=40"
+                        }
                         alt={`${user.username}'s avatar`}
                         className="w-full h-full object-cover"
                       />

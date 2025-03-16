@@ -7,16 +7,16 @@ import Footer from "../footer/footer";
 function aim_mission_vision() {
   return (
     <div className="flex flex-col min-h-screen">
-    <div
-      className="fixed inset-0 bg-cover bg-center -z-10"
-      style={{ backgroundImage: `url(${background})` }}
-    />
+      <div
+        className="fixed inset-0 bg-cover bg-center "
+        style={{ backgroundImage: `url(${background})` }}
+      />
       <div className="relative z-10 w-full">
         <Navbar />
       </div>
       <div className="flex-grow flex items-center justify-center px-4 py-8">
         {/* Backdrop div with glass effect */}
-        <div className="w-11/12 max-w-6xl bg-white/20 rounded-3xl text-center space-y-20 text-white backdrop-blur-md p-12">
+        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-center space-y-20 text-white ">
           <ContentSection
             title="OUR AIM"
             description="Create a comprehensive, community-oriented web application, CoastalCanopy.lk, dedicated to the monitoring, protection, and sustainable management of mangrove ecosystems in Sri Lanka."
@@ -33,8 +33,10 @@ function aim_mission_vision() {
           />
         </div>
       </div>
-      <div className="relative z-10 "> <Footer /> </div> 
-      
+      <div className="relative z-10 ">
+        {" "}
+        <Footer />{" "}
+      </div>
     </div>
   );
 }

@@ -6,19 +6,25 @@ import Footer from "../footer/footer"
 export default function CommunityReportingMain() {
   return (
     <div
-      className="bg-cover min-h-screen bg-fixed"
+      className="bg-cover min-h-screen bg-fixed "
       style={{ backgroundImage: `url(${background})` }}
     >
       <div className="z-20 relative">
         <Navbar />
       </div>
-      
+
       <div className="flex justify-center items-center py-10">
-        <div className="z-10 bg-gray-50 bg-opacity-10 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto flex justify-center items-center">
+        <div className=" mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen h-auto flex justify-center items-center">
           <div className="max-w-2xl w-full text-center ">
-            <h1 className="text-3xl font-bold mb-6 text-white" style={{ fontFamily: "'Playfair Display', serif" }}>Reporting Form</h1>
+            <h1
+              className="text-3xl font-bold mb-6 text-white"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Reporting Form
+            </h1>
             <p className="text-lg mb-8 text-white font-bold">
-              Choose whether to report anonymously to protect your identity or with information.
+              Choose whether to report anonymously to protect your identity or
+              with information.
             </p>
             <div className="space-y-4">
               <Link
@@ -42,7 +48,6 @@ export default function CommunityReportingMain() {
       </div>
 
       <Footer />
-      
     </div>
   )
 }
