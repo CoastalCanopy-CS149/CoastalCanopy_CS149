@@ -47,41 +47,42 @@ const shopMain = () => {
         <Navbar />
       </div>
 
-      <div 
+      <div
         className="absolute inset-0 w-full min-h-screen"
         style={{
-          backgroundImage: "url('/imgs/shop/mangrove_background.jpg')", 
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          width: '100%',
-          backgroundAttachment: 'fixed', /* Prevents zooming or scrolling effects */
+          backgroundImage: "url('/imgs/shop/mangrove_background.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          backgroundAttachment:
+            "fixed" /* Prevents zooming or scrolling effects */,
         }}
       >
-
         <div className="absolute inset-0 bg-black/30"></div>
       </div>
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center justify-start py-16 px-4">
-        <div className="bg-green-100 bg-opacity-25 backdrop-blur-sm p-8 rounded-3xl w-11/12 md:w-4/5 max-w-7xl flex flex-col items-center my-12">
+        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen flex flex-col items-center my-12">
           <h1 className="text-3xl font-bold mb-4 text-white">
-            {showCart ? 'Guarding Green Roots 🍃' : 'Hope Grows With Every Click !'}
+            {showCart
+              ? "Guarding Green Roots 🍃"
+              : "Hope Grows With Every Click !"}
           </h1>
 
           <h5 className="text-2xl font-semibold mb-4 text-white">
             {showCart
-              ? ''
-              : 'Every purchase plants a seed of hope - support mangroves, sustain life'
-            }
+              ? ""
+              : "Every purchase plants a seed of hope - support mangroves, sustain life"}
           </h5>
 
-          <button 
+          <button
             className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600 mb-4 mt-5 flex items-center transform transition-transform duration-300 hover:scale-105"
-            onClick={() => setShowCart(!showCart)}  // Toggle cart visibility
+            onClick={() => setShowCart(!showCart)} // Toggle cart visibility
           >
-            {showCart ? 'Go to Shop' : 'View Shopping Cart'}
-            <ShoppingCart size={20} className="ml-2" />              
+            {showCart ? "Go to Shop" : "View Shopping Cart"}
+            <ShoppingCart size={20} className="ml-2" />
           </button>
 
           {/* <Link to="/CartList">
@@ -95,27 +96,31 @@ const shopMain = () => {
 
           {/* Conditional Rendering */}
           {showCart ? (
-            <CartList cartItems={cartItems} setCartItems={setCartItems} />  // Pass cart items and setCartItems
+            <CartList cartItems={cartItems} setCartItems={setCartItems} /> // Pass cart items and setCartItems
           ) : (
             // Grid for Items
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8 w-full">
               {items.map((item) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center w-full transform transition-transform duration-300 hover:scale-105 relative"
                 >
-                  <img 
-                    src={item.image} 
-                    alt={`Item ${item.id}`} 
+                  <img
+                    src={item.image}
+                    alt={`Item ${item.id}`}
                     className="w-full h-56 object-cover mb-1 rounded-md"
                   />
-                  
-                  <p className="text-gray-700 mb-4 mt-7 text-center text-lg">{item.description}</p>
-                  <p className="text-green-700 font-bold mb-4 text-lg">{item.price}</p>
 
-                  <button 
+                  <p className="text-gray-700 mb-4 mt-7 text-center text-lg">
+                    {item.description}
+                  </p>
+                  <p className="text-green-700 font-bold mb-4 text-lg">
+                    {item.price}
+                  </p>
+
+                  <button
                     className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600 ml-48"
-                    onClick={() => addToCart(item)}  // Add item to cart
+                    onClick={() => addToCart(item)} // Add item to cart
                   >
                     <ShoppingCart size={18} />
                   </button>
@@ -132,7 +137,7 @@ const shopMain = () => {
           )}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

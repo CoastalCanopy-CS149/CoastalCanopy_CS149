@@ -18,61 +18,63 @@ const mangroveLocations = [
 
 function Mapping() {
     return (
-        <div
-            className="min-h-screen w-full bg-cover bg-center flex flex-col"
-            style={{ backgroundImage: "url('/imgs/mapping/background.jpg')" }}
-        >
-            <div className="relative z-20">
-                <Navbar />
-            </div>
-            
-            <div className="flex-grow flex items-center justify-center">
-
-                {/* Centered Blur Background */}
-                <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/20 backdrop-blur-sm rounded-3xl flex flex-col items-center justify-center p-4">
-                {/* <div className="bg-gray-50 bg-opacity-25 backdrop-blur-sm p-4 sm:p-6 md:p-10 rounded-3xl w-full max-w-7xl min-h-screen flex flex-col"> */}
-                    <h1 
-                        className="text-3xl md:text-4xl font-bold text-white mb-4 text-center"
-                        style={{ fontFamily: "'Playfair Display', serif" }}
-                    >
-                        Negombo Lagoon Mangrove Ecosystems
-                    </h1>
-                    
-                    {/* Map Component */}
-                    <div className="w-full h-[500px] sm:h-[600px] md:h-[700px] rounded-2xl overflow-hidden bg-white p-4">
-                        <MapContainer 
-                            bounds={mangroveLocations.map(location => location.bounds).flat()} 
-                            zoom={14} 
-                            minZoom={7} // Prevents zooming out too far
-                            className="w-full h-full rounded-2xl"
-                            maxBounds={[[5.85, 79.65], [9.85, 81.9]]} // Restricts view to Sri Lanka
-                            maxBoundsViscosity={1.0} // Ensures strict bounds adherence
-                        >
-                            <TileLayer
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            {mangroveLocations.map((location) => (
-                                <>
-                                    <Rectangle 
-                                        key={location.id} 
-                                        bounds={location.bounds} 
-                                        color="green" 
-                                        fillColor="green" 
-                                        fillOpacity={0.6}
-                                    >
-                                        <Popup>{location.name}</Popup>
-                                    </Rectangle>
-                                    <Marker position={location.labelPos}>
-                                        <Popup>{location.name}</Popup>
-                                    </Marker>
-                                </>
-                            ))}
-                        </MapContainer>
-                    </div>
-                </div>
-            </div>
-            <Footer/>        
+      <div
+        className="min-h-screen w-full bg-cover bg-center flex flex-col"
+        style={{ backgroundImage: "url('/imgs/mapping/background.jpg')" }}
+      >
+        <div className="relative z-20">
+          <Navbar />
         </div>
+        
+        <div className="flex-grow flex items-center justify-center">
+          {/* Centered Blur Background */}
+          <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl flex flex-col items-center justify-center p-4">
+            {/* <div className="bg-gray-50 bg-opacity-25 backdrop-blur-sm p-4 sm:p-6 md:p-10 rounded-3xl w-full max-w-7xl min-h-screen flex flex-col"> */}
+            <h1
+              className="text-3xl md:text-4xl font-bold text-white mb-4 text-center"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Negombo Lagoon Mangrove Ecosystems
+            </h1>
+
+            {/* Map Component */}
+            <div className="w-full h-[500px] sm:h-[600px] md:h-[700px] rounded-2xl overflow-hidden bg-white p-4">
+              <MapContainer
+                bounds={mangroveLocations
+                  .map((location) => location.bounds)
+                  .flat()}
+                zoom={14}
+                minZoom={7} // Prevents zooming out too far
+                className="w-full h-full rounded-2xl"
+                maxBounds={[
+                  [5.85, 79.65],
+                  [9.85, 81.9],
+                ]} // Restricts view to Sri Lanka
+                maxBoundsViscosity={1.0} // Ensures strict bounds adherence
+              >
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {mangroveLocations.map((location) => (
+                  <>
+                    <Rectangle
+                      key={location.id}
+                      bounds={location.bounds}
+                      color="green"
+                      fillColor="green"
+                      fillOpacity={0.6}
+                    >
+                      <Popup>{location.name}</Popup>
+                    </Rectangle>
+                    <Marker position={location.labelPos}>
+                      <Popup>{location.name}</Popup>
+                    </Marker>
+                  </>
+                ))}
+              </MapContainer>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </div>
     );
 }
 
