@@ -1,24 +1,33 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Trophy } from "lucide-react";
-import bg from "/imgs/gamification/gamificationBg1.jpg";
-import axios from "axios";
+import { useState, useEffect } from "react"
+import { motion } from "framer-motion"
+import { Trophy } from "lucide-react"
+import bg from "/imgs/gamification/gamificationBg1.jpg"
+import axios from "axios"
 
 export default function GamificationLeaderboard() {
 
   const [leaderboard, setLeaderboard] = useState([]);
 
+  const colors = [
+    "bg-red-500",
+    "bg-pink-500",
+    "bg-purple-500",
+    "bg-yellow-500",
+  ]
+
+  let index = 0;
+
   useEffect(() => {
     axios.get("http://127.0.0.1:5000/gamification/getRanks")
       .then((response) => setLeaderboard(response.data.leaderboard))
       .catch((error) => console.error("Error fetching leaderboard:", error));
-  }, []);
+  }, [])
 
   // Get top 3 users for the podium
-  const topThree = leaderboard.slice(0, 3);
+  const topThree = leaderboard.slice(0, 3)
 
   // Get users ranked 4-7
-  const otherUsers = leaderboard.slice(3, 7);
+  const otherUsers = leaderboard.slice(3, 7)
 
   // Animation variants for the rolling and floating effects
   const rollAnimation = {
@@ -31,7 +40,7 @@ export default function GamificationLeaderboard() {
         repeat: Number.POSITIVE_INFINITY,
       },
     },
-  };
+  }
 
   const floatAnimation = {
     initial: { y: 0 },
@@ -44,7 +53,7 @@ export default function GamificationLeaderboard() {
         repeatType: "reverse",
       },
     },
-  };
+  }
 
 
 
@@ -166,7 +175,7 @@ export default function GamificationLeaderboard() {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-white rounded-xl shadow-lg"
           >
-            {otherUsers.map((user) => (
+            {otherUsers.map((user, index) => (
               <motion.div
                 key={user.rank}
                 whileHover={{ scale: 1.05 }}
@@ -177,7 +186,7 @@ export default function GamificationLeaderboard() {
                   {user.rank}
                 </div>
                 <div
-                  className={`flex-1 flex items-center p-3 rounded-full overflow-hidden ${user.color} bg-opacity-80`}
+                  className={`flex-1 flex items-center p-3 rounded-full overflow-hidden ${colors[index % colors.length]} bg-opacity-80`}
                 >
                   <div className="w-10 h-10 rounded-full overflow-hidden mr-3 shadow-md">
                     <img
@@ -201,5 +210,5 @@ export default function GamificationLeaderboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -5,7 +5,7 @@ from app.database import get_users_collection
 
 gamification_bp = Blueprint("users", __name__)
 
-@gamification_bp.route("/getRanks", methods=["GET", "POST"])
+@gamification_bp.route("/getRanks", methods=["GET"])
 def get_points():
     users_collection = get_users_collection()
 
@@ -25,8 +25,6 @@ def get_points():
             "points": user["points"],
             "username": user["username"],
             "avatar":user.get("avatar", "/imgs/gamification/user2.png?width=60&height=60"),
-            "color": user.get("color", "bg-yellow-300")
-
         })
 
         previous_points = user["points"]
