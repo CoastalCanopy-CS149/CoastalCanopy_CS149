@@ -16,6 +16,8 @@
     "@fontsource/adamina": "^5.1.1",
     "@fontsource/afacad": "^5.1.1",
     "@fontsource/comfortaa": "^5.1.1",
+    "@paypal/react-paypal-js": "^8.8.2",
+    "axios": "^1.8.3",
     "firebase": "^11.4.0",
     "framer-motion": "^12.4.1",
     "leaflet": "^1.9.4",
@@ -23,9 +25,9 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
-    "react-router-dom": "^7.1.5",
     "react-leaflet": "^5.0.0",
     "react-player": "^2.16.0",
+    "react-router-dom": "^7.1.5",
     "swiper": "^11.2.2"
   },
   "devDependencies": {
