@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Trophy } from "lucide-react"
-import bg from "/imgs/gamification/gamificationBg1.jpg"
+import bg from "/imgs/gamification/bg1.jpg"
 import axios from "axios"
 
 export default function GamificationLeaderboard() {
@@ -62,7 +62,7 @@ export default function GamificationLeaderboard() {
       className="bg-cover min-h-screen flex justify-center items-center bg-fixed py-10"
       style={{ backgroundImage: `url(${bg})` }}
     >
-      <div className="z-10 bg-gray-50 bg-opacity-15 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto flex justify-center">
+      <div className="bg-gray-50 bg-opacity-15 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto flex justify-center">
         <div className="w-full max-w-3xl mx-auto p-6 rounded-xl min-h-[600px] flex flex-col">
           {/* Title with Trophy */}
           <motion.div
@@ -71,9 +71,9 @@ export default function GamificationLeaderboard() {
             transition={{ type: "spring", stiffness: 300 }}
             className="text-center mb-8 flex justify-center items-center"
           >
-            <Trophy className="mr-4 text-amber-500" size={48} strokeWidth={2} />
+            <Trophy className="mr-4 text-green-400" size={48} strokeWidth={2} />
             <h1
-              className="inline-block px-8 py-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-500"
+              className="inline-block px-8 py-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-white"
               style={{ fontFamily: "Playfair Display, serif" }}
             >
               Leader Board

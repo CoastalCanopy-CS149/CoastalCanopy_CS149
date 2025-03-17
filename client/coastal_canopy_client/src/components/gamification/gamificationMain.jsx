@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import bg from "/imgs/gamification/gamificationBg1.jpg";
+import bg from "/imgs/gamification/bg1.jpg";
 import { motion } from "framer-motion"
-import { ArrowUpRight, Share2, Coins } from 'lucide-react';
+import { ArrowUpRight, Share2, Coins} from 'lucide-react';
+import Progress from "./progress";
 
 
 export default function GamificationMain() {
     const navigate = useNavigate();
+    const [showProgress, setShowProgress] = useState(true);
 
     const username = "Greeny_Granny's Lagoon"
     const points = 340
@@ -30,8 +33,9 @@ export default function GamificationMain() {
     }
       
     return(
-        <div
-        className="bg-cover min-h-screen flex justify-center items-center bg-fixed py-10"
+      <div className="relative">
+      <div
+        className={`bg-cover min-h-screen flex justify-center items-center bg-fixed py-10 ${showProgress ? "blur-sm" : ""}`}
         style={{ backgroundImage: `url(${bg})` }}
       >
         
@@ -45,8 +49,10 @@ export default function GamificationMain() {
               <span className="font-medium">{username}</span>
             </div>
             <div className="rounded-full bg-green-500/80 border-2 border-green-600 px-4 py-2 text-white shadow-lg hover:scale-105 transition-transform">
-              <Coins className="inline-block mr-2 text-yellow-300" />
-              <span className="font-medium">Points: {points}</span>
+              <button onClick={() => setShowProgress(true)}>
+                <Coins className="inline-block mr-2 text-yellow-300" />
+                <span className="font-medium">Points: {points}</span>
+              </button>
             </div>
           </div>
   
@@ -123,6 +129,20 @@ export default function GamificationMain() {
         </div>
       
         </div>
+      </div>
+      {showProgress && (
+        <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="relative z-30">
+            <Progress />
+            <button
+              className="absolute top-4 m-4 right-4 rounded-full py-2 px-3 text-green-600 hover:text-red-600"
+              onClick={() => setShowProgress(false)}
+            >
+              X
+            </button>
+          </div>
         </div>
+      )}
+      </div>
     )
 }
