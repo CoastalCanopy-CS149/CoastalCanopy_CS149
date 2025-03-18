@@ -25,16 +25,26 @@ const CartList = ({ cartItems, setCartItems }) => {
   }
 
   return (
-    <div className="mt-8 w-full">
-      {cartItems.length === 0 ? (
-        <p className="text-center text-lg text-white">Your cart is empty</p>
-      ) : (
-        <div className="bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto"> {/* Increased max-width */}
-          <div className="flex justify-end mb-4">
-            <button className="bg-red-500 text-white p-3 rounded-md hover:bg-red-600" onClick={clearCart}>
-              Clear All
-            </button>
-          </div>
+    <>
+      {/* <Link to="../">
+        <button 
+          className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600 mb-4 mt-5 flex items-center transform transition-transform duration-300 hover:scale-105"            
+        >
+          Go to Shop
+          <ShoppingCart size={20} className="ml-2" />               
+        </button>
+      </Link> */}
+
+      <div className="mt-8 w-full">
+        {cartItems.length === 0 ? (
+          <p className="text-center text-lg text-white">Your cart is empty</p>
+        ) : (
+          <div className="bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto"> {/* Increased max-width */}
+            <div className="flex justify-end mb-4">
+              <button className="bg-red-500 text-white p-3 rounded-md hover:bg-red-600" onClick={clearCart}>
+                Clear All
+              </button>
+            </div>
 
           <div className="space-y-4">
             {cartItems.map((item, index) => (
@@ -69,6 +79,7 @@ const CartList = ({ cartItems, setCartItems }) => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

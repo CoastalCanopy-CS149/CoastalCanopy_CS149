@@ -27,3 +27,5 @@ def submit_quiz():
     })
 
     return jsonify({"message": "Quiz data submitted successfully"}), 200
+
+
