@@ -223,7 +223,7 @@ return (
 
 const EducationQuiz = () => {
   const navigate = useNavigate();
-  const [answers, setAnswers] = useState({ q1: "", q2: "" });
+  const [answers, setAnswers] = useState({ q1: "", q2: "" , q3: "", q4: "", q5: "", q6: "", q7: "", q8: "", q9: "", q10: "" });
   const [score, setScore] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -245,7 +245,7 @@ const EducationQuiz = () => {
     setAnswers({ ...answers, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!answers.q1 || !answers.q2 || !answers.q3 || !answers.q4  || !answers.q5 || !answers.q6 || !answers.q7 || !answers.q8 || !answers.q9 || !answers.q10) {
       setModalMessage("Please answer all questions before submitting.");
       setShowModal(true);
@@ -272,8 +272,29 @@ const EducationQuiz = () => {
 
     setScore(`You earned ${totalScore} points!`);
     setShowModal(true);
-  };
+  
 
+  // Send the quiz data to Flask backend
+ const quizData ={
+       name: "User's Name",  // Replace with the actual user's name if nedded
+       answers: answers,
+       score: totalScore,
+ };
+  
+ try{
+     const response = await fetch('http://localhost:5000/submit-quiz', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(quizData),
+     });
+     const result = await response.json();
+     console.log(result.message);  // Log success message from Flask
+ } catch(error){
+    console.error('Error submitting quiz: ', error);
+ }
+};
   return (
     <>
       <div
@@ -291,9 +312,10 @@ const EducationQuiz = () => {
       >
         <div className="p-8 bg-white bg-opacity-35 rounded-3xl backdrop-blur-sm w-11/12 max-w-5xl shadow-md mt-14">
           <h3 className="font-semibold text-center text-white text-4xl mb-5">Quiz</h3>
+          
           <div className="space-y-6  max-h-[400px] overflow-y-auto">
-
-            {/* Question 1 */}
+           
+           {/* Question 1 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
                 1) Which of the following is a common species found in mangrove forests?
@@ -343,7 +365,7 @@ const EducationQuiz = () => {
                 3) What are mangroves primarily known for?
               </h2>
               <div className="space-y-2">
-                {["Producing hradwood for furniture", "Providing habitats for deep-sea creatures", "Protecting coastlines from erosion and storm surges", "Creating deserts"].map((option, index) => (
+                {["Producing hardwood for furniture", "Providing habitats for deep-sea creatures", "Protecting coastlines from erosion and storm surges", "Creating deserts"].map((option, index) => (
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -431,7 +453,7 @@ const EducationQuiz = () => {
                 7) What is the primary threat to mangrove forests?
               </h2>
               <div className="space-y-2">
-                {["Rising sea levels", "invasive desert plants", "Deforestation and land reclamation", "Overproduction of oxygen"].map((option, index) => (
+                {["Rising sea levels", "Invasive desert plants", "Deforestation and land reclamation", "Overproduction of oxygen"].map((option, index) => (
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -475,7 +497,7 @@ const EducationQuiz = () => {
                 9) How do mangroves help combat climate change?
               </h2>
               <div className="space-y-2">
-                {["By increasing ocean temparatures", "By absorbing and storing large amounts of carbon dioxide", "by reflecting sunlight back into the atmosphere", "By producing methane gas"].map((option, index) => (
+                {["By increasing ocean temperatures", "By absorbing and storing large amounts of carbon dioxide", "by reflecting sunlight back into the atmosphere", "By producing methane gas"].map((option, index) => (
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -494,10 +516,10 @@ const EducationQuiz = () => {
             {/* Question 10 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
-                10) Which of the  folowing is a significant ecologicl benefit of mangrove forests?
+                10) Which of the  following is a significant ecologicl benefit of mangrove forests?
               </h2>
               <div className="space-y-2">
-                {["Creation of desert environments", "Filtering pollutatnts from water", "Increasing soil erosion", "reducing fish populations"].map((option, index) => (
+                {["Creation of desert environments", "Filtering pollutants from water", "Increasing soil erosion", "Reducing fish populations"].map((option, index) => (
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -531,6 +553,7 @@ const EducationQuiz = () => {
  </div>
  </div>
  </div>
+  
 
        {/* Modal for Messages */}
             {showModal && (
