@@ -110,142 +110,147 @@ const Carousel = ({ images }) => {
 
 export default function AboutUs() {
   return (
-  <div
-  className="bg-cover min-h-screen bg-fixed"
-  style={{ backgroundImage: `url(${background})` }}
-  >
-    <div className="z-20 relative">
-      <Navbar />
-    </div>
-
-    <div className="flex justify-center items-center py-10 sm:py-5 m-5">
-      <div className="bg-gray-50 bg-opacity-25 backdrop-blur-sm p-4 sm:p-6 md:p-10 rounded-3xl w-full max-w-7xl min-h-screen">
-        {/* Team Members Section */}
-        <section className="mb-12">
-        <h1
-          className="text-3xl sm:text-4xl font-bold text-white mb-8 text-center"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >Meet The Team</h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 justify-items-center">
-            {teamMembers.map((member, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg shadow-md hover:scale-105 transition-transform duration-300 text-center w-full max-w-sm"
-              >
-                <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
-                  <img
-                    src={member.imageUrl || "/placeholder.svg"}
-                    alt={member.name}
-                    className="w-full h-full object-cover rounded-lg"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="p-4 md:p-6 border-t-2">
-                  <h2 className="text-lg md:text-xl font-semibold text-gray-900">{member.name}</h2>
-                  <p className="text-sm md:text-base text-gray-500 mb-2">{member.role}</p>
-                  <p className="text-xs md:text-sm text-gray-600 mb-3">{member.bio}</p>
-                  
-                  <a
-                    href={member.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-blue-600 hover:text-blue-800"
-                  >
-                    <Linkedin className="w-5 h-6 mx-3 text-blue-600 hover:text-blue-800" />
-                    
-                  </a>
-
-                  <a
-                  href={member.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800"
-                  >
-                  <Github className="w-5 h-6 mx-3 text-violet-600 hover:text-violet-800" />
-                  </a>
-
-                 
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Journey Section */}
-        <section>
-        <h1
-          className="text-3xl sm:text-4xl font-bold text-white mb-4 text-center"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-            Journey To The Success
-          </h1>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-            {/* Journey Card 1 */}
-            <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
-              <div className="rounded-t-lg">
-                <Carousel images={coastalD} />
-              </div>
-              <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
-                <p className="text-xs md:text-sm text-black font-serif">
-                  Went to Coast Conservation and Coastal Resource Management Department to get some geographical
-                  layers from them.
-                  <br />
-                  <span className="font-medium">Date: 2024-11-07</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Journey Card 2 */}
-            <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
-              <div className="rounded-t-lg">
-                <Carousel images={cwImages} />
-              </div>
-              <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
-                <p className="text-xs md:text-sm text-black font-serif">
-                  Successfully submitted the project report and aced the viva examination, demonstrating understanding
-                  and hard work.
-                  <br />
-                  <span className="font-medium">Date: 2024-12-20</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Journey Card 3 */}
-            <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
-              <div className="rounded-t-lg">
-                <Carousel images={diyatha} />
-              </div>
-              <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
-                <p className="text-xs md:text-sm text-black font-serif">
-                  Visited Diyatha Park to collect detailed images, data, and valuable information about mangroves for
-                  the project.
-                  <br />
-                  <span className="font-medium">Date: 2025-02-11</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Journey Card 4 */}
-            <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
-              <div className="rounded-t-lg">
-                <Carousel images={hultprize} />
-              </div>
-              <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
-                <p className="text-xs md:text-sm text-black font-serif">
-                  Competed in the IIT Hult Prize Qualifier Round and received valuable feedback from the judging
-                  panel.
-                  <br />
-                  <span className="font-medium">Date: 2025-02-22</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+    <div
+      className="bg-cover min-h-screen bg-fixed"
+      style={{ backgroundImage: `url(${background})` }}
+    >
+      <div className="z-20 relative">
+        <Navbar />
       </div>
+
+      <div className="flex justify-center items-center py-10 sm:py-5 m-5">
+        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen">
+          {/* Team Members Section */}
+          <section className="mb-12">
+            <h1
+              className="text-3xl sm:text-4xl font-bold text-white mb-8 text-center"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Meet The Team
+            </h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8 justify-items-center">
+              {teamMembers.map((member, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg shadow-md hover:scale-105 transition-transform duration-300 text-center w-full max-w-sm"
+                >
+                  <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
+                    <img
+                      src={member.imageUrl || "/placeholder.svg"}
+                      alt={member.name}
+                      className="w-full h-full object-cover rounded-lg"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-4 md:p-6 border-t-2">
+                    <h2 className="text-lg md:text-xl font-semibold text-gray-900">
+                      {member.name}
+                    </h2>
+                    <p className="text-sm md:text-base text-gray-500 mb-2">
+                      {member.role}
+                    </p>
+                    <p className="text-xs md:text-sm text-gray-600 mb-3">
+                      {member.bio}
+                    </p>
+
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800"
+                    >
+                      <Linkedin className="w-5 h-6 mx-3 text-blue-600 hover:text-blue-800" />
+                    </a>
+
+                    <a
+                      href={member.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800"
+                    >
+                      <Github className="w-5 h-6 mx-3 text-violet-600 hover:text-violet-800" />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Journey Section */}
+          <section>
+            <h1
+              className="text-3xl sm:text-4xl font-bold text-white mb-4 text-center"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Journey To The Success
+            </h1>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+              {/* Journey Card 1 */}
+              <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
+                <div className="rounded-t-lg">
+                  <Carousel images={coastalD} />
+                </div>
+                <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
+                  <p className="text-xs md:text-sm text-black font-serif">
+                    Went to Coast Conservation and Coastal Resource Management
+                    Department to get some geographical layers from them.
+                    <br />
+                    <span className="font-medium">Date: 2024-11-07</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Journey Card 2 */}
+              <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
+                <div className="rounded-t-lg">
+                  <Carousel images={cwImages} />
+                </div>
+                <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
+                  <p className="text-xs md:text-sm text-black font-serif">
+                    Successfully submitted the project report and aced the viva
+                    examination, demonstrating understanding and hard work.
+                    <br />
+                    <span className="font-medium">Date: 2024-12-20</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Journey Card 3 */}
+              <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
+                <div className="rounded-t-lg">
+                  <Carousel images={diyatha} />
+                </div>
+                <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
+                  <p className="text-xs md:text-sm text-black font-serif">
+                    Visited Diyatha Park to collect detailed images, data, and
+                    valuable information about mangroves for the project.
+                    <br />
+                    <span className="font-medium">Date: 2025-02-11</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Journey Card 4 */}
+              <div className="border-2 rounded-lg w-full bg-white bg-opacity-10 shadow-lg flex flex-col">
+                <div className="rounded-t-lg">
+                  <Carousel images={hultprize} />
+                </div>
+                <div className="p-3 md:p-4 rounded-b-md bg-gray-50 flex-grow">
+                  <p className="text-xs md:text-sm text-black font-serif">
+                    Competed in the IIT Hult Prize Qualifier Round and received
+                    valuable feedback from the judging panel.
+                    <br />
+                    <span className="font-medium">Date: 2025-02-22</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+      <Footer />
     </div>
-    <Footer />
-  </div>
-  )
+  );
 }
 
