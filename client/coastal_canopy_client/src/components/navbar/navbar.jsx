@@ -22,7 +22,7 @@ const Navbar = () => {
     { name: "Reporting", path: "/reporting" },
     { name: "Learn", path: "/education" },
     { name: "AR View", path: "/ar" },
-    { name: "Virtual Mangrove", path: "/gamification" },
+    { name: "EcoScore", path: "/gamification/" },
     { name: "Social Hub", path: "/socialMedia" },
     { name: "Shop", path: "/shop" },
     { name: "About Us", path: "/aboutUs" },
@@ -70,14 +70,16 @@ const Navbar = () => {
   return (
     <div className="w-full top-0 z-50">
       <nav className="w-full">
-        <div className="relative flex items-center justify-between px-4 sm:px-8 py-4 bg-black/40 backdrop-blur-sm">
+        <div className="relative flex items-center justify-between px-4 sm:px-8 py-2 bg-black/40 backdrop-blur-sm">
           <Link to="/" className="flex items-center gap-1">
             <img
               src="/imgs/navbar/logo.png"
               alt="CoastalCanopy Logo"
               className="h-12 w-12 sm:h-16 sm:w-16 rounded-full"
             />
-            <span className="font-['Aclonica'] text-lg sm:text-2xl text-white">CoastalCanopy</span>
+            <span className="font-['Aclonica'] text-lg sm:text-2xl text-white">
+              CoastalCanopy
+            </span>
           </Link>
 
           <div className="flex items-center gap-4 sm:gap-8">
@@ -107,13 +109,13 @@ const Navbar = () => {
 
               {/* Desktop Menu Overlay */}
               {isMenuOpen && (
-                <div className="absolute right-0 top-10 w-[220px] bg-white/25 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 hidden md:block">
+                <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 hidden md:block">
                   <div className="py-1">
                     {menuItems.map((item) => (
                       <Link
                         key={item.name}
                         to={item.path}
-                        className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-white/50 transition-colors text-center
+                        className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-black/50 transition-colors text-center
                           ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -126,7 +128,7 @@ const Navbar = () => {
 
               {/* Mobile Menu Overlay */}
               {isMobileMenuOpen && (
-                <div className="absolute right-0 top-10 w-[220px] bg-white/25 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 md:hidden">
+                <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-black/100 shadow-lg z-50 md:hidden">
                   <div className="py-1">
                     {menuItems.map((item) => (
                       <Link
@@ -153,7 +155,7 @@ const Navbar = () => {
         </div>
       </nav>
     </div>
-  )
+  );
 }
 
 export default Navbar
