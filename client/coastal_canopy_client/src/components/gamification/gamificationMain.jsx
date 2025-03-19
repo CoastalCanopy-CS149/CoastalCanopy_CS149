@@ -39,7 +39,7 @@ export default function GamificationMain() {
         style={{ backgroundImage: `url(${bg})` }}
       >
         
-        <div className="z-10 bg-gray-50 bg-opacity-25 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto flex justify-center">
+        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen h-auto flex justify-center">
         
   
         <div className="relative z-10 flex h-full flex-col items-center justify-start pt-8">

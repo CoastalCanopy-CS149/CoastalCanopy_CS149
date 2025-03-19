@@ -62,7 +62,7 @@ export default function GamificationLeaderboard() {
       className="bg-cover min-h-screen flex justify-center items-center bg-fixed py-10"
       style={{ backgroundImage: `url(${bg})` }}
     >
-      <div className="bg-gray-50 bg-opacity-15 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto flex justify-center">
+      <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen h-auto flex justify-center">
         <div className="w-full max-w-3xl mx-auto p-6 rounded-xl min-h-[600px] flex flex-col">
           {/* Title with Trophy */}
           <motion.div

@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { TreePalm, Sun, CloudRain, Cloud, CheckCircle } from 'lucide-react';
+import { Sun, CloudRain,Trees,Volume2, VolumeX } from 'lucide-react';
 import Confetti from 'react-confetti';
+import Sound from 'react-sound';
 import { useWindowSize } from 'react-use';
 import bg from "/imgs/gamification/bg1.jpg";
 
 export default function PlantMangrove() {
   const [step, setStep] = useState(1); // Tracks the current step in the planting process
   const [isPlanted, setIsPlanted] = useState(false); // Tracks if the mangrove has been planted
+  const [isSoundPlaying, setIsSoundPlaying] = useState(true); // Tracks if the sound is playing
   const { width, height } = useWindowSize(); // For confetti dimensions
 
   // Simulate the planting process with a delay
@@ -19,20 +21,45 @@ export default function PlantMangrove() {
       const timer = setTimeout(() => setStep(3), 2000); // Move to step 3 after 2 seconds
       return () => clearTimeout(timer);
     } else if (step === 3) {
-      const timer = setTimeout(() => setStep(0),setIsPlanted(true), 2000); // Final step after 2 seconds
+      const timer = setTimeout(() => {
+        setIsPlanted(true);
+        setStep(0);
+      }, 2000); // Final step after 2 seconds
       return () => clearTimeout(timer);
     }
   }, [step]);
 
+  const toggleSound = () => {
+    setIsSoundPlaying(!isSoundPlaying);
+  };
+
   return (
     <div
-      className={"bg-cover min-h-screen flex justify-center items-center bg-fixed py-10" }
+      className={"bg-cover min-h-screen flex justify-center items-center bg-fixed overflow-hidden" }
       style={{ backgroundImage: `url(${bg})` }}
-    >
-            
-      <div className="bg-gray-50 bg-opacity-15 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto flex justify-center items-center">
+    >        
+        {isSoundPlaying && (
+          <Sound
+            url="/imgs/gamification/nature.mp3"
+            playStatus={Sound.status.PLAYING}
+            loop={true}
+            onFinishedPlaying={() => console.log('Audio finished playing')}
+          />
+        )}
+             
+      <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen h-auto flex justify-center items-center">
       {/* Confetti celebration when the mangrove is planted */}
-      {isPlanted && <Confetti width={width} height={height} recycle={false} />}
+      {isPlanted && <Confetti width={width} height={height} recycle={true} />}
+
+      <div className="absolute top-5 left-5 text-white">
+        <button>
+        {isSoundPlaying ? (
+          <Volume2 className=" hover:text-red-500" size={26} onClick={toggleSound}  />
+        ) : (
+          <VolumeX className="text-red-500 hover:text-white" size={26} onClick={toggleSound} />
+        )}
+        </button>
+      </div>
 
       <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full flex justify-center items-center text-center relative overflow-hidden h-full">
         {/* Step 1: Preparing the soil */}
@@ -50,7 +77,7 @@ export default function PlantMangrove() {
         {step === 2 && (
           <div className="space-y-6">
             <div className="w-20 h-20 mx-auto bg-green-500 rounded-full flex items-center justify-center">
-              <TreePalm className="text-white" size={40} />
+              <Trees className="text-white" size={40} />
             </div>
             <h1 className="text-2xl font-bold text-gray-800">Planting your mangrove...</h1>
             <p className="text-gray-600">Your mangrove is being placed in its new home. Almost there!</p>
@@ -71,9 +98,7 @@ export default function PlantMangrove() {
         {/* Final Step: Mangrove planted successfully */}
         {isPlanted && (
           <div className="space-y-6 animate-fade-in">
-            <div className="w-20 h-20 mx-auto bg-green-600 rounded-full flex items-center justify-center">
-              <CheckCircle className="text-white" size={40} />
-            </div>
+            <img src="/imgs/gamification/plantmang.jpg" alt="Mangrove" className="w-full h-full rounded-sm" />
             <h1 className="text-2xl font-bold text-gray-800">Mangrove Planted! 🌱</h1>
             <p className="text-gray-600">
               Congratulations! Your virtual mangrove has been planted. You're helping the planet one tree at a time!
@@ -99,14 +124,6 @@ export default function PlantMangrove() {
             <div className="absolute -top-20 -left-20 w-40 h-40 bg-blue-200 rounded-full opacity-30 animate-pulse"></div>
           )}
         </div>
-      </div>
-
-      {/* Clouds for a playful touch */}
-      <div className="absolute top-10 left-10 animate-float">
-        <Cloud className="text-gray-300" size={60} />
-      </div>
-      <div className="absolute top-20 right-20 animate-float-delay">
-        <Cloud className="text-gray-300" size={80} />
       </div>
     </div>
     </div>
