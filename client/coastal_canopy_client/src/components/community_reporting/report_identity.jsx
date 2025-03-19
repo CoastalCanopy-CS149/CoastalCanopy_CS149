@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import background from "/imgs/community_reporting/BgComRep.jpg"
+import background from "/imgs/community_reporting/bg1.jpg"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
