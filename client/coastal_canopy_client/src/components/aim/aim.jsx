@@ -207,37 +207,53 @@ function LandingPage() {
 
         {/* About Coastal Canopy Section */}
         <AnimatedSection className="mb-36">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
+          <h2
+            className="text-4xl md:text-5xl font-bold text-center mb-12"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             About Coastal Canopy
           </h2>
 
-          <div className="flex flex-col md:flex-row gap-8 justify-center items-center mb-12">
-            <div className="flex-1">
-              <img
-                src={laptopImage || "/imgs/aim/laptop.jpg"}
-                alt="CoastalCanopy on Desktop"
-                className="rounded-lg shadow-xl max-w-full h-auto"
-              />
-            </div>
-            <div className="flex-1">
-              <img
-                src={mobileImage || "/placeholder.svg"}
-                alt="CoastalCanopy on Mobile"
-                className="rounded-lg shadow-xl max-w-full h-auto mx-auto max-h-96"
-              />
+          <div className="flex flex-col gap-8 justify-center items-center">
+            {/* Device Images Container */}
+            <div className="w-full max-w-7xl flex justify-center items-center">
+              <div className="relative w-full h-96 md:h-[450px] flex justify-center">
+                {/* Laptop Image - Centered */}
+                <div className="absolute left-1/2 transform -translate-x-1/2 max-w-xs sm:max-w-md ">
+                  <img
+                    src={laptopImage || "/imgs/aim/laptop.jpg"}
+                    alt="CoastalCanopy on Desktop"
+                    className="rounded-lg object-contain h-96 md:h-96"
+                  />
+                </div>
+
+                {/* Phone Image - Bottom Right of Laptop */}
+                <div className="absolute left-1/2 transform translate-x-16 md:translate-x-24 top-32 md:top-40 ">
+                  <img
+                    src={mobileImage || "/imgs/aim/phone.png"}
+                    alt="CoastalCanopy on Mobile"
+                    className="rounded-lg object-contain h-48 md:h-64 hidden md:block "
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
           <p className="text-xl text-center">
             CoastalCanopy.lk is a community-driven platform dedicated to
             preserving Sri Lanka's vital mangrove ecosystems through technology,
-            education, and collective action.
+            education, and collective action. We empower local communities to
+            become guardians of Sri Lanka's precious mangrove forests, ensuring
+            these vital ecosystems thrive for generations to come.
           </p>
         </AnimatedSection>
 
         {/* Aim, Mission, Vision Section */}
         <AnimatedSection className="mb-36">
-          <div className="space-y-28">
+          <div
+            className="space-y-20"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             <ContentSection
               title="OUR AIM"
               description="Create a comprehensive, community-oriented web application, CoastalCanopy.lk, dedicated to the monitoring, protection, and sustainable management of mangrove ecosystems in Sri Lanka."
@@ -257,7 +273,10 @@ function LandingPage() {
 
         {/* Features Section */}
         <AnimatedSection className="mb-36">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
+          <h2
+            className="text-4xl md:text-5xl font-bold text-center mb-12"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             Our Features
           </h2>
 
@@ -292,7 +311,10 @@ function LandingPage() {
 
         {/* FAQ Section */}
         <AnimatedSection className="mb-36">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-12">
+          <h2
+            className="text-4xl md:text-5xl font-bold text-center mb-12"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             Frequently Asked Questions
           </h2>
 
@@ -336,7 +358,10 @@ function LandingPage() {
 
         {/* Feedback Section */}
         <AnimatedSection>
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-8">
+          <h2
+            className="text-4xl md:text-5xl font-bold text-center mb-8"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
             Share Your Feedback
           </h2>
 
