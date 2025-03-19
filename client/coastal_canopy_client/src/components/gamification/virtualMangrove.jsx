@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sun, CloudRain,Trees,Volume2, VolumeX } from 'lucide-react';
 import Confetti from 'react-confetti';
-import Sound from 'react-sound';
+import Howler from 'react-howler';
 import { useWindowSize } from 'react-use';
 import bg from "/imgs/gamification/bg1.jpg";
 
@@ -39,11 +39,10 @@ export default function PlantMangrove() {
       style={{ backgroundImage: `url(${bg})` }}
     >        
         {isSoundPlaying && (
-          <Sound
-            url="/imgs/gamification/nature.mp3"
-            playStatus={Sound.status.PLAYING}
+          <Howler
+            src="/imgs/gamification/nature.mp3"
+            playing={isSoundPlaying}
             loop={true}
-            onFinishedPlaying={() => console.log('Audio finished playing')}
           />
         )}
              
