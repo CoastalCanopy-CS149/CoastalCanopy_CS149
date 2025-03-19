@@ -3,6 +3,8 @@ import { motion } from "framer-motion"
 import { Trophy } from "lucide-react"
 import bg from "/imgs/gamification/bg1.jpg"
 import axios from "axios"
+import Navbar from "../navbar/navbar";
+import Footer from "../footer/footer";
 
 export default function GamificationLeaderboard() {
 
@@ -59,9 +61,14 @@ export default function GamificationLeaderboard() {
 
   return (
     <div
-      className="bg-cover min-h-screen flex justify-center items-center bg-fixed py-10"
+      className="bg-cover min-h-screen  bg-fixed"
       style={{ backgroundImage: `url(${bg})` }}
     >
+      <div className="relative z-20">
+        <Navbar />
+      </div>
+
+      <div className="flex justify-center items-center">
       <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen h-auto flex justify-center">
         <div className="w-full max-w-3xl mx-auto p-6 rounded-xl min-h-[600px] flex flex-col">
           {/* Title with Trophy */}
@@ -209,6 +216,8 @@ export default function GamificationLeaderboard() {
           </motion.div>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   )
 }
