@@ -22,7 +22,7 @@ const Navbar = () => {
     { name: "Reporting", path: "/reporting" },
     { name: "Learn", path: "/education" },
     { name: "AR View", path: "/ar" },
-    { name: "Leaderboard", path: "/gamification/leaderboard" },
+    { name: "EcoScore", path: "/gamification/" },
     { name: "Social Hub", path: "/socialMedia" },
     { name: "Shop", path: "/shop" },
     { name: "About Us", path: "/aboutUs" },
