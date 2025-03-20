@@ -32,35 +32,45 @@ export function CreatePost() {
     };
 
     return (
-        <div
-            style={{
-                backgroundImage: `url(${mangroveBackground})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-            }}
-            className="min-h-screen flex flex-col items-center pt-6 px-4 sm:px-6"
-        >
-            <div className="bg-white bg-opacity-30 backdrop-blur-lg rounded-3xl p-6 sm:p-10 w-full sm:w-11/12 max-w-7xl shadow-xl">
-                {!selectedTheme ? (
-                    <>
-                        <h2 className="text-center text-2xl sm:text-3xl font-bold text-white">Create Post</h2>
-                        <p className="text-center text-lg text-white mb-6">Select a theme</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                            {themes.map((theme, index) => (
-                                <div
-                                    key={index}
-                                    onClick={() => handleThemeSelect(theme.theme)}
-                                    className="bg-white bg-opacity-90 p-4 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                                >
-                                    <img src={theme.image} alt={theme.theme} className="w-full h-28 sm:h-32 md:h-40 object-cover rounded-lg" />
-                                    <h3 className="text-center text-sm font-semibold mt-2">{theme.title}</h3>
-                                </div>
-                            ))}
-                        </div>
-                    </>
-                ) : null}
-            </div>
+      <div
+        style={{
+          backgroundImage: `url(${mangroveBackground})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+        className="min-h-screen flex flex-col items-center pt-6 px-4 sm:px-6"
+      >
+        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4">
+          {!selectedTheme ? (
+            <>
+              <h2 className="text-center text-2xl sm:text-3xl font-bold text-white">
+                Create Post
+              </h2>
+              <p className="text-center text-lg text-white mb-6">
+                Select a theme
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {themes.map((theme, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handleThemeSelect(theme.theme)}
+                    className="bg-white bg-opacity-90 p-4 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                  >
+                    <img
+                      src={theme.image}
+                      alt={theme.theme}
+                      className="w-full h-28 sm:h-32 md:h-40 object-cover rounded-lg"
+                    />
+                    <h3 className="text-center text-sm font-semibold mt-2">
+                      {theme.title}
+                    </h3>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : null}
         </div>
+      </div>
     );
 }
 

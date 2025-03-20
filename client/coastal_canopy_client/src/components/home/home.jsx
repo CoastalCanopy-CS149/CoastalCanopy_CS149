@@ -23,7 +23,7 @@ function Home() {
       <div className="absolute inset-0 bg-black/30" />
 
       {/* Blurred Left Section */}
-      <div className="absolute inset-y-0 left-0 display sm:w-full sm:w-3/4 lg:w-1/2 bg-inherit/40 backdrop-blur-md z-0 " />
+      <div className="absolute inset-y-0 left-0 display sm:w-full lg:w-1/2 bg-inherit/40 backdrop-blur-md z-0 " />
 
       <div className="relative z-10 flex flex-col px-4 sm:px-8 md:px-16 w-full md:max-w-xl lg:max-w-lg justify-start items-start mt-16 sm:mt-24 md:mt-32 flex-grow">
         <h1

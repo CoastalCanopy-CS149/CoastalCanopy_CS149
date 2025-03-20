@@ -19,93 +19,117 @@ const EducationSection = () => {
         backgroundImage: `url(${mangroveBackground})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        
       }}
-    > 
+    >
       <div className="z-20 relative">
-      <Navbar/>
+        <Navbar />
       </div>
-    <div className="flex justify-center items-start pt-12">
-      <div className="bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl w-11/12 max-w-7xl -mt-6  mb-10">
-      <h1 className="text-center text-3xl text-white font-bold mt-8 ">Mangrove Conservation & Ecosystem Awareness</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 lg:p-8 ">
-      
-         {/* Education Card 1 */}
-         
-        <div className="p-4 bg-white rounded-3xl flex flex-col justify-between shadow-md text-center">
-          
-         <h2 className="text-lg md:text-xl font-semibold">Education for Mangrove Conservation</h2>
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-            Educate on mangrove to protect coastlines, biodiversity, and climate.
-            Mangroves protect coastlines from natural threats. They provide
-            habitats, supporting diverse thriving ecosystems.  <br></br>
-          </p>  
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed">Mangroves act as natural barries, reducing the impact of storms, erosion and rising sea levels.</p> 
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed">They absorb significant amounts of carbon dioxide, helping combat climate change.<br></br></p>
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed">Additionally, mangroves support local communities by providing resources like fish, wood, and medicinal plants.</p>
-          <p className="text-gray-600 text-sm md:text-base leading-relaxed">In Sri Lanka, these ecosystems...</p>
-          <button
-            onClick={() => navigate("../education-content")}
-            className="mt-4 md:mt-6 bg-green-500 text-white hover:bg-green-600 px-4 py-2 w-32 mx-auto rounded-md transition"
-          >
-            Learn More
-          </button>
-        </div>
+      <div className="flex justify-center items-start pt-12">
+        <div
+          className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          <h1 className="text-center text-3xl text-white font-bold mt-8 ">
+            Mangrove Conservation & Ecosystem Awareness
+          </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 md:p-6 lg:p-8 ">
+            {/* Education Card 1 */}
 
-        {/* Education Card 2 */}
-        <div className="p-4 bg-white rounded-3xl shadow-md  text-center">
-          <h2 className="text-lg md:text-xl font-semibold">
-            EcoUpdates: Latest News on Mangrove Conservation
-          </h2>
-          <img
-            src={mangrovesrilanka}
-            alt="Mangrove"
-            className="rounded-lg mx-auto w-full h-auto mb-4"
-          />
-          <p className="text-gray-600 md:text-sm text-xs text-left">16 February 2024.</p>
-          <button
-            onClick={() => navigate("../education-news")}
-            className="mt-8 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
-          >
-            See More
-          </button>
-        </div>
+            <div className="p-4 bg-white rounded-3xl flex flex-col justify-between shadow-md text-center">
+              <h2 className="text-lg md:text-xl font-semibold">
+                Education for Mangrove Conservation
+              </h2>
+              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                Educate on mangrove to protect coastlines, biodiversity, and
+                climate. Mangroves protect coastlines from natural threats. They
+                provide habitats, supporting diverse thriving ecosystems.{" "}
+                <br></br>
+              </p>
+              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                Mangroves act as natural barries, reducing the impact of storms,
+                erosion and rising sea levels.
+              </p>
+              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                They absorb significant amounts of carbon dioxide, helping
+                combat climate change.<br></br>
+              </p>
+              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                Additionally, mangroves support local communities by providing
+                resources like fish, wood, and medicinal plants.
+              </p>
+              <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+                In Sri Lanka, these ecosystems...
+              </p>
+              <button
+                onClick={() => navigate("../education-content")}
+                className="mt-4 md:mt-6 bg-green-500 text-white hover:bg-green-600 px-4 py-2 w-32 mx-auto rounded-md transition"
+              >
+                Learn More
+              </button>
+            </div>
 
-        {/* Video Card */}
-        <div className="p-4 bg-white rounded-3xl shadow-md  text-center">
-          <h2 className="text-lg font-semibold ">
-            The Crucial Role of Mangroves in Conservation
-          </h2>
-          <img
-            src={mangroveThumbnail}
-            alt="Mangrove"
-            className="rounded-lg mx-auto mb-4"
-          />
-          <p className="text-gray-600">Watch this video to learn about the mangrove ecosystem.</p>
-          <button  onClick={() => navigate("../VideoCard")} className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md">
-            Play
-          </button>
-        </div>
+            {/* Education Card 2 */}
+            <div className="p-4 bg-white rounded-3xl shadow-md  text-center">
+              <h2 className="text-lg md:text-xl font-semibold">
+                EcoUpdates: Latest News on Mangrove Conservation
+              </h2>
+              <img
+                src={mangrovesrilanka}
+                alt="Mangrove"
+                className="rounded-lg mx-auto w-full h-auto mb-4"
+              />
+              <p className="text-gray-600 md:text-sm text-xs text-left">
+                16 February 2024.
+              </p>
+              <button
+                onClick={() => navigate("../education-news")}
+                className="mt-8 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+              >
+                See More
+              </button>
+            </div>
 
-        {/* Quiz Section */}
-        
-        <div className="col-span-1 md:col-span-2 text-center bg-green-50 p-4 rounded-3xl lg:col-span-3">
-          <p className="text-lg font-medium">
-            Do you want to Play Quiz and earn points?
-          </p>
-          <p className=" text-lg font-medium md:text-xl">🚀<span>Join Now</span></p>
-          <button
-            onClick={() => navigate("../education-quiz")}
-            className="mt-8 bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition"
-          >
-            Click Here
-          </button>
+            {/* Video Card */}
+            <div className="p-4 bg-white rounded-3xl shadow-md  text-center">
+              <h2 className="text-lg font-semibold ">
+                The Crucial Role of Mangroves in Conservation
+              </h2>
+              <img
+                src={mangroveThumbnail}
+                alt="Mangrove"
+                className="rounded-lg mx-auto mb-4"
+              />
+              <p className="text-gray-600">
+                Watch this video to learn about the mangrove ecosystem.
+              </p>
+              <button
+                onClick={() => navigate("../VideoCard")}
+                className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+              >
+                Play
+              </button>
+            </div>
+
+            {/* Quiz Section */}
+
+            <div className="col-span-1 md:col-span-2 text-center bg-green-50 p-4 rounded-3xl lg:col-span-3">
+              <p className="text-lg font-medium">
+                Do you want to Play Quiz and earn points?
+              </p>
+              <p className=" text-lg font-medium md:text-xl">
+                🚀<span>Join Now</span>
+              </p>
+              <button
+                onClick={() => navigate("../education-quiz")}
+                className="mt-8 bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition"
+              >
+                Click Here
+              </button>
+            </div>
+          </div>
         </div>
-       
       </div>
-      </div>
-    </div>
-    <Footer/>
+      <Footer />
     </div>
   );
 };
@@ -126,18 +150,39 @@ const EducationContent = () => {
         paddingTop: "5vh",
       }}
     >
-      <div className="p-8 bg-white bg-opacity-45 rounded-3xl shadow-md mt-6 min-h-0 ">
-        <h3 className="font-semibold text-center text-white text-4xl mb-5">
+      <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white ">
+        <h3
+          className="font-semibold text-center text-white text-3xl mb-5"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
           Education for Mangrove Conservation
         </h3>
-        <p className="max-w-3xl text-center font-semibold text-lg mb-10">
-        Sri Lanka is home to more than twenty species of true mangroves, around one third of all mangrove species in the world. They thrive along lagoons and estuaries and currently cover around 19,500 hectares of the island according to the Forest Department.
+        <div className="flex justify-center items-center">
+          <p className="max-w-3xl text-center font-semibold text-lg mb-10 ">
+            Sri Lanka is home to more than twenty species of true mangroves,
+            around one third of all mangrove species in the world. They thrive
+            along lagoons and estuaries and currently cover around 19,500
+            hectares of the island according to the Forest Department.
             <br />
-            The Country has pledged to restore an additional 10,000 hectares by 2030 with three strategies: protecting existing mangroves, converting abandoned shrimp farms and salterns, and restoring degraded mangroves. Mangrove forests are immensely productive coastal ecosystems, thriving at the border between land and sea and serving as an important bridge between marine and terrestrial biodiversity.
+            The Country has pledged to restore an additional 10,000 hectares by
+            2030 with three strategies: protecting existing mangroves,
+            converting abandoned shrimp farms and salterns, and restoring
+            degraded mangroves. Mangrove forests are immensely productive
+            coastal ecosystems, thriving at the border between land and sea and
+            serving as an important bridge between marine and terrestrial
+            biodiversity.
             <br />
-            Mangroves sequester and store huge amounts of "blue carbon". They produce nutrients, anchor shorelines, serve as sheltered nurseries and habitats for countless species of fauna and flora. They protect coastal communities and provide many raw materials for construction, food, handicrafts, or medicine. As measured by UNEP, their annual ecosystem services are worth US$ 33-57,000 per ha. They are also sites of stunning natural beauty and cultural significance that can promote the well-being of local communities, strengthen resilience and climate change adaptation, and provide sustainable livelihoods.
-
-        </p>
+            Mangroves sequester and store huge amounts of "blue carbon". They
+            produce nutrients, anchor shorelines, serve as sheltered nurseries
+            and habitats for countless species of fauna and flora. They protect
+            coastal communities and provide many raw materials for construction,
+            food, handicrafts, or medicine. As measured by UNEP, their annual
+            ecosystem services are worth US$ 33-57,000 per ha. They are also
+            sites of stunning natural beauty and cultural significance that can
+            promote the well-being of local communities, strengthen resilience
+            and climate change adaptation, and provide sustainable livelihoods.
+          </p>
+        </div>
 
         <div className="flex justify-center">
           <div
@@ -168,9 +213,13 @@ const EducationNews = () => {
         paddingTop: "5vh",
       }}
     >
-      <div className="p-8 bg-white bg-opacity-35 rounded-3xl backdrop-blur-sm w-11/12 max-w-5xl shadow-md mt-8">
-        <h3 className="font-semibold text-center text-white text-4xl mb-5">
-          Sri Lanka gets global recognition by UN for rebuilding mangrove ecosystems
+      <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white">
+        <h3
+          className="font-semibold text-center text-white text-3xl mb-5"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          Sri Lanka gets global recognition by UN for rebuilding mangrove
+          ecosystems
         </h3>
         <img
           src={mangrovesrilanka}
@@ -178,7 +227,10 @@ const EducationNews = () => {
           className="rounded-lg mx-auto mb-4 w-1/3"
         />
         <p className="font-semibold text-lg text-center font-mono mb-10">
-        "2024 marks a landmark achievement in the world of conservation with Sri Lanka being declared as a UN World Restoration Flagship, in recognition of the nation’s vital efforts <br></br>to rebuild and restore its mangrove ecosystems."
+          "2024 marks a landmark achievement in the world of conservation with
+          Sri Lanka being declared as a UN World Restoration Flagship, in
+          recognition of the nation’s vital efforts <br></br>to rebuild and
+          restore its mangrove ecosystems."
         </p>
         <p className="max-3xl text-lg text-left text-gray-100 mb-10">
           Wednesday, 16 February 2024
@@ -191,10 +243,8 @@ const EducationNews = () => {
             Back
           </div>
         </div>
-        
       </div>
-      </div>
-      
+    </div>
   );
 };
 
@@ -320,15 +370,19 @@ const EducationQuiz = () => {
           paddingTop: "5vh",
         }}
       >
-        <div className="p-8 bg-white bg-opacity-35 rounded-3xl backdrop-blur-sm w-11/12 max-w-5xl shadow-md mt-14">
-          <h3 className="font-semibold text-center text-white text-4xl mb-5">Quiz</h3>
-          
+        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white">
+          <h3
+            className="font-semibold text-center text-white text-4xl mb-5"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            Quiz
+          </h3>
           <div className="space-y-6  max-h-[400px] overflow-y-auto">
-           
-           {/* Question 1 */}
+            {/* Question 1 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
-                1) Which of the following is a common species found in mangrove forests?
+                1) Which of the following is a common species found in mangrove
+                forests?
               </h2>
               <div className="space-y-2">
                 {["Oak", "Rhizopora", "Pine", "Birch"].map((option, index) => (
@@ -353,7 +407,12 @@ const EducationQuiz = () => {
                 2) How do mangroves help in combating climate change?
               </h2>
               <div className="space-y-2">
-                {["By absorbing carbon dioxide", "By releasing carbon dioxide", "By absorbing oxygen", "By releasing oxygen"].map((option, index) => (
+                {[
+                  "By absorbing carbon dioxide",
+                  "By releasing carbon dioxide",
+                  "By absorbing oxygen",
+                  "By releasing oxygen",
+                ].map((option, index) => (
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -375,7 +434,13 @@ const EducationQuiz = () => {
                 3) What are mangroves primarily known for?
               </h2>
               <div className="space-y-2">
-                {["Producing hardwood for furniture", "Providing habitats for deep-sea creatures", "Protecting coastlines from erosion and storm surges", "Creating deserts"].map((option, index) => (
+                {[
+                  "Producing hradwood for furniture",
+                  "Providing habitats for deep-sea creatures",
+                  "Protecting coastlines from erosion and storm surges",
+                  "Creating deserts",
+                ].map((option, index) => (
+
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -397,7 +462,12 @@ const EducationQuiz = () => {
                 4) Which of the following is a common feature of mangrove trees?
               </h2>
               <div className="space-y-2">
-                {["Needle-like leaves", "Thick, waxy leaves to reduce water loss", "Prop roots that rise above the water", "Deep underground tap roots"].map((option, index) => (
+                {[
+                  "Needle-like leaves",
+                  "Thick, waxy leaves to reduce water loss",
+                  "Prop roots that rise above the water",
+                  "Deep underground tap roots",
+                ].map((option, index) => (
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -419,7 +489,12 @@ const EducationQuiz = () => {
                 5) Mangroves are typically found in which type of environment?
               </h2>
               <div className="space-y-2">
-                {["Deserts", "freshwater lakes", "Coastal intertidal zones", "High-altitude mountain regions"].map((option, index) => (
+                {[
+                  "Deserts",
+                  "freshwater lakes",
+                  "Coastal intertidal zones",
+                  "High-altitude mountain regions",
+                ].map((option, index) => (
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -434,14 +509,19 @@ const EducationQuiz = () => {
                 ))}
               </div>
             </div>
-            
+
             {/* Question 6 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
                 6) Why are mangroves important for marine biodiversity?
               </h2>
               <div className="space-y-2">
-                {["They attract only a single type of fish", "They provide shelter and breeding grounds for various marine species", "They reduce the oxygen levels in the water", "They block sunlight,limiting plant growth"].map((option, index) => (
+                {[
+                  "They attract only a single type of fish",
+                  "They provide shelter and breeding grounds for various marine species",
+                  "They reduce the oxygen levels in the water",
+                  "They block sunlight,limiting plant growth",
+                ].map((option, index) => (
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -456,14 +536,20 @@ const EducationQuiz = () => {
                 ))}
               </div>
             </div>
-            
+
             {/* Question 7 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
                 7) What is the primary threat to mangrove forests?
               </h2>
               <div className="space-y-2">
-                {["Rising sea levels", "Invasive desert plants", "Deforestation and land reclamation", "Overproduction of oxygen"].map((option, index) => (
+                {[
+                  "Rising sea levels",
+                  "invasive desert plants",
+                  "Deforestation and land reclamation",
+                  "Overproduction of oxygen",
+                ].map((option, index) => (
+
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -482,22 +568,25 @@ const EducationQuiz = () => {
             {/* Question 8 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
-                8) Which country has the largest area of mangrove forests in the world?
+                8) Which country has the largest area of mangrove forests in the
+                world?
               </h2>
               <div className="space-y-2">
-                {["Brazil", "India", "Indonesia", "Australia"].map((option, index) => (
-                  <label key={index} className="block">
-                    <input
-                      type="radio"
-                      name="q8"
-                      value={option}
-                      checked={answers.q8 === option}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    {option}
-                  </label>
-                ))}
+                {["Brazil", "India", "Indonesia", "Australia"].map(
+                  (option, index) => (
+                    <label key={index} className="block">
+                      <input
+                        type="radio"
+                        name="q8"
+                        value={option}
+                        checked={answers.q8 === option}
+                        onChange={handleChange}
+                        className="mr-2"
+                      />
+                      {option}
+                    </label>
+                  )
+                )}
               </div>
             </div>
 
@@ -507,7 +596,13 @@ const EducationQuiz = () => {
                 9) How do mangroves help combat climate change?
               </h2>
               <div className="space-y-2">
-                {["By increasing ocean temperatures", "By absorbing and storing large amounts of carbon dioxide", "by reflecting sunlight back into the atmosphere", "By producing methane gas"].map((option, index) => (
+                {[
+                  "By increasing ocean temparatures",
+                  "By absorbing and storing large amounts of carbon dioxide",
+                  "by reflecting sunlight back into the atmosphere",
+                  "By producing methane gas",
+                ].map((option, index) => (
+
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -526,10 +621,17 @@ const EducationQuiz = () => {
             {/* Question 10 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
-                10) Which of the  following is a significant ecologicl benefit of mangrove forests?
+                10) Which of the folowing is a significant ecologicl benefit of
+                mangrove forests?
               </h2>
               <div className="space-y-2">
-                {["Creation of desert environments", "Filtering pollutants from water", "Increasing soil erosion", "Reducing fish populations"].map((option, index) => (
+                {[
+                  "Creation of desert environments",
+                  "Filtering pollutatnts from water",
+                  "Increasing soil erosion",
+                  "reducing fish populations",
+                ].map((option, index) => (
+
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -544,59 +646,62 @@ const EducationQuiz = () => {
                 ))}
               </div>
             </div>
-         <div className="relative mt-5">
-  <div
-    onClick={() => navigate("/education")}
-    className="absolute left-0  text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit flex items-center cursor-pointer"
-  >
-   <ArrowLeft size={54} className="-ml-14" /> 
-  </div>
-  <div className="text-center">
-    <button
-      onClick={handleSubmit}
-      className="bg-green-500 hover:bg-green-600 text-white text-2xl px-16 py-2 rounded-3xl mt-1"
-    >
-      Submit
-    </button>
-   </div>
-  </div>
- </div>
- </div>
- </div>
-  
 
-       {/* Modal for Messages */}
-            {showModal && (
-              <motion.div
-                className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+            <div className="relative mt-5">
+              <div
+                onClick={() => navigate("/education")}
+                className="absolute left-0  text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit flex items-center cursor-pointer"
+
               >
-                <div className="bg-white p-8 rounded-3xl text-center shadow-lg w-96 relative">
-                  <motion.div
-                    initial={{ y: -50 }}
-                    animate={{ y: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 20,
-                    }}
-                  >
-                    <h2 className="text-3xl font-bold text-green-600 mb-4">
-                      {modalMessage.includes("Congratulations") ? "🎉 Success!" : "⚠️ Warning!"}
-                    </h2>
-                    <p className="text-lg text-gray-700">{modalMessage}</p>
-                  </motion.div>
-                  <button
-                    className="mt-6 bg-green-500 text-white px-6 py-2 rounded-2xl hover:bg-green-600"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                </div>
-              </motion.div>
-            )}
+                <ArrowLeft size={54} className="-ml-14" />
+              </div>
+              <div className="text-center">
+                <button
+                  onClick={handleSubmit}
+                  className="bg-green-500 hover:bg-green-600 text-white text-2xl px-16 py-2 rounded-3xl mt-1"
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal for Messages */}
+      {showModal && (
+        <motion.div
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="bg-white p-8 rounded-3xl text-center shadow-lg w-96 relative">
+            <motion.div
+              initial={{ y: -50 }}
+              animate={{ y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+              }}
+            >
+              <h2 className="text-3xl font-bold text-green-600 mb-4">
+                {modalMessage.includes("Congratulations")
+                  ? "🎉 Success!"
+                  : "⚠️ Warning!"}
+              </h2>
+              <p className="text-lg text-gray-700">{modalMessage}</p>
+            </motion.div>
+            <button
+              className="mt-6 bg-green-500 text-white px-6 py-2 rounded-2xl hover:bg-green-600"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </button>
+          </div>
+        </motion.div>
+      )}
     </>
   );
 };
