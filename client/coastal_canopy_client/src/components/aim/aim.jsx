@@ -178,7 +178,7 @@ function LandingPage() {
       {/* Main Content Container with consistent blur background */}
       <div className="w-11/12 max-w-6xl mx-auto my-12 bg-white/20 rounded-3xl text-white backdrop-blur-md p-8 md:p-12 relative z-10">
         {/* Donate Button at the top */}
-        <AnimatedSection className="mb-28">
+        <AnimatedSection className="mb-20">
           <div className="flex justify-center">
             <motion.button
               className="px-8 py-4 bg-green-600 text-white font-bold rounded-full text-xl shadow-lg"
@@ -204,9 +204,9 @@ function LandingPage() {
         </AnimatedSection>
 
         {/* About Coastal Canopy Section */}
-        <AnimatedSection className="mb-36">
+        <AnimatedSection className="mb-24">
           <h2
-            className="text-4xl md:text-5xl font-bold text-center mb-12"
+            className="text-3xl md:text-4xl font-bold text-center mb-8"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             About Coastal Canopy
@@ -247,23 +247,22 @@ function LandingPage() {
         </AnimatedSection>
 
         {/* Aim, Mission, Vision Section */}
-        <AnimatedSection className="mb-36">
+        <AnimatedSection className="mb-24">
           <div
-            className="space-y-20"
-            style={{ fontFamily: "'Playfair Display', serif" }}
+            className="space-y-14 text-4xl md:text-4xl"
           >
             <ContentSection
-              title="OUR AIM"
+              title="Our Aim"
               description="Create a comprehensive, community-oriented web application, CoastalCanopy.lk, dedicated to the monitoring, protection, and sustainable management of mangrove ecosystems in Sri Lanka."
             />
 
             <ContentSection
-              title="OUR MISSION"
+              title="Our Mission"
               description="To educate communities and promote sustainable practices that protect and restore mangrove ecosystems."
             />
 
             <ContentSection
-              title="OUR VISION"
+              title="Our Vision"
               description="A Sri Lanka where mangrove forests thrive, safeguarding biodiversity, livelihoods, and the planet."
             />
           </div>
@@ -272,7 +271,7 @@ function LandingPage() {
         {/* Features Section */}
         <AnimatedSection className="mb-36">
           <h2
-            className="text-4xl md:text-5xl font-bold text-center mb-12"
+            className="text-3xl md:text-4xl font-bold text-center mb-12"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Our Features
@@ -310,7 +309,7 @@ function LandingPage() {
         {/* FAQ Section */}
         <AnimatedSection className="mb-36">
           <h2
-            className="text-4xl md:text-5xl font-bold text-center mb-12"
+            className="text-3xl md:text-4xl font-bold text-center mb-12"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Frequently Asked Questions
@@ -357,7 +356,7 @@ function LandingPage() {
         {/* Feedback Section */}
         <AnimatedSection>
           <h2
-            className="text-4xl md:text-5xl font-bold text-center mb-8"
+            className="text-3xl md:text-4xl font-bold text-center mb-8"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
             Share Your Feedback
@@ -394,7 +393,7 @@ function LandingPage() {
                   id="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white"
+                  className="w-full p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white placeholder-white/80"
                   placeholder="Your name"
                 />
               </div>
@@ -408,7 +407,7 @@ function LandingPage() {
                   id="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white"
+                  className="w-full p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white placeholder-white/80"
                   placeholder="Your email"
                 />
               </div>
@@ -422,7 +421,7 @@ function LandingPage() {
                   rows="4"
                   value={formData.message}
                   onChange={handleInputChange}
-                  className="w-full p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white"
+                  className="w-full p-3 rounded-lg bg-white/10 backdrop-blur-sm border border-white/30 text-white placeholder-white/80"
                   placeholder="Your feedback"
                 ></textarea>
               </div>
@@ -452,7 +451,12 @@ function LandingPage() {
 function ContentSection({ title, description }) {
   return (
     <div className="space-y-6">
-      <h2 className="text-5xl font-bold tracking-wide text-center">{title}</h2>
+      <h2
+        className="text-3xl md:text-4xl font-bold tracking-wide text-center"
+        style={{ fontFamily: "'Playfair Display', serif" }}
+      >
+        {title}
+      </h2>
       <p className="text-xl leading-relaxed max-w-2xl mx-auto text-center">
         {description}
       </p>
