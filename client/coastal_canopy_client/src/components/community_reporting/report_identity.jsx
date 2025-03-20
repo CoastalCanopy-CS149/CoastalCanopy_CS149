@@ -61,9 +61,9 @@ export default function CommunityReporting1() {
 
       <div className="flex justify-center items-center py-10">
         <div className="flex justify-center items-center mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen h-auto ">
-          <div className="w-6/12 ">
+          <div className="w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
             {!isMobileOrTablet && (
-              <div className="bg-red-500 p-3 text-center font-bold rounded">
+              <div className="bg-red-500 p-2 sm:p-3 text-center font-bold rounded">
                 ⚠ Please access this application from a mobile phone or tablet
                 to do a reporting
               </div>
@@ -72,10 +72,10 @@ export default function CommunityReporting1() {
             <div>
               <form
                 onSubmit={handleSubmit}
-                className="space-y-6 p-6 bg-white rounded-lg"
+                className="space-y-4 sm:space-y-6 p-4 bg-white rounded-lg"
               >
-                <h1 className="text-2xl font-bold">Reporting Form</h1>
-                <p className="text-sm ">
+                <h1 className="text-xl sm:text-2xl font-bold text-center">Reporting Form</h1>
+                <p className="text-sm text-center">
                   This information will be used for authentication purposes
                   only.
                 </p>
@@ -85,7 +85,7 @@ export default function CommunityReporting1() {
                     <div key={field}>
                       <label
                         htmlFor={field}
-                        className="block text-sm font-medium p-3"
+                        className="block text-md font-medium p-2 sm:p-3"
                       >
                         {field.charAt(0).toUpperCase() +
                           field.slice(1).replace(/([A-Z])/g, " $1")}
@@ -96,7 +96,7 @@ export default function CommunityReporting1() {
                         id={field}
                         value={formData[field]}
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md p-3 border border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        className="mt-1 block w-full rounded-md p-3 sm:p-2 border border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 "
                         placeholder={
                           field === "contactNumber" ? "+94 XX XXX XXXX" : ""
                         }
