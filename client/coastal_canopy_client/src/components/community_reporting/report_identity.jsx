@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom"
 import background from "/imgs/community_reporting/BgComRep.jpg"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
+import {ArrowUp} from "lucide-react"
 
 export default function CommunityReporting1() {
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false)
@@ -54,7 +55,7 @@ export default function CommunityReporting1() {
       style={{ backgroundImage: `url(${background})` }}
     >
 
-      <div className="z-20 relative">
+      <div className="z-20 relative" id="top">
         <Navbar />
       </div>
 
@@ -101,6 +102,17 @@ export default function CommunityReporting1() {
             </div>
           </div>
         </div>
+
+        <div className="z-20 fixed bottom-8 right-8">
+          <a 
+            href="#top" 
+            className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+            aria-label="Back to top"
+          >
+            <ArrowUp size={20} />
+          </a>
+        </div>
+
       </div>
 
       <Footer />
