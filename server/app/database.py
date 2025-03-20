@@ -6,8 +6,9 @@ def init_db(app):
     client = MongoClient(MONGO_URI)
     app.db = client[DATABASE_NAME]
     
-    # Reference to the Mapping collection
-    app.db.Mapping = app.db["Mapping"]
+# Reference to the Mapping collection
+def get_mangrove_locations():
+    return current_app.db["Mapping"]
 
 
 #Gets reference to the 'Users' collection in MongoDB
