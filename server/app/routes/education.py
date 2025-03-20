@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime,timezone
 
 quiz_api = Blueprint('quiz_api', __name__)
 
@@ -23,7 +23,7 @@ def submit_quiz():
         "name": name,
         "answers": answers,
         "score": score,
-        "submitted_at": datetime.now()
+        "submitted_at": datetime.now(timezone.utc)
     })
 
     return jsonify({"message": "Quiz data submitted successfully"}), 200
