@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useLocation, useNavigate, Link } from "react-router-dom"
 import {ArrowUp} from "lucide-react"
-import background from "/imgs/community_reporting/BgComRep.jpg"
+import background from "/imgs/community_reporting/bg1.jpg"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
@@ -128,20 +128,24 @@ export default function CommunityReporting2() {
       </div>
 
       <div className="flex justify-center items-center py-10">
-        <div className="flex justify-center items-center bg-gray-50 bg-opacity-10 backdrop-blur-sm p-10 rounded-3xl w-11/12 max-w-7xl min-h-screen h-auto">
+        <div className="flex justify-center items-center mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen h-auto">
           <div className="w-6/12">
-
             {!isMobileOrTablet && (
               <div className="bg-red-500  p-3 text-center font-bold rounded">
-                ⚠ Please access this application from a mobile phone or tablet to do a reporting
+                ⚠ Please access this application from a mobile phone or tablet
+                to do a reporting
               </div>
             )}
 
             <div className=" p-6 rounded-lg space-y-6 bg-white">
-              <h1 className="text-2xl font-semibold ">Reporting Form (2nd Page)</h1>
+              <h1 className="text-2xl font-semibold ">
+                Reporting Form (2nd Page)
+              </h1>
 
               <div>
-                <label className="block text-sm font-medium ">Capture a Picture of the Incident</label>
+                <label className="block text-sm font-medium ">
+                  Capture a Picture of the Incident
+                </label>
                 {!image ? (
                   <div>
                     <video
@@ -173,11 +177,19 @@ export default function CommunityReporting2() {
                     className="mt-2 rounded-md shadow-md max-h-full w-full object-cover"
                   />
                 )}
-                <canvas ref={canvasRef} style={{ display: "none" }} width="640" height="480" />
+                <canvas
+                  ref={canvasRef}
+                  style={{ display: "none" }}
+                  width="640"
+                  height="480"
+                />
               </div>
 
               <div>
-                <label htmlFor="destructionType" className="block text-sm font-medium ">
+                <label
+                  htmlFor="destructionType"
+                  className="block text-sm font-medium "
+                >
                   Type of Destruction
                 </label>
                 <select
@@ -195,17 +207,16 @@ export default function CommunityReporting2() {
                 </select>
               </div>
 
-
               <div>
                 {location.state && location.state.fromIdentityPage && (
-                <Link
-                  to="../report-identity"
-                  state={{ formData, image }}
-                  className="mr-4 inline-block bg-blue-500 hover:bg-blue-600  py-2 px-4 rounded"
-                >
-                  Go Back
-                </Link>
-              )}
+                  <Link
+                    to="../report-identity"
+                    state={{ formData, image }}
+                    className="mr-4 inline-block bg-blue-500 hover:bg-blue-600  py-2 px-4 rounded"
+                  >
+                    Go Back
+                  </Link>
+                )}
                 <button
                   onClick={handleSubmit}
                   className="inline-block bg-blue-500 hover:bg-blue-700 py-2 px-4 rounded"
@@ -231,8 +242,7 @@ export default function CommunityReporting2() {
       </div>
 
       <Footer />
-
     </div>
-  )
+  );
 }
 

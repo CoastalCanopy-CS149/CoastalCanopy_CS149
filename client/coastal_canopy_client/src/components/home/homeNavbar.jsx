@@ -22,7 +22,7 @@ const Navbar = () => {
     { name: "Reporting", path: "/reporting" },
     { name: "Learn", path: "/education" },
     { name: "AR View", path: "/ar" },
-    { name: "Virtual Mangrove", path: "/gamification" },
+    { name: "EcoScore", path: "/gamification/" },
     { name: "Social Hub", path: "/socialMedia" },
     { name: "Shop", path: "/shop" },
     { name: "About Us", path: "/aboutUs" },
@@ -109,13 +109,13 @@ const Navbar = () => {
 
               {/* Desktop Menu Overlay */}
               {isMenuOpen && (
-                <div className="absolute right-0 top-10 w-[220px] bg-white/25 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 hidden md:block">
+                <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 hidden md:block">
                   <div className="py-1">
                     {menuItems.map((item) => (
                       <Link
                         key={item.name}
                         to={item.path}
-                        className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-white/50 transition-colors text-center
+                        className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-black/50 transition-colors text-center
                           ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -128,13 +128,13 @@ const Navbar = () => {
 
               {/* Mobile Menu Overlay */}
               {isMobileMenuOpen && (
-                <div className="absolute right-0 top-10 w-[220px] bg-white/25 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 md:hidden">
+                <div className="absolute right-0 top-10 w-[220px]  bg-black/40 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 md:hidden">
                   <div className="py-1">
                     {menuItems.map((item) => (
                       <Link
                         key={item.name}
                         to={item.path}
-                        className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-white/50 transition-colors text-center
+                        className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-black/50 transition-colors text-center
                           ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
