@@ -240,7 +240,7 @@ const Login = () => {
                   </div>
                   Remember Me
                 </label>
-                <Link to="/forgot-password" className="hover:underline">
+                <Link to="../forgot-password" className="hover:underline">
                   Forgot Password?
                 </Link>
               </div>
