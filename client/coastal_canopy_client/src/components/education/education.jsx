@@ -83,7 +83,7 @@ const EducationSection = () => {
               </p>
               <button
                 onClick={() => navigate("../education-news")}
-                className="mt-8 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                className="mt-32 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
               >
                 See More
               </button>
@@ -104,7 +104,7 @@ const EducationSection = () => {
               </p>
               <button
                 onClick={() => navigate("../VideoCard")}
-                className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                className="mt-24 bg-green-500 hover:bg-green-600 text-white px-8 py-2 rounded-md"
               >
                 Play
               </button>
@@ -138,18 +138,17 @@ const EducationContent = () => {
   const navigate = useNavigate();
   return (
     <div
+       className="min-h-screen"
       style={{
         backgroundImage: `url(${mangroveBackground})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        display: "flex",
-        height: "100vh",
-        overflow: "hidden",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        paddingTop: "5vh",
-      }}
+        }}
     >
+      <div className="z-20 relative">
+        <Navbar />
+      </div>
+      <div className="flex justify-center items-start pt-12">
       <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white ">
         <h3
           className="font-semibold text-center text-white text-3xl mb-5"
@@ -194,6 +193,8 @@ const EducationContent = () => {
         </div>
       </div>
     </div>
+    <Footer />
+    </div>
   );
 };
 
@@ -205,14 +206,12 @@ const EducationNews = () => {
         backgroundImage: `url(${mangroveBackground})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        display: "flex",
-        height: "100vh",
-        overflow: "hidden",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        paddingTop: "5vh",
-      }}
+       }}
     >
+       <div className="z-20 relative">
+        <Navbar />
+      </div>
+      <div className="flex justify-center items-start pt-12">
       <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white">
         <h3
           className="font-semibold text-center text-white text-3xl mb-5"
@@ -245,12 +244,10 @@ const EducationNews = () => {
         </div>
       </div>
     </div>
+    <Footer />
+    </div>
   );
 };
-
-
-
-
 
 const VideoCard = () => {
   const videoFile = "/imgs/education/5079225-uhd_3840_2160_24fps.mp4";
@@ -276,9 +273,7 @@ return (
             />
           </div>
         </div>
-    
-   
-  );
+    );
 };
 
 const EducationQuiz = () => {
@@ -362,14 +357,15 @@ const EducationQuiz = () => {
           backgroundImage: `url(${mangroveBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          display: "flex",
-          height: "100vh",
-          overflow: "hidden",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          paddingTop: "5vh",
-        }}
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          backgroundAttachment: "fixed",
+          }}
       >
+        <div className="z-20 relative">
+          <Navbar />
+        </div>
+        <div className="flex justify-center items-start pt-12">
         <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white">
           <h3
             className="font-semibold text-center text-white text-4xl mb-5"
@@ -377,14 +373,14 @@ const EducationQuiz = () => {
           >
             Quiz
           </h3>
-          <div className="space-y-6  max-h-[400px] overflow-y-auto">
+          <div className="space-y-6">
             {/* Question 1 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
                 1) Which of the following is a common species found in mangrove
                 forests?
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-2 font-semibold">
                 {["Oak", "Rhizopora", "Pine", "Birch"].map((option, index) => (
                   <label key={index} className="block">
                     <input
@@ -595,7 +591,7 @@ const EducationQuiz = () => {
               <h2 className="font-semibold text-lg text-left mb-10">
                 9) How do mangroves help combat climate change?
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-2 font-semibold">
                 {[
                   "By increasing ocean temparatures",
                   "By absorbing and storing large amounts of carbon dioxide",
@@ -666,6 +662,8 @@ const EducationQuiz = () => {
             </div>
           </div>
         </div>
+        </div>
+        <Footer />
       </div>
 
       {/* Modal for Messages */}
