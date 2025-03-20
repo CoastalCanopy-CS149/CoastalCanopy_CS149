@@ -1,0 +1,10 @@
+.env
+# Ignore IntelliJ IDEA project files  
+*.iml  
+
+# Ignore XML files  
+*.xml  
+
+# Ignore Python bytecode files  
+*.pyc  
+

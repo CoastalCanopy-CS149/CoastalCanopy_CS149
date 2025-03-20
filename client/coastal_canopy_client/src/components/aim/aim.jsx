@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import background from "/imgs/aim/aim_background.jpg";

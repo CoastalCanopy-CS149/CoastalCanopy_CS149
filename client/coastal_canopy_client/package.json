@@ -10,11 +10,28 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "framer-motion": "^12.5.0",
+    "@fontsource/aclonica": "^5.1.1",
+    "@fontsource/acme": "^5.1.1",
+    "@fontsource/actor": "^5.1.1",
+    "@fontsource/adamina": "^5.1.1",
+    "@fontsource/afacad": "^5.1.1",
+    "@fontsource/comfortaa": "^5.1.1",
+    "@paypal/react-paypal-js": "^8.8.2",
+    "axios": "^1.8.3",
+    "firebase": "^11.4.0",
+    "framer-motion": "^12.4.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.475.0",
     "react": "^19.0.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.5"
+    "react-howler": "^5.2.0",
+    "react-icons": "^5.5.0",
+    "react-leaflet": "^5.0.0",
+    "react-player": "^2.16.0",
+    "react-router-dom": "^7.1.5",
+    "react-use": "^17.6.0",
+    "swiper": "^11.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
