@@ -83,7 +83,18 @@ export default function CommunityReporting2() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const isFormValid = () => {
+    return formData.latitude !== null && formData.longitude !== null && image !== null
+  }
+
   const handleSubmit = async () => {
+    if (!isFormValid()) {
+      alert("Please capture an image with location access enabled. Location data and the image are required.")
+      return
+    }
+
+    alert("Form is submitting...")
+
     const { isAnonymous } = location.state || {}
     const completeFormData = {
       ...formData,
