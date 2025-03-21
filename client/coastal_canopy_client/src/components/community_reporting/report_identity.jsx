@@ -39,6 +39,14 @@ export default function CommunityReporting1() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    // Validate required fields
+    const { firstName, lastName, email, contactNumber } = formData;
+    if (!firstName || !lastName || !email || !contactNumber) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
     navigate("../report-anonymous", {
       state: {
         formData,
@@ -100,6 +108,7 @@ export default function CommunityReporting1() {
                         placeholder={
                           field === "contactNumber" ? "+94 XX XXX XXXX" : ""
                         }
+                        required
                         // disabled={!isMobileOrTablet}
                       />
                     </div>

@@ -43,7 +43,7 @@ export default function CommunityReportingMain() {
                   state={{ isAnonymous: false }}
                   className="block w-full bg-green-600 hover:bg-green-700 text-white rounded-3xl p-4 sm:p-4 md:p-5 lg:p-6 text-lg sm:text-xl md:text-2xl transition-colors duration-200 "
                 >
-                  Report With Identity
+                  Report With The Identity
                 </Link>
 
                 <Link

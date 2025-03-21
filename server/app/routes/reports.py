@@ -1,18 +1,32 @@
 from flask import Blueprint, request, jsonify
 from ultralytics import YOLO
 import cv2
-from app.database import get_reports_collection
 import base64
 import os
 from bson import ObjectId
+import cloudinary
+import cloudinary.uploader
+from dotenv import load_dotenv
+import io
+from app.database import get_reports_collection
+
+# Load environment variables
+load_dotenv()
+
+# Configure Cloudinary using .env variables
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
 
 reports_bp = Blueprint('reports', __name__)
 
 #folder to save reports locally on the machine
 FOLDER = "reports"
-RESULTS_FOLDER = "results"
+# RESULTS_FOLDER = "results"
 os.makedirs(FOLDER, exist_ok=True)
-os.makedirs(RESULTS_FOLDER, exist_ok=True)
+# os.makedirs(RESULTS_FOLDER, exist_ok=True)
 
 # Get the directory where the current script is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -38,7 +52,7 @@ def submit_report():
     image_bytes = base64.b64decode(encoded)
 
     # Define the image path
-    image_filename = f"{report_id}.jpg"  # Save as JPG
+    image_filename = f"{report_id}.jpg"
     image_path = os.path.join(FOLDER, image_filename)
 
     # Save the image to the folder
@@ -48,6 +62,7 @@ def submit_report():
     # Process the image using the YOLO model
     try:
         detection_result, result_image_path = detect(image_path, report_id)
+        delete_image(image_path)
     except Exception as e:
         return jsonify({"error": f"Failed to process image: {str(e)}"}), 500
 
@@ -57,12 +72,11 @@ def submit_report():
         "lastName": data.get("lastName"),
         "email": data.get("email"),
         "contactNumber": data.get("contactNumber"),
-        "image": data.get("image"),
-        "imagePath": image_path,
-        "resultImagePath": result_image_path,
-        "latitudes": data.get("latitudes"),
-        "longitudes": data.get("longitudes"),
+        "latitude": data.get("latitude"),
+        "longitude": data.get("longitude"),
         "destructionType": data.get("destructionType"),
+        "image": data.get("image"),
+        "resultImagePath": result_image_path,
         "detection_result": detection_result
     }
 
@@ -88,9 +102,9 @@ def detect(image_path, report_id):
     if img is None:
         # If results doesn't contain any detection, load the image directly
         img = cv2.imread(image_path)
-
-    # Define result image path
-    result_image_path = os.path.join(RESULTS_FOLDER, f"result_{report_id}.jpg")
+    #
+    # # Define result image path
+    # result_image_path = os.path.join(RESULTS_FOLDER, f"result_{report_id}.jpg")
 
     # Process results
     output = {
@@ -145,10 +159,40 @@ def detect(image_path, report_id):
         cv2.putText(img, "No mangrove destruction detected", (20, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-    # Save the result image
-    cv2.imwrite(result_image_path, img)
+    # # Save the result image
+    # cv2.imwrite(result_image_path, img)
 
-    return output, result_image_path
+    # Convert OpenCV image (NumPy array) to bytes
+    _, buffer = cv2.imencode(".jpg", img)  # Encode image to JPEG format
+    image_bytes = io.BytesIO(buffer)  # Create an in-memory buffer
+
+    # # Define the Cloudinary filename using report_id
+    # cloudinary_filename = f"Reports/result_{report_id}"
+    #
+    # # Upload to Cloudinary with a custom name
+    # response = cloudinary.uploader.upload(image_bytes, public_id=cloudinary_filename)
+
+    # Define the Cloudinary filename using report_id
+    cloudinary_filename = f"result_{report_id}"
+
+    # Upload to Cloudinary with a custom name to the Reports folder
+    response = cloudinary.uploader.upload(image_bytes,
+                                          public_id=cloudinary_filename,
+                                          folder="ReportResults",
+                                          type="private",
+                                          )
+
+    return output, response["secure_url"]
+
+def delete_image(image_path):
+    try:
+        if os.path.exists(image_path):
+            os.remove(image_path)
+            print(f"{image_path} has been deleted successfully.")
+        else:
+            print(f"The file {image_path} does not exist.")
+    except Exception as e:
+        print(f"Error deleting file: {e}")
 
 
 

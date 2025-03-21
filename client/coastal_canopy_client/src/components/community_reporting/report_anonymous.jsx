@@ -93,7 +93,7 @@ export default function CommunityReporting2() {
       return
     }
 
-    alert("Form is submitting...")
+    alert("Form is submitting...This will take few moments")
 
     const { isAnonymous } = location.state || {}
     const completeFormData = {
