@@ -7,10 +7,10 @@ function AR() {
       style={{ backgroundImage: "url('/imgs/AR/background_ar.jpg')" }}
     >
       {/* Centered Blur Background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-6xl h-4/5 bg-white/20  backdrop-blur-sm rounded-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-6xl h-4/5 bg-white/10  backdrop-blur-sm rounded-3xl" />
 
-      {/* Overlay for better readability */}
-      <div className="absolute inset-0 bg-black/50"></div>
+      {/* Overlay for better readability
+      <div className="absolute inset-0 bg-black/50"></div> */}
 
       <div className="text-center max-w-3xl relative z-10 px-4">
         <h1
