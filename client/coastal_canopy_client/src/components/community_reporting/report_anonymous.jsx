@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useLocation, useNavigate, Link } from "react-router-dom"
 import {ArrowUp} from "lucide-react"
-import background from "/imgs/community_reporting/bg1.jpg"
+import background from "/imgs/community_reporting/bg4.jpg"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 

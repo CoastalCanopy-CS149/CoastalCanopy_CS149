@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import background from "/imgs/community_reporting/bg1.jpg"
+import background from "/imgs/community_reporting/bg4.jpg"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 import {ArrowUp} from "lucide-react"
