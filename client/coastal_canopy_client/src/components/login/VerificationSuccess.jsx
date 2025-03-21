@@ -39,7 +39,7 @@ const VerificationSuccess = () => {
       <Navbar />
 
       <div className="flex-1 flex items-center justify-center py-6 px-4">
-        <div className="relative w-full max-w-[800px] bg-black/40 backdrop-blur-sm rounded-[25px] p-4 sm:p-12">
+        <div className="relative w-full max-w-[800px] bg-black/40 backdrop-blur-sm rounded-3xl p-4 sm:p-12 mt-12 mb-12">
           <div className="flex flex-col items-center justify-center">
             <h1 className="font-['Acme'] text-white text-[24px] sm:text-[30px] text-center mb-2 sm:mb-3">
               Welcome aboard!
