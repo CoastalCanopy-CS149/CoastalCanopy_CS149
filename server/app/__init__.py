@@ -9,6 +9,7 @@ from app.database import init_db
 
 from app.routes.gamification import gamification_bp
 from app.routes.mapping import mapping_bp
+from app.routes.monitoring import monitoring_bp
 
 
 
@@ -29,6 +30,7 @@ def create_app():
 
     app.register_blueprint(gamification_bp, url_prefix="/gamification")
     app.register_blueprint(mapping_bp, url_prefix="/api/mapping")
+    app.register_blueprint(monitoring_bp, url_prefix="/api/monitoring")  # Register monitoring blueprint
 
     @app.route('/')
     def home():
