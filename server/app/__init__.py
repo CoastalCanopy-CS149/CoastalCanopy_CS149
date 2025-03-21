@@ -9,6 +9,7 @@ from app.database import init_db
 from app.routes.reports import reports_bp
 from app.routes.gamification import gamification_bp
 from app.routes.mapping import mapping_bp
+from app.routes.increase_points import points_bp
 
 
 def create_app():
@@ -26,6 +27,7 @@ def create_app():
     app.register_blueprint(reports_bp, url_prefix="/reports")
     app.register_blueprint(gamification_bp, url_prefix="/gamification")
     app.register_blueprint(mapping_bp, url_prefix="/api/mapping")
+    app.register_blueprint(points_bp, url_prefix="/points")
 
     return app
 

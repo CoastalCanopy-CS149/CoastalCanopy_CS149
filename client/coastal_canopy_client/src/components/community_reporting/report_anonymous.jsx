@@ -20,6 +20,9 @@ export default function CommunityReporting2() {
   const canvasRef = useRef(null)
   const [isCameraActive, setIsCameraActive] = useState(false)
 
+  const username = "Malsha"
+  const points = 100
+
 
   useEffect(() => {
     const userAgent = navigator.userAgent
@@ -119,6 +122,7 @@ export default function CommunityReporting2() {
       })
 
       if (response.ok) {
+        increasePoints(username, points)
         alert("Thank you for reporting!")
         navigate("/reporting")
       } else {
@@ -129,6 +133,23 @@ export default function CommunityReporting2() {
       alert("Failed to submit report. Please try again.")
     }
   }
+
+  
+  const increasePoints = async (username, points) => {
+    try {
+      const response = await fetch('http://localhost:5000/points/Increase_points', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, points }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error increasing points:', error);
+    }
+  };
+
 
   return (
     <div
