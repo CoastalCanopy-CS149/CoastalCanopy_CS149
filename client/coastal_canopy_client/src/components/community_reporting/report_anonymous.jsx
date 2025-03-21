@@ -248,7 +248,7 @@ export default function CommunityReporting2() {
           </div>
         </div>
 
-        <div className="z-20 fixed bottom-8 right-8">
+        <div className="z-20 fixed bottom-8 right-5">
           <a 
             href="#top" 
             className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
