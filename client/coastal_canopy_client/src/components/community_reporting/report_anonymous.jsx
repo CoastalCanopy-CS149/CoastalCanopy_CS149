@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useLocation, useNavigate, Link } from "react-router-dom"
-import background from "/imgs/community_reporting/bg1.jpg"
+import {ArrowUp} from "lucide-react"
+import background from "/imgs/community_reporting/bg4.jpg"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
@@ -17,6 +18,11 @@ export default function CommunityReporting2() {
   const navigate = useNavigate()
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
+  const [isCameraActive, setIsCameraActive] = useState(false)
+
+  const username = "Malsha"
+  const points = 100
+
 
   useEffect(() => {
     const userAgent = navigator.userAgent
@@ -80,7 +86,18 @@ export default function CommunityReporting2() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const isFormValid = () => {
+    return formData.latitude !== null && formData.longitude !== null && image !== null
+  }
+
   const handleSubmit = async () => {
+    if (!isFormValid()) {
+      alert("Please capture an image with location access enabled. Location data and the image are required.")
+      return
+    }
+
+    alert("Form is submitting...This will take few moments")
+
     const { isAnonymous } = location.state || {}
     const completeFormData = {
       ...formData,
@@ -96,7 +113,7 @@ export default function CommunityReporting2() {
     }
 
     try {
-      const response = await fetch("/api/submit-report", {
+      const response = await fetch("http://localhost:5000/reports/submit-report", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,8 +122,9 @@ export default function CommunityReporting2() {
       })
 
       if (response.ok) {
+        increasePoints(username, points)
         alert("Thank you for reporting!")
-        navigate("/")
+        navigate("/reporting")
       } else {
         throw new Error("Failed to submit report")
       }
@@ -116,33 +134,53 @@ export default function CommunityReporting2() {
     }
   }
 
+  
+  const increasePoints = async (username, points) => {
+    try {
+      const response = await fetch('http://localhost:5000/points/Increase_points', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, points }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error increasing points:', error);
+    }
+  };
+
+
   return (
     <div
       className="bg-cover min-h-screen bg-fixed"
       style={{ backgroundImage: `url(${background})` }}
     >
-      <div className="z-20 relative">
+
+      <div className="z-20 relative" id="top">
         <Navbar />
       </div>
 
       <div className="flex justify-center items-center py-10">
         <div className="flex justify-center items-center mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 min-h-screen h-auto">
-          <div className="w-6/12">
+          <div className="w-full sm:w-10/12 md:w-8/12 lg:w-6/12">
             {!isMobileOrTablet && (
-              <div className="bg-red-500  p-3 text-center font-bold rounded">
+              <div className="bg-red-500  p-2 sm:p-3 text-center font-bold rounded">
                 ⚠ Please access this application from a mobile phone or tablet
                 to do a reporting
               </div>
             )}
 
-            <div className=" p-6 rounded-lg space-y-6 bg-white">
-              <h1 className="text-2xl font-semibold ">
+            <div className="p-6 rounded-lg space-y-6 bg-white">
+              <h1 className="text-xl sm:text-2xl font-bold ">
                 Reporting Form (2nd Page)
               </h1>
 
-              <div>
+              <div >
                 <label className="block text-sm font-medium ">
-                  Capture a Picture of the Incident
+                  <div>1. Alow the camera access <span className="text-red-600">*</span></div>
+                  <div>2. Capture a Picture of the Incident <span className="text-red-600">*</span></div>
+                  <div>3. Allow the location access <span className="text-red-600">*</span></div>
                 </label>
                 {!image ? (
                   <div>
@@ -150,11 +188,14 @@ export default function CommunityReporting2() {
                       ref={videoRef}
                       autoPlay
                       playsInline
-                      className="mt-2 rounded-md max-h-full w-full object-cover border-2"
+                      className="mt-1 sm:mt-2 rounded-md  h-full max-h-full w-full object-cover border-2"
                     />
 
                     <button
-                      onClick={startCamera}
+                      onClick={() => {
+                        startCamera();
+                        setIsCameraActive(true);
+                      }}
                       className="mt-2 bg-green-500 hover:bg-green-700  font-bold py-2 px-4 rounded"
                       // disabled={!isMobileOrTablet}
                     >
@@ -162,7 +203,8 @@ export default function CommunityReporting2() {
                     </button>
                     <button
                       onClick={captureImage}
-                      className="mt-2 ml-2 bg-green-500 hover:bg-green-700  font-bold py-2 px-4 rounded"
+                      className="mt-2 ml-2 bg-green-500 hover:bg-green-700  font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={!isCameraActive}
                       // disabled={!isMobileOrTablet}
                     >
                       Capture Image
@@ -178,8 +220,8 @@ export default function CommunityReporting2() {
                 <canvas
                   ref={canvasRef}
                   style={{ display: "none" }}
-                  width="640"
-                  height="480"
+                  width="800"
+                  height="600"
                 />
               </div>
 
@@ -226,6 +268,17 @@ export default function CommunityReporting2() {
             </div>
           </div>
         </div>
+
+        <div className="z-20 fixed bottom-8 right-5">
+          <a 
+            href="#top" 
+            className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+            aria-label="Back to top"
+          >
+            <ArrowUp size={20} />
+          </a>
+        </div>
+
       </div>
 
       <Footer />

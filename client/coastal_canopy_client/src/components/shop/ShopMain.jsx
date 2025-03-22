@@ -19,10 +19,10 @@ const ShopMain = () => {
     { id: 10, description: "Sticker Pack 1", price: "Rs. 120.00", image: "/imgs/shop/pack2.png" },
     { id: 11, description: "Sticker Pack 3", price: "Rs. 100.00", image: "/imgs/shop/pack4.png" },
     { id: 12, description: "Sticker Pack 4", price: "Rs. 100.00", image: "/imgs/shop/pack3.jpg" },
-    { id: 12, description: "Cofee Mug", price: "Rs. 400.00", image: "/imgs/shop/mug.png" },
-    { id: 12, description: "Submarine Bracelet", price: "Rs. 300.00", image: "/imgs/shop/bracelet.jpg" },
-    { id: 12, description: "Glass Water Bottle", price: "Rs. 700.00", image: "/imgs/shop/bottle.png" },
-    { id: 12, description: "Suviniour", price: "Rs. 200.00", image: "/imgs/shop/suviniour.png" },
+    { id: 13, description: "Cofee Mug", price: "Rs. 400.00", image: "/imgs/shop/mug.png" },
+    { id: 14, description: "Submarine Bracelet", price: "Rs. 300.00", image: "/imgs/shop/bracelet.jpg" },
+    { id: 15, description: "Glass Water Bottle", price: "Rs. 700.00", image: "/imgs/shop/bottle.png" },
+    { id: 16, description: "Suviniour", price: "Rs. 200.00", image: "/imgs/shop/suviniour.png" },
   ]
 
   const { cartItems, addToCart } = useCart()

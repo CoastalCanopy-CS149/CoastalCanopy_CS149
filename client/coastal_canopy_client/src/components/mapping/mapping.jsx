@@ -3,6 +3,21 @@ import { MapContainer, TileLayer, Rectangle, Popup, Marker } from "react-leaflet
 import "leaflet/dist/leaflet.css"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
+import L from "leaflet"; // Import Leaflet
+import markerIcon from "leaflet/dist/images/marker-icon.png"; // Import marker icon
+import markerIconShadow from "leaflet/dist/images/marker-shadow.png"; // Import marker shadow
+
+// Set the default icon for Leaflet markers
+let DefaultIcon = L.icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerIconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 // Define the type for mangrove locations
 const initialBounds = [
