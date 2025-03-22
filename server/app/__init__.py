@@ -1,4 +1,5 @@
 from flask import Flask
+from app.routes.education import quiz_api
 from flask_cors import CORS
 
 from app.database import init_db
@@ -33,6 +34,6 @@ def create_app():
     @app.route('/')
     def home():
         return "Hello, Flask!"  # Simple route to test if the app works
-
+        app.register_blueprint(quiz_api)
     return app
 
