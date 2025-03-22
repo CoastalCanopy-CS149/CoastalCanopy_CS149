@@ -10,6 +10,8 @@ import environment from "/imgs/social_media/environment.jpg";
 import brushstrokes from "/imgs/social_media/brush-strokes.jpg";
 import nature from "/imgs/social_media/nature.jpg";
 import { FaCloudUploadAlt, FaFacebook, FaInstagram, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import Navbar from "../navbar/navbar";
+import Footer from "../footer/footer";
 
 const themes = [
     { title: "Sustainability and environment", theme: "Ethereal Glow", image: etherealglow },
@@ -32,43 +34,40 @@ export function CreatePost() {
     };
 
     return (
-      <div
-        style={{
-          backgroundImage: `url(${mangroveBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-        className="min-h-screen flex flex-col items-center pt-6 px-4 sm:px-6"
-      >
-        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4">
-          {!selectedTheme ? (
-            <>
-              <h2 className="text-center text-2xl sm:text-3xl font-bold text-white">
-                Create Post
-              </h2>
-              <p className="text-center text-lg text-white mb-6">
-                Select a theme
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                {themes.map((theme, index) => (
-                  <div
-                    key={index}
-                    onClick={() => handleThemeSelect(theme.theme)}
-                    className="bg-white bg-opacity-90 p-4 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform"
-                  >
-                    <img
-                      src={theme.image}
-                      alt={theme.theme}
-                      className="w-full h-28 sm:h-32 md:h-40 object-cover rounded-lg"
-                    />
-                    <h3 className="text-center text-sm font-semibold mt-2">
-                      {theme.title}
-                    </h3>
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : null}
+        <div
+            className="min-h-screen"
+            style={{
+                backgroundImage: `url(${mangroveBackground})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}
+            >
+             <div className="z-20 relative">
+                <Navbar />
+                </div>   
+            <div className="flex justify-center items-start pt-12">  
+            <div className="bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl p-6 sm:p-10  w-11/12 max-w-7xl shadow-xl -mt-6 mb-10">
+                {!selectedTheme ? (
+                    <>
+                        <h2 className="text-center text-2xl sm:text-3xl font-bold text-white">Create Post</h2>
+                        <p className="text-center text-lg text-white mb-6">Select a theme</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                            {themes.map((theme, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => handleThemeSelect(theme.theme)}
+                                    className="bg-white bg-opacity-90 p-4 rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform"
+                                >
+                                    <img src={theme.image} alt={theme.theme} className="w-full h-28 sm:h-32 md:h-40 object-cover rounded-lg" />
+                                    <h3 className="text-center text-sm font-semibold mt-2">{theme.title}</h3>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                ) : null}
+            </div>
+            </div>
+            <Footer/>
         </div>
       </div>
     );
@@ -165,20 +164,26 @@ export function UploadSection() {
 
     return (
         <div
+           className="min-h-screen"
             style={{
                 backgroundImage: `url(${mangroveBackground})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
             }}
-            className="min-h-screen flex flex-col justify-center items-center pt-6 px-4 sm:px-6"
         >
+            <div className="z-20 relative">
+                <Navbar />
+            </div>
+          <div className="flex justify-center items-start pt-12">
             <div
                 style={{
                     backgroundImage: themeData ? `url(${themeData.image})` : "none",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                 }}
-                className="rounded-3xl p-6 sm:p-10 w-full max-w-2xl shadow-xl h-auto"
+               
+                
+                className="rounded-3xl p-6 sm:p-10 w-11/12 max-w-2xl shadow-xl mb-32sm:mb-48 md:mb-64 mt-64 sm:mt-48 md:mt-64"
             >
                 <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center">
                     Upload Image
@@ -217,14 +222,16 @@ export function UploadSection() {
                 )}
 
                 <div className="flex flex-col sm:flex-row gap-4 mt-6 sm:gap-6 w-full sm:w-auto">
-                    <button onClick={() => navigate(-1)} className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-green-600">
-                        ← Back  
+                    <button onClick={() => navigate(-1)} className="w-full sm:w-auto bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-800">
+                        ← Go to theme  
                     </button>
-                    <button onClick={() => navigate("/socialMedia/share")} className="w-full sm:w-auto bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-green-600">
+                    <button onClick={() => navigate("/socialMedia/share")} className="w-full sm:w-auto bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-800">
                         Next →
                     </button>
                 </div>
             </div>
+        </div>
+        <Footer/>
         </div>
     );
 }
@@ -289,7 +296,7 @@ export function SocialMediaSection() {
                     </button>
                 </div>
                 <div className="text-center mt-6">
-                <button onClick={() => navigate(-1)} className="mt-6 w-full sm:w-auto   bg-blue-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-green-600">
+                <button onClick={() => navigate(-1)} className="mt-6 w-full sm:w-auto   bg-green-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-green-800">
                     ← Back
                 </button>
                 </div>
