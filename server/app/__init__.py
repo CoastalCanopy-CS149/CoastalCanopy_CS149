@@ -10,6 +10,7 @@ from app.routes.reports import reports_bp
 from app.routes.gamification import gamification_bp
 from app.routes.mapping import mapping_bp
 from app.routes.increase_points import points_bp
+# from app.routes.monitoring import monitoring_bp
 
 
 def create_app():
@@ -28,6 +29,10 @@ def create_app():
     app.register_blueprint(gamification_bp, url_prefix="/gamification")
     app.register_blueprint(mapping_bp, url_prefix="/api/mapping")
     app.register_blueprint(points_bp, url_prefix="/points")
+
+    @app.route('/')
+    def home():
+        return "Hello, Flask!"  # Simple route to test if the app works
 
     return app
 
