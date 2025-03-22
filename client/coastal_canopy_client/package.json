@@ -17,6 +17,7 @@
     "@fontsource/afacad": "^5.1.1",
     "@fontsource/comfortaa": "^5.1.1",
     "@paypal/react-paypal-js": "^8.8.2",
+    "@supabase/supabase-js": "^2.49.1",
     "axios": "^1.8.4",
     "chart.js": "^4.4.8",
     "firebase": "^11.4.0",
@@ -33,6 +34,7 @@
     "react-player": "^2.16.0",
     "react-router-dom": "^7.1.5",
     "react-use": "^17.6.0",
+    "recharts": "^2.15.1",
     "swiper": "^11.2.2"
   },
   "devDependencies": {

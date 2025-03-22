@@ -9,7 +9,7 @@ from app.database import init_db
 
 from app.routes.gamification import gamification_bp
 from app.routes.mapping import mapping_bp
-from app.routes.monitoring import monitoring_bp
+# from app.routes.monitoring import monitoring_bp
 
 
 
@@ -18,7 +18,6 @@ def create_app():
     # Allows all routes from any origin
     CORS(app)
 
-
     init_db(app)
 
     # Seed the database with initial mangrove data
@@ -26,11 +25,9 @@ def create_app():
 
     # Register Blueprints (modular routes)
     # app.register_blueprint(auth_bp, url_prefix="/users)
-    # app.register_blueprint(reports_bp, url_prefix="/reports")
-
     app.register_blueprint(gamification_bp, url_prefix="/gamification")
     app.register_blueprint(mapping_bp, url_prefix="/api/mapping")
-    app.register_blueprint(monitoring_bp, url_prefix="/api/monitoring")  # Register monitoring blueprint
+
 
     @app.route('/')
     def home():
