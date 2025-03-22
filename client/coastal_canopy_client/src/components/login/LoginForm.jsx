@@ -13,36 +13,70 @@ import "@fontsource/comfortaa"
 const Login = () => {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState(() => {
-    return sessionStorage.getItem("loginEmail") || ""
-  })
-  const [password, setPassword] = useState(() => {
-    return sessionStorage.getItem("loginPassword") || ""
-  })
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const [rememberMe, setRememberMe] = useState(false)
   const [errors, setErrors] = useState({})
   const [invalidCredentials, setInvalidCredentials] = useState(false)
+  const [failedAttempts, setFailedAttempts] = useState(() => {
+    const attempts = localStorage.getItem("loginFailedAttempts")
+    return attempts ? Number.parseInt(attempts) : 0
+  })
+  const [isLocked, setIsLocked] = useState(false)
+  const [lockTimeLeft, setLockTimeLeft] = useState(0)
+  const lockTimerRef = { current: null }
 
-  // Save form data to sessionStorage when it changes
+  // Check if the form is locked on component mount
   useEffect(() => {
-    sessionStorage.setItem("loginEmail", email)
-    sessionStorage.setItem("loginPassword", password)
-  }, [email, password])
-  
-  // Clear form data when navigating away or closing the tab
-  useEffect(() => {
-    const clearSessionData = () => {
-      sessionStorage.removeItem("loginEmail");
-      sessionStorage.removeItem("loginPassword");
-  };
+    const lockedUntil = localStorage.getItem("loginLockedUntil")
 
-  // Clear data on component unmount (navigation)
-  return () => clearSessionData();
+    if (lockedUntil) {
+      const lockTime = Number.parseInt(lockedUntil)
+      const currentTime = new Date().getTime()
 
-  // Clear data on tab close
-  window.addEventListener("beforeunload", clearSessionData);
-  return () => window.removeEventListener("beforeunload", clearSessionData);
-}, []);
+      if (lockTime > currentTime) {
+        // Form is still locked
+        setIsLocked(true)
+        const timeLeft = Math.ceil((lockTime - currentTime) / 1000)
+        setLockTimeLeft(timeLeft)
+        startLockTimer()
+      } else {
+        // Lock has expired
+        localStorage.removeItem("loginLockedUntil")
+        localStorage.removeItem("loginFailedAttempts")
+        setFailedAttempts(0)
+        setIsLocked(false)
+      }
+    }
+  }, [])
+
+  // Start the lock timer
+  const startLockTimer = () => {
+    if (lockTimerRef.current) {
+      clearInterval(lockTimerRef.current)
+    }
+
+    lockTimerRef.current = setInterval(() => {
+      setLockTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(lockTimerRef.current)
+          setIsLocked(false)
+          localStorage.removeItem("loginLockedUntil")
+          localStorage.removeItem("loginFailedAttempts")
+          setFailedAttempts(0)
+          return 0
+        }
+        return prevTime - 1
+      })
+    }, 1000)
+  }
+
+  // Format time for display
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = seconds % 60
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
+  }
 
   // Check for remembered login on component mount
   useEffect(() => {
@@ -74,6 +108,13 @@ const Login = () => {
     const newErrors = {}
     setInvalidCredentials(false)
 
+    // Check if form is locked
+    if (isLocked) {
+      setInvalidCredentials(true)
+      setErrors({ form: `Account locked. Please try again in ${formatTime(lockTimeLeft)}.` })
+      return
+    }
+
     // Basic validation
     if (!email) newErrors.email = "Email is required"
     if (!password) newErrors.password = "Password is required"
@@ -91,6 +132,10 @@ const Login = () => {
       // Login successful
       localStorage.setItem("currentUser", JSON.stringify(user))
 
+      // Reset failed attempts
+      localStorage.removeItem("loginFailedAttempts")
+      setFailedAttempts(0)
+
       // Handle remember me
       if (rememberMe) {
         const twoWeeksFromNow = new Date()
@@ -105,8 +150,25 @@ const Login = () => {
       // Redirect to home page
       navigate("/")
     } else {
-      // Login failed
-      setInvalidCredentials(true)
+      // Login failed - increment failed attempts
+      const newFailedAttempts = failedAttempts + 1
+      setFailedAttempts(newFailedAttempts)
+      localStorage.setItem("loginFailedAttempts", newFailedAttempts)
+
+      // Check if we should lock the form
+      if (newFailedAttempts >= 5) {
+        // Lock for 10 minutes (600 seconds)
+        const lockUntil = new Date().getTime() + 10 * 60 * 1000
+        localStorage.setItem("loginLockedUntil", lockUntil)
+        setIsLocked(true)
+        setLockTimeLeft(600)
+        startLockTimer()
+        setErrors({ form: "Too many failed attempts. Account locked for 10 minutes." })
+      } else {
+        // Show invalid credentials message
+        setInvalidCredentials(true)
+        setErrors({ form: `Invalid email or password. (Attempt ${newFailedAttempts}/5)` })
+      }
     }
   }
 
@@ -170,10 +232,11 @@ const Login = () => {
                     value={email}
                     onChange={(e) => {
                       setEmail(e.target.value)
-                      setErrors({ ...errors, email: "" })
+                      setErrors({ ...errors, email: "", form: "" })
                       setInvalidCredentials(false)
                     }}
-                    className="w-full h-[45px] pl-12 pr-4 rounded-[25px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] sm:text-[16px]"
+                    disabled={isLocked}
+                    className="w-full h-[45px] pl-12 pr-4 rounded-[25px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] sm:text-[16px] disabled:opacity-50"
                   />
                 </div>
                 {/* Fixed height error container that's always present */}
@@ -191,15 +254,17 @@ const Login = () => {
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value)
-                      setErrors({ ...errors, password: "" })
+                      setErrors({ ...errors, password: "", form: "" })
                       setInvalidCredentials(false)
                     }}
-                    className="w-full h-[45px] pl-12 pr-10 rounded-[25px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] sm:text-[16px]"
+                    disabled={isLocked}
+                    className="w-full h-[45px] pl-12 pr-10 rounded-[25px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] sm:text-[16px] disabled:opacity-50"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                    disabled={isLocked}
                   >
                     {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
                   </button>
@@ -211,8 +276,15 @@ const Login = () => {
               </div>
 
               {/* Fixed height container for invalid credentials message */}
-              <div className="h--3 text-center">
-                {invalidCredentials && <p className="text-red-500 text-xs sm:text-sm">Invalid email or password</p>}
+              <div className="text-center">
+                {(invalidCredentials || errors.form) && (
+                  <p className="text-red-500 text-xs sm:text-sm">{errors.form || "Invalid email or password"}</p>
+                )}
+                {isLocked && (
+                  <p className="text-red-500 text-xs sm:text-sm">
+                    Account locked. Try again in {formatTime(lockTimeLeft)}
+                  </p>
+                )}
               </div>
 
               <div className="flex items-center justify-between text-white font-['comfortaa'] text-[12px] sm:text-[14px]">
@@ -248,7 +320,8 @@ const Login = () => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="w-[85%] h-[45px] rounded-[25px] bg-white/50 text-white font-['comfortaa'] text-[16px] sm:text-[18px] hover:bg-white/60 transition-colors shadow-lg"
+                  disabled={isLocked}
+                  className="w-[85%] h-[45px] rounded-[25px] bg-white/50 text-white font-['comfortaa'] text-[16px] sm:text-[18px] hover:bg-white/60 transition-colors shadow-lg disabled:opacity-50"
                 >
                   Login
                 </button>
