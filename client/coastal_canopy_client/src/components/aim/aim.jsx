@@ -171,7 +171,7 @@ function LandingPage() {
         className="fixed inset-0 bg-cover bg-center -z-10"
         style={{ backgroundImage: `url(${background})` }}
       />
-      <div className="relative z-10 w-full">
+      <div className="relative z-20 w-full">
         <Navbar />
       </div>
 
@@ -238,7 +238,7 @@ function LandingPage() {
           </div>
 
           <p className="text-xl text-center">
-            CoastalCanopy.lk is a community-driven platform dedicated to
+            CoastalCanopy.org.lk is a community-driven platform dedicated to
             preserving Sri Lanka's vital mangrove ecosystems through technology,
             education, and collective action. We empower local communities to
             become guardians of Sri Lanka's precious mangrove forests, ensuring
@@ -253,7 +253,7 @@ function LandingPage() {
           >
             <ContentSection
               title="Our Aim"
-              description="Create a comprehensive, community-oriented web application, CoastalCanopy.lk, dedicated to the monitoring, protection, and sustainable management of mangrove ecosystems in Sri Lanka."
+              description="Create a comprehensive, community-oriented web application, CoastalCanopy.org.lk, dedicated to the monitoring, protection, and sustainable management of mangrove ecosystems in Sri Lanka."
             />
 
             <ContentSection
