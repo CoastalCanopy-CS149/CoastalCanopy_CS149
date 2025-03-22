@@ -13,6 +13,7 @@ import {
   BookOpenIcon,
   UsersIcon,
 } from "lucide-react";
+import {ArrowUp} from "lucide-react"
 
 // Animation variants
 const sectionVariants = {
@@ -171,7 +172,7 @@ function LandingPage() {
         className="fixed inset-0 bg-cover bg-center -z-10"
         style={{ backgroundImage: `url(${background})` }}
       />
-      <div className="relative z-10 w-full">
+      <div className="relative z-20 w-full">
         <Navbar />
       </div>
 
@@ -238,7 +239,7 @@ function LandingPage() {
           </div>
 
           <p className="text-xl text-center">
-            CoastalCanopy.lk is a community-driven platform dedicated to
+            CoastalCanopy.org.lk is a community-driven platform dedicated to
             preserving Sri Lanka's vital mangrove ecosystems through technology,
             education, and collective action. We empower local communities to
             become guardians of Sri Lanka's precious mangrove forests, ensuring
@@ -253,7 +254,7 @@ function LandingPage() {
           >
             <ContentSection
               title="Our Aim"
-              description="Create a comprehensive, community-oriented web application, CoastalCanopy.lk, dedicated to the monitoring, protection, and sustainable management of mangrove ecosystems in Sri Lanka."
+              description="Create a comprehensive, community-oriented web application, CoastalCanopy.org.lk, dedicated to the monitoring, protection, and sustainable management of mangrove ecosystems in Sri Lanka."
             />
 
             <ContentSection
@@ -440,6 +441,16 @@ function LandingPage() {
           )}
         </AnimatedSection>
       </div>
+
+    <div className="z-20 fixed bottom-8 right-5">
+      <a 
+        href="#top" 
+        className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </a>
+    </div>
 
       <div className="relative z-10 mt-12">
         <Footer />

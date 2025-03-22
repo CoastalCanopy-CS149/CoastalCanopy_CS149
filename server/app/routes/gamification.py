@@ -1,5 +1,5 @@
 #gamification
-from flask import Blueprint, jsonify
+from flask import Flask, request, jsonify, current_app, Blueprint
 from app.database import get_users_collection
 
 
@@ -33,4 +33,63 @@ def get_points():
     return jsonify({"leaderboard": ranked_users}), 200
 
 
+@gamification_bp.route("/getDetails", methods=["POST"])
+def get_details():
+    data = request.get_json()  # Retrieve JSON payload from frontend
+
+    if not data or "username" not in data:
+        return jsonify({"error": "Username is required"}), 400  # Validate the request payload
+
+    username = data.get('username')  # Extract username from the frontend requ
+
+    # Access the 'Users' collection via the function
+    users_collection = get_users_collection()
+
+    # Find the user by username
+    user = users_collection.find_one({'username': username})
+
+    progress = (user["points"] /1000) * 100
+
+    if user:
+        user_details = [
+            {
+                "points": user["points"],
+                "username": user["username"],
+                "treesPlanted": user["treesPlanted"],
+                "avatar": user.get("avatar", "/imgs/gamification/user2.png?width=60&height=60"),
+                "progress": progress,
+            }
+        ]
+        return jsonify(user_details)
+    else:
+        return jsonify({"error": "User not found"}), 404
+
+
+@gamification_bp.route("/plantMangrove", methods=["POST"])
+def reset_points():
+    # Retrieve JSON payload from frontend
+    data = request.get_json()
+
+    if not data or "username" not in data:
+        return jsonify({"error": "Username is required"}), 400  # Validate the request payload
+
+    username = data.get('username')
+
+    users_collection = get_users_collection()
+
+    user = users_collection.find_one({'username': username})
+
+    if user:
+        # Reset the points to 0 and increment treesPlanted by 1
+        users_collection.update_one(
+            {'username': username},
+            {
+                '$set': {'points': 0},
+                '$inc': {'treesPlanted': 1}
+            }
+        )
+
+        return jsonify({"success": "Points have been reset to 0"}), 200
+    else:
+        return jsonify({"error": "User not found"}), 404
 
