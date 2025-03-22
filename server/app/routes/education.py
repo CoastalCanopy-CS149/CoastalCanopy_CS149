@@ -1,31 +1,34 @@
-from flask import Blueprint, request, jsonify
-from pymongo import MongoClient
-from datetime import datetime,timezone
+from flask import Blueprint, request, jsonify,current_app
+from app.config import DATABASE_NAME
 
 quiz_api = Blueprint('quiz_api', __name__)
 
-# MongoDB connection
-client = MongoClient("mongodb+srv://malshaG:coastalCanopy-149-Malsha@cluster0.rqdby.mongodb.net/")
-db = client['CoastalCanopy']
-quiz_collection = db['quiz_scores']
-
 @quiz_api.route('/api/submit-quiz', methods=['POST'])
 def submit_quiz():
-    data = request.json
-    name = data.get("name")
-    answers = data.get("answers")
-    score = data.get("score")
 
-    if not name or not answers or score is None:
-        return jsonify({"message": "Missing data"}), 400
+    try:
+        # Get data from request body
+        data = request.json
+        score = data.get("score")
 
-    quiz_collection.insert_one({
-        "name": name,
-        "answers": answers,
-        "score": score,
-        "submitted_at": datetime.now(timezone.utc)
-    })
+        if score is None:
+             return jsonify({"error": "Missing score"}), 400
 
-    return jsonify({"message": "Quiz data submitted successfully"}), 200
+        # Get reference to education collection
+        quiz_collection = current_app.db.education
+
+        # Insert quiz submission into the database
+        quiz_collection.insert_one({
+            "score" : score
+         })
+        return jsonify({"message": "Quiz data submitted successfully"}), 200
+
+    except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+
+
+
+
 
 

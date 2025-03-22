@@ -14,3 +14,9 @@ def init_db(app):
 def get_users_collection():
     return g.get('users_collection') or current_app.db['Users']
 
+def edu_db(app):
+    client = MongoClient(MONGO_URI)
+    app.db = client[DATABASE_NAME]
+
+    # Reference to the education quiz collection
+    app.db.education = app.db["Education"]
