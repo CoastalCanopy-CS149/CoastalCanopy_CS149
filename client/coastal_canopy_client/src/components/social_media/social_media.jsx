@@ -69,7 +69,6 @@ export function CreatePost() {
             </div>
             <Footer/>
         </div>
-      </div>
     );
 }
 
