@@ -36,6 +36,8 @@ const Navbar = () => {
     return 0
   })
   const [currentUser, setCurrentUser] = useState(null)
+  // Add a new state for the login popup
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
 
   const menuRef = useRef(null)
   const menuButtonRef = useRef(null)
@@ -346,6 +348,23 @@ const Navbar = () => {
     }
   }
 
+  // Add a function to handle restricted navigation
+  const handleRestrictedNavigation = (path) => {
+    if (!currentUser) {
+      // If user is not logged in, show login popup
+      setIsLoginModalOpen(true)
+    } else {
+      // If user is logged in, navigate to the path
+      navigate(path)
+    }
+  }
+
+  // Add a function to handle login button click in the popup
+  const handleLoginRedirect = () => {
+    setIsLoginModalOpen(false)
+    navigate("/login")
+  }
+
   return (
     <div className="w-full top-0 z-50">
       <nav className="w-full">
@@ -361,17 +380,33 @@ const Navbar = () => {
 
           <div className="flex items-center gap-4 sm:gap-8">
             <div className="hidden md:flex items-center gap-4 sm:gap-8">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.path}
-                  className={`text-white font-['comfortaa'] text-base sm:text-[18px] font-bold transition-all duration-200 hover:text-gray-300 ${
-                    isCurrentPath(item.path) ? "opacity-100" : "opacity-80"
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some((path) =>
+                  item.path.includes(path),
+                )
+
+                return isRestricted ? (
+                  <button
+                    key={item.name}
+                    onClick={() => handleRestrictedNavigation(item.path)}
+                    className={`text-white font-['comfortaa'] text-base sm:text-[18px] font-bold transition-all duration-200 hover:text-gray-300 ${
+                      isCurrentPath(item.path) ? "opacity-100" : "opacity-80"
+                    }`}
+                  >
+                    {item.name}
+                  </button>
+                ) : (
+                  <Link
+                    key={item.name}
+                    to={item.path}
+                    className={`text-white font-['comfortaa'] text-base sm:text-[18px] font-bold transition-all duration-200 hover:text-gray-300 ${
+                      isCurrentPath(item.path) ? "opacity-100" : "opacity-80"
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                )
+              })}
             </div>
             <div className="relative z-50" ref={menuRef}>
               <button
@@ -388,17 +423,35 @@ const Navbar = () => {
               {isMenuOpen && (
                 <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 hidden md:block">
                   <div className="py-1">
-                    {menuItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.path}
-                        className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-black/50 transition-colors text-center
-                          ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
+                    {menuItems.map((item) => {
+                      const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some(
+                        (path) => item.path.includes(path),
+                      )
+
+                      return isRestricted ? (
+                        <button
+                          key={item.name}
+                          className={`block w-full px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-black/50 transition-colors text-center
+                            ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
+                          onClick={() => {
+                            setIsMenuOpen(false)
+                            handleRestrictedNavigation(item.path)
+                          }}
+                        >
+                          {item.name}
+                        </button>
+                      ) : (
+                        <Link
+                          key={item.name}
+                          to={item.path}
+                          className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-black/50 transition-colors text-center
+                            ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      )
+                    })}
                   </div>
                 </div>
               )}
@@ -407,17 +460,35 @@ const Navbar = () => {
               {isMobileMenuOpen && (
                 <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 md:hidden">
                   <div className="py-1">
-                    {menuItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        to={item.path}
-                        className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-black/50 transition-colors text-center
-                          ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
+                    {menuItems.map((item) => {
+                      const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some(
+                        (path) => item.path.includes(path),
+                      )
+
+                      return isRestricted ? (
+                        <button
+                          key={item.name}
+                          className={`block w-full px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-white/50 transition-colors text-center
+                            ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
+                          onClick={() => {
+                            setIsMobileMenuOpen(false)
+                            handleRestrictedNavigation(item.path)
+                          }}
+                        >
+                          {item.name}
+                        </button>
+                      ) : (
+                        <Link
+                          key={item.name}
+                          to={item.path}
+                          className={`block px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-white/50 transition-colors text-center
+                            ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      )
+                    })}
                   </div>
                 </div>
               )}
@@ -579,6 +650,31 @@ const Navbar = () => {
                 className="px-6 py-2 bg-white/20 hover:bg-white/30 text-white font-['comfortaa'] font-bold rounded-full"
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Login Required Modal */}
+      {isLoginModalOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100]">
+          <div className="bg-black/80 backdrop-blur-md rounded-lg p-6 max-w-sm w-[90%] relative">
+            <button
+              onClick={() => setIsLoginModalOpen(false)}
+              className="absolute top-2 right-2 text-white hover:text-gray-300 hidden sm:block"
+            >
+              <X size={20} />
+            </button>
+            <h3 className="text-white font-['comfortaa'] text-xl font-bold mb-4 text-center">Hey there!</h3>
+            <p className="text-white font-['comfortaa'] text-center mb-6">
+              Log in to unlock this feature and explore more cool stuff!
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={handleLoginRedirect}
+                className="px-6 py-2 bg-white/50 hover:bg-white/60 text-white font-['comfortaa'] font-bold rounded-full animate-pulse"
+              >
+                Login
               </button>
             </div>
           </div>
