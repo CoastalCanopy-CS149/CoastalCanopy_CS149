@@ -113,7 +113,7 @@ export default function CommunityReporting2() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/reports/submit-report", {
+      const response = await fetch("https://coastalcanopy.up.railway.app/reports/submit-report", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +137,7 @@ export default function CommunityReporting2() {
   
   const increasePoints = async (username, points) => {
     try {
-      const response = await fetch('http://localhost:5000/points/Increase_points', {
+      const response = await fetch('https://coastalcanopy.up.railway.app/points/Increase_points', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, points }),

@@ -4,6 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { Line, Bar } from 'react-chartjs-2'; // Import Line and Bar chart components from react-chartjs-2
 import Navbar from "../navbar/navbar"; // Import Navbar component
 import Footer from "../footer/footer"; // Import Footer component
+import {ArrowUp} from "lucide-react"
 
 // Register ChartJS components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
@@ -216,6 +217,15 @@ export default function MangroveAnalysis() {
                                         </div>
                                 </div>
                         </div>
+                </div>
+                <div className="z-20 fixed bottom-8 right-5">
+                <a 
+                    href="#top" 
+                    className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+                    aria-label="Back to top"
+                >
+                    <ArrowUp size={20} />
+                </a>
                 </div>
                 <Footer /> {/* Footer component */}
         </div>

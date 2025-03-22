@@ -6,6 +6,7 @@ import mangrovesrilanka from "/imgs/education/mangrovesrilanka.jpg";
 import mangroveThumbnail from "/imgs/education/mangrove-thumbnail.jpg";
 import { ArrowLeft } from "lucide-react";
 import ReactPlayer from "react-player";
+import {ArrowUp} from "lucide-react"
 
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer";
@@ -129,6 +130,15 @@ const EducationSection = () => {
           </div>
         </div>
       </div>
+      <div className="z-20 fixed bottom-8 right-5">
+      <a 
+        href="#top" 
+        className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </a>
+    </div>
       <Footer />
     </div>
   );

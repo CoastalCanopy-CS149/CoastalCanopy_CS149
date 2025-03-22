@@ -12,6 +12,7 @@ import nature from "/imgs/social_media/nature.jpg";
 import { FaCloudUploadAlt, FaFacebook, FaInstagram, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer";
+import {ArrowUp} from "lucide-react"
 
 const themes = [
     { title: "Sustainability and environment", theme: "Ethereal Glow", image: etherealglow },
@@ -66,7 +67,20 @@ export function CreatePost() {
                     </>
                 ) : null}
             </div>
+
+            <div className="z-20 fixed bottom-8 right-5">
+                <a 
+                    href="#top" 
+                    className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+                    aria-label="Back to top"
+                >
+                    <ArrowUp size={20} />
+                </a>
             </div>
+
+            </div>
+
+            
             <Footer/>
         </div>
     );
@@ -229,6 +243,15 @@ export function UploadSection() {
                     </button>
                 </div>
             </div>
+        </div>
+        <div className="z-20 fixed bottom-8 right-5">
+            <a 
+                href="#top" 
+                className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+                aria-label="Back to top"
+            >
+                <ArrowUp size={20} />
+            </a>
         </div>
         <Footer/>
         </div>
