@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Trophy } from "lucide-react"
+import { Trophy, ArrowUp } from "lucide-react"
 import bg from "/imgs/gamification/bg1.jpg"
 import axios from "axios"
 import Navbar from "../navbar/navbar";
@@ -64,7 +64,7 @@ export default function GamificationLeaderboard() {
       className="bg-cover min-h-screen  bg-fixed"
       style={{ backgroundImage: `url(${bg})` }}
     >
-      <div className="relative z-20">
+      <div className="relative z-20" id="top">
         <Navbar />
       </div>
 
@@ -80,7 +80,7 @@ export default function GamificationLeaderboard() {
           >
             <Trophy className="mr-4 text-green-400" size={48} strokeWidth={2} />
             <h1
-              className="inline-block px-8 py-2 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-white"
+              className="inline-block py-1 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-white"
               style={{ fontFamily: "Playfair Display, serif" }}
             >
               Leader Board
@@ -92,9 +92,9 @@ export default function GamificationLeaderboard() {
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="flex justify-center items-end h-[300px]"
+            className="flex justify-center items-end h-[250px] sm:h-[300px]"
           >
-            <div className="flex items-end gap-20 h-full">
+            <div className="flex items-end gap-4 sm:gap-10 md:gap-20 h-full">
               {/* 2nd Place */}
               <motion.div
                 variants={floatAnimation}
@@ -103,7 +103,7 @@ export default function GamificationLeaderboard() {
               >
                 <div className="relative z-10 mb-[-15px] perspective-[1000px]">
                   <motion.div
-                    className="w-[60px] h-[60px] rounded-full border-3 border-white overflow-hidden shadow-lg"
+                    className="w-[45px] h-[45px] sm:w-[55px] sm:h-[55px] md:w-[60px] md:h-[60px] rounded-full border-3 border-white overflow-hidden shadow-lg"
                     variants={rollAnimation}
                     animate="animate"
                     style={{ transformStyle: "preserve-3d" }}
@@ -118,7 +118,8 @@ export default function GamificationLeaderboard() {
                     />
                   </motion.div>
                 </div>
-                <div className="w-[80px] h-[180px] bg-gradient-to-t from-green-600 to-green-400 rounded-t-lg shadow-md"></div>
+                <p className="text-white z-20 font-bold">{topThree[1]?.username}</p>
+                <div className="w-[60px] sm:w-[70px] md:w-[80px] h-[140px] sm:h-[160px] md:h-[180px] bg-gradient-to-t from-green-600 to-green-400 rounded-t-lg shadow-md"></div>
               </motion.div>
 
               {/* 1st Place */}
@@ -129,7 +130,7 @@ export default function GamificationLeaderboard() {
               >
                 <div className="relative z-10 mb-[-15px] perspective-[1000px]">
                   <motion.div
-                    className="w-[60px] h-[60px] rounded-full border-3 border-white overflow-hidden shadow-lg"
+                    className="w-[45px] h-[45px] sm:w-[55px] sm:h-[55px] md:w-[60px] md:h-[60px] rounded-full border-3 border-white overflow-hidden shadow-lg"
                     variants={rollAnimation}
                     animate="animate"
                     style={{ transformStyle: "preserve-3d" }}
@@ -144,7 +145,8 @@ export default function GamificationLeaderboard() {
                     />
                   </motion.div>
                 </div>
-                <div className="w-[80px] h-[240px] bg-gradient-to-t from-amber-500 to-yellow-400 border-2 border-white rounded-t-lg shadow-xl"></div>
+                <p className="text-white z-20 font-bold">{topThree[0]?.username}</p>
+                <div className="w-[60px] sm:w-[70px] md:w-[80px] h-[180px] sm:h-[210px] md:h-[240px] bg-gradient-to-t from-amber-500 to-yellow-400 border-2 border-white rounded-t-lg shadow-xl"></div>
               </motion.div>
 
               {/* 3rd Place */}
@@ -155,7 +157,7 @@ export default function GamificationLeaderboard() {
               >
                 <div className="relative z-10 mb-[-15px] perspective-[1000px]">
                   <motion.div
-                    className="w-[60px] h-[60px] rounded-full border-3 border-white overflow-hidden shadow-lg"
+                    className="w-[45px] h-[45px] sm:w-[55px] sm:h-[55px] md:w-[60px] md:h-[60px] rounded-full border-3 border-white overflow-hidden shadow-lg"
                     variants={rollAnimation}
                     animate="animate"
                     style={{ transformStyle: "preserve-3d" }}
@@ -170,7 +172,8 @@ export default function GamificationLeaderboard() {
                     />
                   </motion.div>
                 </div>
-                <div className="w-[80px] h-[140px] bg-gradient-to-t from-green-500 to-green-300 rounded-t-lg shadow-md"></div>
+                <p className="text-white z-20 font-bold">{topThree[2]?.username}</p>
+                <div className="w-[60px] sm:w-[70px] md:w-[80px] h-[110px] sm:h-[125px] md:h-[140px] bg-gradient-to-t from-green-500 to-green-300 rounded-t-lg shadow-md"></div>
               </motion.div>
             </div>
           </motion.div>
@@ -216,6 +219,15 @@ export default function GamificationLeaderboard() {
           </motion.div>
         </div>
       </div>
+        <div className="z-20 fixed bottom-8 right-5">
+            <a 
+              href="#top" 
+              className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+              aria-label="Back to top"
+            >
+              <ArrowUp size={20} />
+            </a>
+          </div>
       </div>
       <Footer />
     </div>
