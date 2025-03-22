@@ -150,7 +150,9 @@ export default function MangroveAnalysis() {
       className="bg-cover min-h-screen bg-fixed"
       style={{ backgroundImage: "url('/imgs/monitoring/background2.jpg')" }}
     >
-      <Navbar />
+      <div className="relative z-20">
+        <Navbar />
+      </div>
 
       <div className="flex justify-center items-center px-4 sm:px-6 md:px-8">
         <div className="mt-12 mb-12 w-full max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 sm:p-6 md:p-10 flex flex-col items-center">
