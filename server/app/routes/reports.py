@@ -3,6 +3,7 @@ from ultralytics import YOLO
 import cv2
 import base64
 import os
+import psutil
 from bson import ObjectId
 import cloudinary
 import cloudinary.uploader
@@ -54,12 +55,22 @@ def submit_report():
     np_arr = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
+    #resize the image to smaller resolution
+    img = cv2.resize(img, (640, 640))
+
+    # Log memory usage
+    process = psutil.Process(os.getpid())
+    print(f"Memory usage before inference: {process.memory_info().rss / 1024 / 1024} MB")
+
     # Process the image using the YOLO model
     try:
         detection_result, result_image_url = detect(img , report_id)
         # delete_image(image_path)
+    except MemoryError:
+        return jsonify({"error": "Insufficient memory to process the image"}), 500
     except Exception as e:
         return jsonify({"error": f"Failed to process image: {str(e)}"}), 500
+
 
     report = {
         "_id": report_id,
