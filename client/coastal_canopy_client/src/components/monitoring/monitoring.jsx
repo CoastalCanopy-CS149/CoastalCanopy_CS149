@@ -12,14 +12,12 @@ export default function MangroveAnalysis() {
   const [currentAreas, setCurrentAreas] = useState([]);
   const [predictedAreas, setPredictedAreas] = useState([]);
   const [areaNames, setAreaNames] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        setLoading(true);
-        const response = await fetch("http://localhost:5000/api/mangrove-data");
+        const response = await fetch("https://coastalcanopy.up.railway.app/api/mangrove-data");
         if (!response.ok) throw new Error("Failed to fetch data from the server");
 
         const data = await response.json();
@@ -44,8 +42,6 @@ export default function MangroveAnalysis() {
         setAreaNames(dummyData.map((item) => item.area));
         setCurrentAreas(dummyData.map((item) => item.area_2015));
         setPredictedAreas(dummyData.map((item) => item.predicted_area_2026));
-      } finally {
-        setLoading(false);
       }
     }
 
@@ -60,7 +56,7 @@ export default function MangroveAnalysis() {
       legend: {
         position: "top",
         labels: {
-          color: "white",
+          color: "black",
         },
       },
     },
@@ -137,32 +133,36 @@ export default function MangroveAnalysis() {
     ],
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
-      </div>
-    );
-  }
-
   return (
     <div
-      className="bg-cover min-h-screen bg-fixed"
-      style={{ backgroundImage: "url('/imgs/monitoring/background2.jpg')" }}
+      className="relative min-h-screen w-full overflow-x-hidden"
     >
       <div className="relative z-20">
         <Navbar />
       </div>
 
+      <div
+        className="absolute inset-0 w-full min-h-screen"
+        style={{
+          backgroundImage: "url('/imgs/monitoring/background2.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          backgroundAttachment: "fixed",
+        }}
+      ></div>
+
       <div className="flex justify-center items-center px-4 sm:px-6 md:px-8">
         <div className="mt-12 mb-12 w-full max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 sm:p-6 md:p-10 flex flex-col items-center">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-white text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-6 text-white text-center"
+          style={{ fontFamily: "'Playfair Display', serif" }}>
             Mangrove Analysis in Sri Lanka
           </h1>
 
           {/* Grid for Charts */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-            <div className="bg-white/20 p-4 rounded-lg shadow w-full">
+            <div className="bg-white p-4 rounded-lg shadow w-full">
               <h2 className="text-lg sm:text-xl font-semibold text-green-900 mb-4 text-center">
                 Mangrove Extension in 2015
               </h2>
@@ -171,7 +171,7 @@ export default function MangroveAnalysis() {
               </div>
             </div>
 
-            <div className="bg-white/20 p-4 rounded-lg shadow w-full">
+            <div className="bg-white p-4 rounded-lg shadow w-full">
               <h2 className="text-lg sm:text-xl font-semibold text-blue-900 mb-4 text-center">
                 Predicted Mangrove Extension in 2026
               </h2>
@@ -182,7 +182,7 @@ export default function MangroveAnalysis() {
           </div>
 
           {/* Comparison Chart */}
-          <div className="mt-8 bg-white/20 p-4 rounded-lg shadow w-full">
+          <div className="mt-8 bg-white p-4 rounded-lg shadow w-full">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-700 mb-4 text-center">
               Comparison: 2015 vs 2026 (Predicted)
             </h2>
