@@ -15,8 +15,12 @@ const OTPVerification = () => {
   const [error, setError] = useState("")
   const [timeLeft, setTimeLeft] = useState(420) // 7 minutes in seconds
   const [isExpired, setIsExpired] = useState(false)
+  const [resendCount, setResendCount] = useState(0) // Track number of resends
+  const [isResendLocked, setIsResendLocked] = useState(false) // Track if resend is locked
+  const [lockTimeLeft, setLockTimeLeft] = useState(0) // Track lockout time remaining
   const inputRefs = useRef([])
   const timerRef = useRef(null)
+  const lockTimerRef = useRef(null) // Timer for the resend lockout
   const formData = location.state?.formData
 
   useEffect(() => {
@@ -31,6 +35,9 @@ const OTPVerification = () => {
       if (timerRef.current) {
         clearInterval(timerRef.current)
       }
+      if (lockTimerRef.current) {
+        clearInterval(lockTimerRef.current)
+      }
     }
   }, [navigate, formData])
 
@@ -44,6 +51,26 @@ const OTPVerification = () => {
         if (prevTime <= 1) {
           clearInterval(timerRef.current)
           setIsExpired(true)
+          return 0
+        }
+        return prevTime - 1
+      })
+    }, 1000)
+  }
+
+  const startLockTimer = () => {
+    // 10 minutes in seconds
+    setLockTimeLeft(600)
+
+    if (lockTimerRef.current) {
+      clearInterval(lockTimerRef.current)
+    }
+
+    lockTimerRef.current = setInterval(() => {
+      setLockTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(lockTimerRef.current)
+          setIsResendLocked(false)
           return 0
         }
         return prevTime - 1
@@ -93,6 +120,21 @@ const OTPVerification = () => {
   }
 
   const handleResendOTP = () => {
+    // Check if resend is locked
+    if (isResendLocked) {
+      return
+    }
+
+    // Increment resend count
+    const newResendCount = resendCount + 1
+    setResendCount(newResendCount)
+
+    // Check if we've reached the limit (3 attempts)
+    if (newResendCount >= 3) {
+      setIsResendLocked(true)
+      startLockTimer()
+    }
+
     setOtp(["", "", "", "", "", ""])
     setError("")
     setTimeLeft(420)
@@ -156,9 +198,13 @@ const OTPVerification = () => {
 
                 <p className="text-white font-['comfortaa'] text-[20px] text-center">
                   Didn't you receive the OTP? Check your Spam folder or{" "}
-                  <button type="button" onClick={handleResendOTP} className="underline hover:text-gray-200">
-                    Resend OTP
-                  </button>
+                  {isResendLocked ? (
+                    <span className="text-gray-400">Resend locked for {formatTime(lockTimeLeft)}</span>
+                  ) : (
+                    <button type="button" onClick={handleResendOTP} className="underline hover:text-gray-200">
+                      Resend OTP {resendCount > 0 ? `(${resendCount}/3)` : ""}
+                    </button>
+                  )}
                 </p>
               </div>
             </form>
