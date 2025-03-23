@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from ultralytics import YOLO
 import cv2
 import base64
@@ -9,6 +9,8 @@ import cloudinary.uploader
 from dotenv import load_dotenv
 import io
 from app.database import get_reports_collection
+from app.config import RECEIVER_EMAIL
+from flask_mail import Message
 
 # Load environment variables
 load_dotenv()
@@ -20,13 +22,13 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
 
+
 reports_bp = Blueprint('reports', __name__)
 
 #folder to save reports locally on the machine
 FOLDER = "reports"
-# RESULTS_FOLDER = "results"
 os.makedirs(FOLDER, exist_ok=True)
-# os.makedirs(RESULTS_FOLDER, exist_ok=True)
+
 
 # Get the directory where the current script is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -61,8 +63,9 @@ def submit_report():
 
     # Process the image using the YOLO model
     try:
-        detection_result, result_image_path = detect(image_path, report_id)
+        detection_result, result_image_path, class_name = detect(image_path, report_id)
         delete_image(image_path)
+
     except Exception as e:
         return jsonify({"error": f"Failed to process image: {str(e)}"}), 500
 
@@ -84,12 +87,16 @@ def submit_report():
     result = reports_collection.insert_one(report)
 
     if result.acknowledged:
+        if class_name == "Mangrove_Destruction":
+            send_email(report)
         return jsonify({"message": "Report submitted successfully!", "report_id": report_id}), 201
+
     else:
         return jsonify({"error": "Failed to submit report"}), 500
 
 
 def detect(image_path, report_id):
+    class_name = None
     # Run inference on the image
     results = model(image_path, conf=0.2)
 
@@ -102,9 +109,6 @@ def detect(image_path, report_id):
     if img is None:
         # If results doesn't contain any detection, load the image directly
         img = cv2.imread(image_path)
-    #
-    # # Define result image path
-    # result_image_path = os.path.join(RESULTS_FOLDER, f"result_{report_id}.jpg")
 
     # Process results
     output = {
@@ -132,6 +136,7 @@ def detect(image_path, report_id):
                 # Get confidence and class
                 conf = float(box.conf[0])
                 cls = int(box.cls[0])
+                class_name = model.names[cls]
 
                 # Calculate area of the box
                 box_area = (x2 - x1) * (y2 - y1)
@@ -159,18 +164,10 @@ def detect(image_path, report_id):
         cv2.putText(img, "No mangrove destruction detected", (20, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-    # # Save the result image
-    # cv2.imwrite(result_image_path, img)
 
     # Convert OpenCV image (NumPy array) to bytes
     _, buffer = cv2.imencode(".jpg", img)  # Encode image to JPEG format
     image_bytes = io.BytesIO(buffer)  # Create an in-memory buffer
-
-    # # Define the Cloudinary filename using report_id
-    # cloudinary_filename = f"Reports/result_{report_id}"
-    #
-    # # Upload to Cloudinary with a custom name
-    # response = cloudinary.uploader.upload(image_bytes, public_id=cloudinary_filename)
 
     # Define the Cloudinary filename using report_id
     cloudinary_filename = f"result_{report_id}"
@@ -182,7 +179,8 @@ def detect(image_path, report_id):
                                           type="private",
                                           )
 
-    return output, response["secure_url"]
+
+    return output, response["secure_url"], class_name
 
 def delete_image(image_path):
     try:
@@ -193,6 +191,36 @@ def delete_image(image_path):
             print(f"The file {image_path} does not exist.")
     except Exception as e:
         print(f"Error deleting file: {e}")
+
+
+
+
+def send_email(data):
+    try:
+        recipient_email = RECEIVER_EMAIL # Static recipient for the report
+        subject = "New Report Submitted"
+        message_body = f"""
+        First Name: {data.get('firstName')}
+        Last Name: {data.get('lastName')}
+        Email: {data.get('email')}
+        Contact Number: {data.get('contactNumber')}
+        Latitude: {data.get('latitude')}
+        Longitude: {data.get('longitude')}
+        Destruction Type: {data.get('destructionType')}
+        Detection Result: {data.get('detection_result')}
+        Result Image Path: {data.get('result_image_path')}
+        """
+
+        with current_app.app_context():  # Ensure app context is active
+            msg = Message(subject=subject,
+                          sender=os.getenv("MAIL_USERNAME"),
+                          recipients=[recipient_email])
+            msg.body = message_body
+
+            current_app.extensions['mail'].send(msg)
+            print("Email sent successfully!")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
 
 
 
