@@ -4,6 +4,7 @@ import { Link } from "react-router-dom"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 import { useCart } from "./cartContext"
+import {ArrowUp} from "lucide-react"
 
 const ShopMain = () => {
   const items = [
@@ -19,10 +20,10 @@ const ShopMain = () => {
     { id: 10, description: "Sticker Pack 1", price: "Rs. 120.00", image: "/imgs/shop/pack2.png" },
     { id: 11, description: "Sticker Pack 3", price: "Rs. 100.00", image: "/imgs/shop/pack4.png" },
     { id: 12, description: "Sticker Pack 4", price: "Rs. 100.00", image: "/imgs/shop/pack3.jpg" },
-    { id: 12, description: "Cofee Mug", price: "Rs. 400.00", image: "/imgs/shop/mug.png" },
-    { id: 12, description: "Submarine Bracelet", price: "Rs. 300.00", image: "/imgs/shop/bracelet.jpg" },
-    { id: 12, description: "Glass Water Bottle", price: "Rs. 700.00", image: "/imgs/shop/bottle.png" },
-    { id: 12, description: "Suviniour", price: "Rs. 200.00", image: "/imgs/shop/suviniour.png" },
+    { id: 13, description: "Cofee Mug", price: "Rs. 400.00", image: "/imgs/shop/mug.png" },
+    { id: 14, description: "Submarine Bracelet", price: "Rs. 300.00", image: "/imgs/shop/bracelet.jpg" },
+    { id: 15, description: "Glass Water Bottle", price: "Rs. 700.00", image: "/imgs/shop/bottle.png" },
+    { id: 16, description: "Suviniour", price: "Rs. 200.00", image: "/imgs/shop/suviniour.png" },
   ]
 
   const { cartItems, addToCart } = useCart()
@@ -113,6 +114,15 @@ const ShopMain = () => {
           </div>
         </div>
       </div>
+      <div className="z-20 fixed bottom-8 right-5">
+                <a 
+                    href="#top" 
+                    className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+                    aria-label="Back to top"
+                >
+                    <ArrowUp size={20} />
+                </a>
+            </div>
       <Footer />
     </div>
   )

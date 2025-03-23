@@ -3,6 +3,22 @@ import { MapContainer, TileLayer, Rectangle, Popup, Marker } from "react-leaflet
 import "leaflet/dist/leaflet.css"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
+import L from "leaflet"; // Import Leaflet
+import markerIcon from "leaflet/dist/images/marker-icon.png"; // Import marker icon
+import markerIconShadow from "leaflet/dist/images/marker-shadow.png"; // Import marker shadow
+import {ArrowUp} from "lucide-react"
+
+// Set the default icon for Leaflet markers
+let DefaultIcon = L.icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerIconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 // Define the type for mangrove locations
 const initialBounds = [
@@ -19,7 +35,7 @@ function Mapping() {
     const fetchMangroveLocations = async () => {
       try {
         setIsLoading(true)
-        const response = await fetch("http://localhost:5000/api/mapping/mangrove-locations")
+        const response = await fetch("https://coastalcanopy.up.railway.app/api/mapping/mangrove-locations")
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
@@ -99,6 +115,15 @@ function Mapping() {
           </div>
         </div>
       </div>
+      <div className="z-20 fixed bottom-8 right-5">
+      <a 
+        href="#top" 
+        className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </a>
+    </div>
       <Footer />
     </div>
   )

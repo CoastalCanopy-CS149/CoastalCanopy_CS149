@@ -1,48 +1,60 @@
 import { ChevronRight } from "lucide-react";
+import Navbar from "../navbar/navbar";
+import Footer from "../footer/footer";
+import {ArrowUp} from "lucide-react"
 
 function AR() {
   return (
-    <main
-      className="relative flex flex-col items-center justify-center min-h-screen w-full bg-cover bg-center"
+    <div
+      className="min-h-screen w-full bg-cover bg-center flex flex-col"
       style={{ backgroundImage: "url('/imgs/AR/background_ar.jpg')" }}
     >
-      {/* Centered Blur Background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-6xl h-4/5 bg-white/10  backdrop-blur-sm rounded-3xl" />
-
-      {/* Overlay for better readability
-      <div className="absolute inset-0 bg-black/50"></div> */}
-
-      <div className="text-center max-w-3xl relative z-10 px-4">
-        <h1
-          className="text-3xl md:text-3xl text-white font-bold mb-8"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-        >
-          Explore Mangroves in AR
-        </h1>
-        <p className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed">
-          "Experience mangrove ecosystems like never before! Explore live data,
-          species, and more."
-        </p>
-        <button className="px-12 py-4 text-xl bg-gradient-to-r from-green-600 to-green-300 text-slate-600 rounded-full hover:from-green-600 hover:to-green-500 transition-all duration-300 shadow-lg font-mono">
-          AR Activation
-        </button>
-        <br />
-        <br />
-        <p className="text-xl md:text-2xl text-white/90 mb-12 leading-relaxed">
-          "To be implemented in future...."
-        </p>
+      <div className="relative z-20">
+        <Navbar />
       </div>
 
-      {/* Decorative Leaf */}
-      <img
-        src="/imgs/AR/monstera-leaf.png"
-        alt=""
-        className="absolute bottom-0 right-0 w-48 md:w-56 opacity-80"
-        aria-hidden="true"
-      />
+      <div className="flex-grow flex items-center justify-center">
+        {/* Centered Blur Background */}
+        <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl flex flex-col items-center justify-center p-4">
+          <h1
+            className="text-3xl md:text-4xl font-bold text-white mb-4 text-center"
+            style={{ fontFamily: "'Playfair Display', serif" }}
+          >
+            Explore Mangroves in AR
+          </h1>
+          <p className="text-xl md:text-xl text-white/90 mb-4 leading-relaxed">
+            Experience mangrove ecosystems like never before!
+          </p>
+          <p className="text-xl md:text-xl text-white/90 mb-12 leading-relaxed">
+            Explore live data, species, and more.
+          </p>
 
-      
-    </main>
+          <div>
+            {/* AR Button */}
+            <button
+              className="bg-gradient-to-r from-green-400 to-green-700 text-green-900 hover:from-green-500 hover:to-green-800 hover:text-white font-semibold py-2 px-8 rounded-full shadow-md transition-all duration-300 ease-in-out"
+              disabled
+            >
+              AR Activation
+            </button>
+
+            <p className="mt-6 text-gray-300 italic">
+              "To be implemented in future...."
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="z-20 fixed bottom-8 right-5">
+      <a 
+        href="#top" 
+        className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </a>
+    </div>
+      <Footer />
+    </div>
   );
 }
 
