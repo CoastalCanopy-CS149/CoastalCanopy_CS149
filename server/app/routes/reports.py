@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from ultralytics import YOLO
 import cv2
 import base64
@@ -11,6 +11,8 @@ from dotenv import load_dotenv
 import numpy as np
 import io
 from app.database import get_reports_collection
+from app.config import RECEIVER_EMAIL
+from flask_mail import Message
 
 # Load environment variables
 load_dotenv()
@@ -23,12 +25,6 @@ cloudinary.config(
 )
 
 reports_bp = Blueprint('reports', __name__)
-
-#folder to save reports locally on the machine
-FOLDER = "reports"
-# RESULTS_FOLDER = "results"
-os.makedirs(FOLDER, exist_ok=True)
-# os.makedirs(RESULTS_FOLDER, exist_ok=True)
 
 # Get the directory where the current script is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -64,8 +60,7 @@ def submit_report():
 
     # Process the image using the YOLO model
     try:
-        detection_result, result_image_url = detect(img , report_id)
-        # delete_image(image_path)
+        detection_result, result_image_url, class_name = detect(img , report_id)
     except MemoryError:
         return jsonify({"error": "Insufficient memory to process the image"}), 500
     except Exception as e:
@@ -90,12 +85,16 @@ def submit_report():
     result = reports_collection.insert_one(report)
 
     if result.acknowledged:
+        if class_name == "Mangrove_Destruction":
+            send_email(report)
         return jsonify({"message": "Report submitted successfully!", "report_id": report_id}), 201
     else:
         return jsonify({"error": "Failed to submit report"}), 500
 
 
 def detect(image, report_id):
+    class_name = None
+
     # Run inference on the image
     results = model(image, conf=0.2)
 
@@ -135,6 +134,7 @@ def detect(image, report_id):
                 # Get confidence and class
                 conf = float(box.conf[0])
                 cls = int(box.cls[0])
+                class_name = model.names[cls]
 
                 # Calculate area of the box
                 box_area = (x2 - x1) * (y2 - y1)
@@ -171,8 +171,35 @@ def detect(image, report_id):
                                           folder="ReportResults",
                                           type="private")
 
-    return output, response["secure_url"]
+    return output, response["secure_url"], class_name
 
+
+def send_email(data):
+    try:
+        recipient_email = RECEIVER_EMAIL  # Static recipient for the report
+        subject = "New Report Submitted"
+        message_body = f"""
+         First Name: {data.get('firstName')}
+         Last Name: {data.get('lastName')}
+         Email: {data.get('email')}
+         Contact Number: {data.get('contactNumber')}
+         Latitude: {data.get('latitude')}
+         Longitude: {data.get('longitude')}
+         Destruction Type: {data.get('destructionType')}
+         Detection Result: {data.get('detection_result')}
+         Result Image URL: {data.get('resultImageURL')}
+         """
+
+        with current_app.app_context():  # Ensure app context is active
+            msg = Message(subject=subject,
+                          sender=os.getenv("MAIL_USERNAME"),
+                          recipients=[recipient_email])
+            msg.body = message_body
+
+            current_app.extensions['mail'].send(msg)
+            print("Email sent successfully!")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
 
 
 
