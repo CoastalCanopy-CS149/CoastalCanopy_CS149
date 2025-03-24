@@ -33,21 +33,24 @@ export function CreatePost() {
         setSelectedTheme(theme);
         navigate("/socialmedia/upload", { state: { theme } });
     };
+    
 
     return (
         <div
-            className="min-h-screen"
+            className="w-full min-h-screen "
             style={{
                 backgroundImage: `url(${mangroveBackground})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundAttachment: "fixed",
             }}
             >
              <div className="z-20 relative">
                 <Navbar />
                 </div>   
             <div className="flex justify-center items-start pt-12">  
-            <div className="bg-white bg-opacity-35 backdrop-blur-sm rounded-3xl p-6 sm:p-10  w-11/12 max-w-7xl shadow-xl -mt-6 mb-10">
+            <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 sm:p-10 shadow-xl ">
                 {!selectedTheme ? (
                     <>
                         <h2 className="text-center text-2xl sm:text-3xl font-bold text-white">Create Post</h2>
@@ -103,11 +106,6 @@ export function UploadSection() {
                 return;
             }
     
-            // Check if the image name contains the theme keyword
-            if (!file.name.toLowerCase().includes(selectedTheme.toLowerCase())) {
-                setErrorMessage(`Please upload an image related to the theme: ${selectedTheme}`);
-                return;
-            }
     
             setErrorMessage("");
     
@@ -139,8 +137,8 @@ export function UploadSection() {
                         const themePixelData = themeCtx.getImageData(0, 0, themeImg.width, themeImg.height).data;
                         const themeAvgColor = getAverageColor(themePixelData);
     
-                        // Compare colors (tolerance threshold of 50)
-                        if (colorDistance(avgColor, themeAvgColor) > 50) {
+                        // Compare colors (tolerance threshold of 200)
+                        if (colorDistance(avgColor, themeAvgColor) > 200) {
                             setErrorMessage("Uploaded image does not match the theme color.");
                             return;
                         }
@@ -177,7 +175,7 @@ export function UploadSection() {
 
     return (
         <div
-           className="min-h-screen"
+           className="min-h-screen "
             style={{
                 backgroundImage: `url(${mangroveBackground})`,
                 backgroundSize: "cover",
@@ -187,7 +185,9 @@ export function UploadSection() {
             <div className="z-20 relative">
                 <Navbar />
             </div>
-          <div className="flex justify-center items-start pt-12">
+
+        <div className="flex justify-center items-center">
+          <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 sm:p-10 shadow-xl flex justify-center items-center min-h-screen">
             <div
                 style={{
                     backgroundImage: themeData ? `url(${themeData.image})` : "none",
@@ -196,15 +196,15 @@ export function UploadSection() {
                 }}
                
                 
-                className="rounded-3xl p-6 sm:p-10 w-11/12 max-w-2xl shadow-xl mb-32sm:mb-48 md:mb-64 mt-64 sm:mt-48 md:mt-64"
+                className="rounded-3xl p-6 sm:p-4 w-11/12 max-w-2xl shadow-xl mb-20 mt-20 sm:mb-15 md:mb-15 mt-25 sm:mt-15 md:mt-15"
             >
-                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4 text-center pt-10 pb-5">
                     Upload Image
                 </h2>
                 
-                <label className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-lg hover:bg-gray-200 transition">
-                    <FaCloudUploadAlt className="text-3xl sm:text-4xl text-gray-500 mb-6" />
-                    <span className="text-white font-bold">Upload Image Here</span>
+                <label className="cursor-pointer flex flex-col items-center justify-center border-2 border-dashed bg-gray-200/65 border-gray-400 rounded-lg hover:bg-gray-200/75 transition ">
+                    <FaCloudUploadAlt className="text-3xl sm:text-4xl text-gray-500 mb-6 py-28" />
+                    <span className="text-green-600 font-bold py-2">Upload Image Here</span>
                     <input type="file" className="hidden" onChange={handleImageUpload} />
                 </label>
 
@@ -213,7 +213,7 @@ export function UploadSection() {
                 )}
 
                 {uploadedImage && (
-                    <div className="relative mt-4 w-full max-w-md">
+                    <div className="relative mt-4 w-full max-w-md p-20">
                         {/* Frame overlay */}
                         {themeData && (
                             <div
@@ -252,6 +252,7 @@ export function UploadSection() {
             >
                 <ArrowUp size={20} />
             </a>
+        </div>
         </div>
         <Footer/>
         </div>
@@ -299,29 +300,49 @@ export function SocialMediaSection() {
                 backgroundSize: "cover",
                 backgroundPosition: "center",
             }}
-            className="min-h-screen flex flex-col justify-center items-center  pt-6 px-4 sm:px-6 md:px-10 lg:px-16"
+            className="min-h-screen flex flex-col"
         >
-            <div className="bg-white bg-opacity-30 backdrop-blur-lg rounded-3xl p-6 sm:p-8  w-full  max-w-3xl shadow-xl">
-                <h2 className="text-2xl sm:text-3xl font-bold text-center text-green-700 mb-4">Share on Social Media</h2>
-                <div className="flex flex-col sm:flex-row md:flex-wrap lg:flex-nowrap lg:justify-center gap-4 md:gap-6">
-                    <button onClick={() => handleShare("whatsapp")} className="w-full sm:w-auto lg:w-1/4 flex items-center gap-2 bg-green-600 text-white px-4 sm:px-6 py-2 rounded-lg">
-                        <FaWhatsapp /> WhatsApp
-                    </button>
-                    <button onClick={() => handleShare("instagram")} className="w-full sm:w-auto lg:w-1/4 flex items-center gap-2 bg-pink-500 text-white py-2 px-4 sm:px-6 rounded-lg">
-                        <FaInstagram /> Instagram
-                    </button>
-                    <button onClick={() => handleShare("twitter")} className="w-full sm:w-auto lg:w-1/4 flex items-center gap-2 bg-black text-white py-2 px-4 sm:px-6 rounded-lg">
-                        <FaTwitter /> Twitter
-                    </button>
-                    <button onClick={() => handleShare("facebook")} className="w-full sm:w-auto lg:w-1/4 flex items-center gap-2 bg-blue-600 text-white py-2 px-4 sm:px-6 rounded-lg">
-                        <FaFacebook /> Facebook
-                    </button>
+            <div className="z-20 relative">
+                <Navbar />
+            </div> 
+
+            <div className="flex-grow flex justify-center items-center py-12">
+                <div className="w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-10 sm:p-12">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-4">Share on Social Media</h2>
+                    <div className="flex flex-col sm:flex-row md:flex-wrap lg:flex-nowrap lg:justify-center gap-4 md:gap-6">
+                        <button onClick={() => handleShare("whatsapp")} className="w-full sm:w-auto lg:w-1/4 flex items-center gap-2 bg-green-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-green-700">
+                            <FaWhatsapp /> WhatsApp
+                        </button>
+                        <button onClick={() => handleShare("instagram")} className="w-full sm:w-auto lg:w-1/4 flex items-center gap-2 bg-pink-500 text-white py-2 px-4 sm:px-6 rounded-lg hover:bg-pink-600">
+                            <FaInstagram /> Instagram
+                        </button>
+                        <button onClick={() => handleShare("twitter")} className="w-full sm:w-auto lg:w-1/4 flex items-center gap-2 bg-black text-white py-2 px-4 sm:px-6 rounded-lg hover:bg-gray-800">
+                            <FaTwitter /> Twitter
+                        </button>
+                        <button onClick={() => handleShare("facebook")} className="w-full sm:w-auto lg:w-1/4 flex items-center gap-2 bg-blue-600 text-white py-2 px-4 sm:px-6 rounded-lg hover:bg-blue-700">
+                            <FaFacebook /> Facebook
+                        </button>
+                    </div>
+                    <div className="text-center mt-6">
+                        <button onClick={() => navigate(-1)} className="w-full sm:w-auto bg-green-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-green-800">
+                            ← Back
+                        </button>
+                    </div>
                 </div>
-                <div className="text-center mt-6">
-                <button onClick={() => navigate(-1)} className="mt-6 w-full sm:w-auto   bg-green-600 text-white px-4 sm:px-6 py-2 rounded-lg hover:bg-green-800">
-                    ← Back
-                </button>
-                </div>
+            </div>
+            
+            <div className="mt-auto">
+                <Footer />
+            </div>
+
+            <div className="z-20 fixed bottom-8 right-5">
+                <a 
+                    href="#top" 
+                    className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+                    aria-label="Back to top"
+                >
+                    <ArrowUp size={20} />
+                </a>
             </div>
         </div>
     );
