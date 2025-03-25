@@ -6,6 +6,7 @@ import mangrovesrilanka from "/imgs/education/mangrovesrilanka.jpg";
 import mangroveThumbnail from "/imgs/education/mangrove-thumbnail.jpg";
 import { ArrowLeft } from "lucide-react";
 import ReactPlayer from "react-player";
+import {ArrowUp} from "lucide-react"
 
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer";
@@ -83,7 +84,7 @@ const EducationSection = () => {
               </p>
               <button
                 onClick={() => navigate("../education-news")}
-                className="mt-8 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                className="mt-32 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
               >
                 See More
               </button>
@@ -104,7 +105,7 @@ const EducationSection = () => {
               </p>
               <button
                 onClick={() => navigate("../VideoCard")}
-                className="mt-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                className="mt-24 bg-green-500 hover:bg-green-600 text-white px-8 py-2 rounded-md"
               >
                 Play
               </button>
@@ -129,6 +130,15 @@ const EducationSection = () => {
           </div>
         </div>
       </div>
+      <div className="z-20 fixed bottom-8 right-5">
+      <a 
+        href="#top" 
+        className="flex items-center justify-center w-12 h-12 bg-green-600/90 hover:bg-green-700 text-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl"
+        aria-label="Back to top"
+      >
+        <ArrowUp size={20} />
+      </a>
+    </div>
       <Footer />
     </div>
   );
@@ -138,18 +148,17 @@ const EducationContent = () => {
   const navigate = useNavigate();
   return (
     <div
+       className="min-h-screen"
       style={{
         backgroundImage: `url(${mangroveBackground})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        display: "flex",
-        height: "100vh",
-        overflow: "hidden",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        paddingTop: "5vh",
-      }}
+        }}
     >
+      <div className="z-20 relative">
+        <Navbar />
+      </div>
+      <div className="flex justify-center items-start pt-12">
       <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white ">
         <h3
           className="font-semibold text-center text-white text-3xl mb-5"
@@ -194,6 +203,8 @@ const EducationContent = () => {
         </div>
       </div>
     </div>
+    <Footer />
+    </div>
   );
 };
 
@@ -205,14 +216,12 @@ const EducationNews = () => {
         backgroundImage: `url(${mangroveBackground})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        display: "flex",
-        height: "100vh",
-        overflow: "hidden",
-        justifyContent: "center",
-        alignItems: "flex-start",
-        paddingTop: "5vh",
-      }}
+       }}
     >
+       <div className="z-20 relative">
+        <Navbar />
+      </div>
+      <div className="flex justify-center items-start pt-12">
       <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white">
         <h3
           className="font-semibold text-center text-white text-3xl mb-5"
@@ -245,12 +254,10 @@ const EducationNews = () => {
         </div>
       </div>
     </div>
+    <Footer />
+    </div>
   );
 };
-
-
-
-
 
 const VideoCard = () => {
   const videoFile = "/imgs/education/5079225-uhd_3840_2160_24fps.mp4";
@@ -276,14 +283,12 @@ return (
             />
           </div>
         </div>
-    
-   
-  );
+    );
 };
 
 const EducationQuiz = () => {
   const navigate = useNavigate();
-  const [answers, setAnswers] = useState({ q1: "", q2: "" });
+  const [answers, setAnswers] = useState({ q1: "", q2: "" , q3: "", q4: "", q5: "", q6: "", q7: "", q8: "", q9: "", q10: "" });
   const [score, setScore] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -305,7 +310,7 @@ const EducationQuiz = () => {
     setAnswers({ ...answers, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!answers.q1 || !answers.q2 || !answers.q3 || !answers.q4  || !answers.q5 || !answers.q6 || !answers.q7 || !answers.q8 || !answers.q9 || !answers.q10) {
       setModalMessage("Please answer all questions before submitting.");
       setShowModal(true);
@@ -332,8 +337,29 @@ const EducationQuiz = () => {
 
     setScore(`You earned ${totalScore} points!`);
     setShowModal(true);
-  };
+  
 
+  // Send the quiz data to Flask backend
+ const quizData ={
+       name: "User's Name",  // Replace with the actual user's name if nedded
+       answers: answers,
+       score: totalScore,
+ };
+  
+ try{
+     const response = await fetch('http://localhost:5000/submit-quiz', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(quizData),
+     });
+     const result = await response.json();
+     console.log(result.message);  // Log success message from Flask
+ } catch(error){
+    console.error('Error submitting quiz: ', error);
+ }
+};
   return (
     <>
       <div
@@ -341,14 +367,15 @@ const EducationQuiz = () => {
           backgroundImage: `url(${mangroveBackground})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          display: "flex",
-          height: "100vh",
-          overflow: "hidden",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          paddingTop: "5vh",
-        }}
+          backgroundRepeat: "no-repeat",
+          width: "100%",
+          backgroundAttachment: "fixed",
+          }}
       >
+        <div className="z-20 relative">
+          <Navbar />
+        </div>
+        <div className="flex justify-center items-start pt-12">
         <div className="mt-12 mb-12 w-11/12 max-w-6xl bg-white/10 backdrop-blur-md rounded-3xl p-4 text-white">
           <h3
             className="font-semibold text-center text-white text-4xl mb-5"
@@ -356,14 +383,14 @@ const EducationQuiz = () => {
           >
             Quiz
           </h3>
-          <div className="space-y-6  max-h-[400px] overflow-y-auto">
+          <div className="space-y-6">
             {/* Question 1 */}
             <div>
               <h2 className="font-semibold text-lg text-left mb-10">
                 1) Which of the following is a common species found in mangrove
                 forests?
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-2 font-semibold">
                 {["Oak", "Rhizopora", "Pine", "Birch"].map((option, index) => (
                   <label key={index} className="block">
                     <input
@@ -419,6 +446,7 @@ const EducationQuiz = () => {
                   "Protecting coastlines from erosion and storm surges",
                   "Creating deserts",
                 ].map((option, index) => (
+
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -527,6 +555,7 @@ const EducationQuiz = () => {
                   "Deforestation and land reclamation",
                   "Overproduction of oxygen",
                 ].map((option, index) => (
+
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -572,13 +601,14 @@ const EducationQuiz = () => {
               <h2 className="font-semibold text-lg text-left mb-10">
                 9) How do mangroves help combat climate change?
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-2 font-semibold">
                 {[
                   "By increasing ocean temparatures",
                   "By absorbing and storing large amounts of carbon dioxide",
                   "by reflecting sunlight back into the atmosphere",
                   "By producing methane gas",
                 ].map((option, index) => (
+
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -607,6 +637,7 @@ const EducationQuiz = () => {
                   "Increasing soil erosion",
                   "reducing fish populations",
                 ].map((option, index) => (
+
                   <label key={index} className="block">
                     <input
                       type="radio"
@@ -621,10 +652,12 @@ const EducationQuiz = () => {
                 ))}
               </div>
             </div>
+
             <div className="relative mt-5">
               <div
                 onClick={() => navigate("/education")}
                 className="absolute left-0  text-2xl text-white px-16 py-2 text-center rounded-3xl w-fit flex items-center cursor-pointer"
+
               >
                 <ArrowLeft size={54} className="-ml-14" />
               </div>
@@ -639,6 +672,8 @@ const EducationQuiz = () => {
             </div>
           </div>
         </div>
+        </div>
+        <Footer />
       </div>
 
       {/* Modal for Messages */}

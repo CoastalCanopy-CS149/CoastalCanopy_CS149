@@ -351,8 +351,9 @@ const Navbar = () => {
   // Add a function to handle restricted navigation
   const handleRestrictedNavigation = (path) => {
     if (!currentUser) {
+      navigate(path)
       // If user is not logged in, show login popup
-      setIsLoginModalOpen(true)
+      // setIsLoginModalOpen(true)
     } else {
       // If user is logged in, navigate to the path
       navigate(path)
@@ -386,9 +387,10 @@ const Navbar = () => {
           <div className="flex items-center gap-4 sm:gap-8">
             <div className="hidden md:flex items-center gap-4 sm:gap-8">
               {navItems.map((item) => {
-                const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some((path) =>
-                  item.path.includes(path),
-                )
+                // const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some((path) =>
+                //   item.path.includes(path),
+                // )
+                const isRestricted = false;
 
                 return isRestricted ? (
                   <button

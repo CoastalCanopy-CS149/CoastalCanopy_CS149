@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Coins} from 'lucide-react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
-export default function Progress() {
+export default function Progress({ points, username })  {
 
     const img = [
     "/imgs/gamification/img1.png",
@@ -14,7 +15,6 @@ export default function Progress() {
     const [randomIndex, setRandomIndex] = useState(0)
     const[text, setText] = useState("")
     const [percentage, setPercentage] = useState(0)
-    const[points, setPoints] = useState(1000)
 
     useEffect(() => {
         const generateRandomIndex = () => Math.floor(Math.random() * 4);
@@ -58,8 +58,41 @@ export default function Progress() {
         setPercentage(calculatedPercentage);
     }, [points]);
 
+    const handlePlantMangrove = async () => {
+        try {
+            const response = await axios.post(
+                'https://coastalcanopy.up.railway.app/gamification/plantMangrove',
+                {
+                    username: username
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                console.log("Points reset and tree planted successfully!");
+            } else {
+                console.error("Unexpected response:", response);
+            }
+        } catch (error) {
+            console.error("Error planting mangrove:", error);
+            if (error.response) {
+                // Handle specific error responses
+                if (error.response.status === 400) {
+                    console.error("Bad request: Username is required");
+                } else if (error.response.status === 404) {
+                    console.error("User not found");
+                }
+            }
+        }
+    };
+    
+
     return (
-        <div className="p-6 flex justify-center items-center min-h-full">
+        <div className="p-6 flex justify-center items-center min-h-full m-5">
             <div className="border border-gray-200 bg-white py-10 px-10 md:px-20 rounded-lg shadow-lg flex flex-col items-center gap-6 max-w-md w-full">
                 {/* Progress Image */}
                 <div className="w-40 h-40 overflow-hidden rounded-full border-4 border-green-600 shadow-md">
@@ -94,9 +127,7 @@ export default function Progress() {
                     <Link to="../plant" className="w-full mt-4">
                         <button 
                             className="w-full py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-colors font-medium"
-                            onClick={() => {
-                                setPoints(0);
-                            }}
+                            onClick={handlePlantMangrove}
                         >
                             Plant a virtual mangrove 🌱
                         </button>
