@@ -16,30 +16,25 @@ const SignUp = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Track if this is a page refresh or a navigation
-  const [isPageRefresh, setIsPageRefresh] = useState(() => {
-    // Check if this is the first load or a refresh
-    return !sessionStorage.getItem("signupPageVisited")
-  })
+  // Check if we're coming back from OTP verification
+  const isFromOtpVerification = location.state?.formData || sessionStorage.getItem("inOtpVerification")
 
-  // Initialize form data from session storage or location state
+  // Initialize form data - only keep data if coming back from OTP verification
   const [formData, setFormData] = useState(() => {
-    // Check if we're coming back from OTP verification
-    const inOtpVerification = sessionStorage.getItem("inOtpVerification")
+    if (isFromOtpVerification) {
+      // If coming back from OTP, use location state or session storage
+      if (location.state?.formData) {
+        return location.state.formData
+      }
 
-    // If coming back from OTP, use location state
-    if (location.state?.formData) {
-      return location.state.formData
+      // If this is a page refresh after OTP verification
+      const savedForm = sessionStorage.getItem("signupFormData")
+      if (savedForm) {
+        return JSON.parse(savedForm)
+      }
     }
 
-    // If this is a page refresh, use session storage
-    const savedForm = sessionStorage.getItem("signupFormData")
-    if (savedForm) {
-      console.log("Loaded from session storage:", savedForm)
-      return JSON.parse(savedForm)
-    }
-
-    // Default empty form
+    // Default empty form for new visits
     return {
       firstName: "",
       lastName: "",
@@ -52,93 +47,48 @@ const SignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false)
   const [showReenterPassword, setShowReenterPassword] = useState(false)
-  const [agreeToTerms, setAgreeToTerms] = useState(() => {
-    // Restore agreeToTerms state from location state if coming back from OTP page
-    if (location.state?.formData && location.state.formData.agreeToTerms) {
-      return true
-    }
 
-    // Check if we're coming back from OTP verification
-    const inOtpVerification = sessionStorage.getItem("inOtpVerification")
-    if (inOtpVerification) {
-      return true
-    }
+  // Terms and conditions checkbox - only checked if coming back from OTP verification
+  const [agreeToTerms, setAgreeToTerms] = useState(!!isFromOtpVerification)
 
-    return false
-  })
   const [errors, setErrors] = useState({})
   const [showTerms, setShowTerms] = useState(false)
 
-  // Set a flag in sessionStorage to track page visits
+  // Save form data to session storage only if coming from OTP verification
   useEffect(() => {
-    // Mark that we've visited this page
-    sessionStorage.setItem("signupPageVisited", "true")
-
-    // Handle navigation events
-    const handleNavigation = (e) => {
-      // Don't clear data if navigating to OTP verification
-      if (!window.location.pathname.includes("verify")) {
-        sessionStorage.removeItem("signupFormData")
-      }
-    }
-
-    // Listen for navigation events
-    window.addEventListener("beforeunload", handleNavigation)
-
-    // This will run when component unmounts (navigating away)
-    return () => {
-      // Clear the flag when navigating away
-      sessionStorage.removeItem("signupPageVisited")
-
-      // If not going to verification, clear form data
-      if (!window.location.pathname.includes("verify")) {
-        sessionStorage.removeItem("signupFormData")
-      }
-
-      window.removeEventListener("beforeunload", handleNavigation)
-    }
-  }, [])
-
-  // Save form data to session storage when it changes
-  useEffect(() => {
-    console.log("Saving form data:", formData)
-    sessionStorage.setItem("signupFormData", JSON.stringify(formData))
-  }, [formData])
-
-  // Clear data on tab close
-  useEffect(() => {
-    const clearSessionData = () => {
-      sessionStorage.removeItem("signupFormData")
-      sessionStorage.removeItem("signupPageVisited")
-    }
-
-    window.addEventListener("beforeunload", clearSessionData)
-    return () => window.removeEventListener("beforeunload", clearSessionData)
-  }, [])
-
-  // Persist form data only on refresh (not when navigating away)
-  useEffect(() => {
-    if (performance.navigation.type === 1) {
-      // Check if page is reloaded
+    if (isFromOtpVerification) {
       sessionStorage.setItem("signupFormData", JSON.stringify(formData))
     }
-  }, [formData])
+  }, [formData, isFromOtpVerification])
 
-  // Clear form data when user leaves the page (except on refresh)
+  // Clear form data when component unmounts (navigating away)
   useEffect(() => {
-    const handleUnload = (event) => {
-      if (performance.navigation.type !== 1) {
-        // Not a refresh
+    return () => {
+      // Only clear if not going to verification
+      if (!window.location.pathname.includes("verify")) {
         sessionStorage.removeItem("signupFormData")
+        sessionStorage.removeItem("signupPageVisited")
+      }
+    }
+  }, [])
+
+  // Clear data on tab close or refresh (except when coming from OTP)
+  useEffect(() => {
+    const clearSessionData = () => {
+      // Don't clear if we're coming from OTP verification
+      if (!isFromOtpVerification) {
+        sessionStorage.removeItem("signupFormData")
+        sessionStorage.removeItem("signupPageVisited")
       }
     }
 
-    window.addEventListener("beforeunload", handleUnload)
+    // Clear on tab/browser close
+    window.addEventListener("beforeunload", clearSessionData)
 
     return () => {
-      window.removeEventListener("beforeunload", handleUnload)
+      window.removeEventListener("beforeunload", clearSessionData)
     }
-  }, [])
+  }, [isFromOtpVerification])
 
   // Handle back button on mobile for terms modal
   useEffect(() => {

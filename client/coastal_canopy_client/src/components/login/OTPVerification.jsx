@@ -18,33 +18,96 @@ const OTPVerification = () => {
   const [resendCount, setResendCount] = useState(0) // Track number of resends
   const [isResendLocked, setIsResendLocked] = useState(false) // Track if resend is locked
   const [lockTimeLeft, setLockTimeLeft] = useState(0) // Track lockout time remaining
+  const [showAttempts, setShowAttempts] = useState(false) // Track whether to show attempts
   const inputRefs = useRef([])
   const timerRef = useRef(null)
   const lockTimerRef = useRef(null) // Timer for the resend lockout
+  const attemptTimerRef = useRef(null) // Timer for hiding attempts count
   const formData = location.state?.formData
+  const isFromSignup = location.state?.fromSignup || false // Check if coming directly from signup form
 
+  // Prevent page refresh
+  useEffect(() => {
+    const preventRefresh = (e) => {
+      e.preventDefault()
+      e.returnValue = ""
+      // Force navigation to be blocked
+      window.history.pushState(null, "", window.location.href)
+      return ""
+    }
+
+    // Block refresh with beforeunload
+    window.addEventListener("beforeunload", preventRefresh)
+
+    // Block navigation with popstate
+    const blockNavigation = () => {
+      window.history.pushState(null, "", window.location.href)
+    }
+
+    // Initialize by pushing current state
+    window.history.pushState(null, "", window.location.href)
+    window.addEventListener("popstate", blockNavigation)
+
+    return () => {
+      window.removeEventListener("beforeunload", preventRefresh)
+      window.removeEventListener("popstate", blockNavigation)
+    }
+  }, [])
+
+  // Initialize timer and OTP state
   useEffect(() => {
     if (!formData) {
       navigate("./signup")
       return
     }
 
+    // Set a flag to track that we're in OTP verification
+    sessionStorage.setItem("inOtpVerification", "true")
+
+    // If coming from signup form, reset timer and generate new OTP
+    if (isFromSignup) {
+      // Reset timer to 7 minutes
+      setTimeLeft(420)
+      setIsExpired(false)
+      setOtp(["", "", "", "", "", ""])
+
+      // Generate new OTP (in a real app, this would be sent to the user's email)
+      console.log("Sending new OTP to:", formData.email)
+    }
+
+    // Start the timer
     startTimer()
 
+    // Start lock timer if needed
+    if (isResendLocked && lockTimeLeft > 0) {
+      startLockTimer()
+    }
+
     return () => {
+      // Clear the OTP verification flag if navigating to signup
+      if (window.location.pathname.includes("signup")) {
+        sessionStorage.removeItem("inOtpVerification")
+      }
+
       if (timerRef.current) {
         clearInterval(timerRef.current)
       }
       if (lockTimerRef.current) {
         clearInterval(lockTimerRef.current)
       }
+      if (attemptTimerRef.current) {
+        clearTimeout(attemptTimerRef.current)
+      }
     }
-  }, [navigate, formData])
+  }, [navigate, formData, isResendLocked, lockTimeLeft, isFromSignup])
 
   const startTimer = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current)
     }
+
+    // Don't start timer if already expired
+    if (isExpired) return
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -60,7 +123,9 @@ const OTPVerification = () => {
 
   const startLockTimer = () => {
     // 10 minutes in seconds
-    setLockTimeLeft(600)
+    if (!lockTimeLeft) {
+      setLockTimeLeft(600)
+    }
 
     if (lockTimerRef.current) {
       clearInterval(lockTimerRef.current)
@@ -68,17 +133,25 @@ const OTPVerification = () => {
 
     lockTimerRef.current = setInterval(() => {
       setLockTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
+        const newTime = prevTime <= 1 ? 0 : prevTime - 1
+
+        if (newTime <= 0) {
           clearInterval(lockTimerRef.current)
           setIsResendLocked(false)
+          // Reset resend count after lockout period
+          setResendCount(0)
           return 0
         }
-        return prevTime - 1
+        return newTime
       })
     }, 1000)
   }
 
+  // Only allow numbers in OTP input
   const handleInputChange = (index, value) => {
+    // Only allow numbers
+    if (!/^\d*$/.test(value)) return
+
     if (value.length > 1) return // Prevent multiple digits
 
     const newOtp = [...otp]
@@ -114,7 +187,42 @@ const OTPVerification = () => {
     }
 
     // Here you would typically verify the OTP with your backend
-    console.log("Verifying OTP:", otpValue)
+    // For demo purposes, we'll assume 123456 is a valid OTP
+    if (otpValue !== "123456") {
+      setError("Invalid OTP. Please try again.")
+      return
+    }
+
+    // Mark OTP as verified
+    sessionStorage.setItem("pendingOtpVerified", "true")
+
+    // Save user data to localStorage
+    const pendingSignupData = JSON.parse(sessionStorage.getItem("pendingSignupData") || "{}")
+    if (pendingSignupData) {
+      // Get existing users or create empty array
+      const users = JSON.parse(localStorage.getItem("users") || "[]")
+
+      // Create new user object
+      const newUser = {
+        firstName: pendingSignupData.firstName,
+        lastName: pendingSignupData.lastName,
+        email: pendingSignupData.email,
+        username: pendingSignupData.usernameOriginal || pendingSignupData.username, // Use original case for display
+        password: pendingSignupData.password,
+        uid: Date.now().toString(), // Generate a simple unique ID
+        createdAt: new Date().toISOString(),
+      }
+
+      // Add to users array
+      users.push(newUser)
+
+      // Save back to localStorage
+      localStorage.setItem("users", JSON.stringify(users))
+
+      // Clear pending signup data
+      sessionStorage.removeItem("pendingSignupData")
+    }
+
     // Navigate to success page
     navigate("../verification-success")
   }
@@ -125,6 +233,18 @@ const OTPVerification = () => {
       return
     }
 
+    // Show attempts count when clicked
+    setShowAttempts(true)
+
+    // Hide attempts count after 3 seconds
+    if (attemptTimerRef.current) {
+      clearTimeout(attemptTimerRef.current)
+    }
+
+    attemptTimerRef.current = setTimeout(() => {
+      setShowAttempts(false)
+    }, 3000)
+
     // Increment resend count
     const newResendCount = resendCount + 1
     setResendCount(newResendCount)
@@ -132,14 +252,26 @@ const OTPVerification = () => {
     // Check if we've reached the limit (3 attempts)
     if (newResendCount >= 3) {
       setIsResendLocked(true)
+      setLockTimeLeft(600) // 10 minutes
       startLockTimer()
     }
 
+    // Reset OTP fields
     setOtp(["", "", "", "", "", ""])
     setError("")
+
+    // Reset timer - ensure it works for all attempts including the 3rd
     setTimeLeft(420)
     setIsExpired(false)
+
+    // Make sure to clear any existing timer before starting a new one
+    if (timerRef.current) {
+      clearInterval(timerRef.current)
+    }
+
+    // Start a new timer
     startTimer()
+
     // Here you would typically call your backend to resend OTP
     console.log("Resending OTP to:", formData?.email)
   }
@@ -152,71 +284,68 @@ const OTPVerification = () => {
 
   return (
     <div
-      className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
+      className="min-h-screen w-full overflow-hidden bg-cover bg-center flex flex-col"
       style={{
         backgroundImage: `url('/imgs/login/Background.jpg')`,
       }}
     >
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center py-10">
-        <div className="relative w-[1000px] h-[700px] bg-black/40 backdrop-blur-sm">
+      <div className="flex-1 flex items-center justify-center py-6 px-4">
+        <div className="relative w-full max-w-[800px] bg-black/40 backdrop-blur-sm rounded-3xl p-4 sm:p-6 min-h-[450px] mt-12 mb-12">
           <div className="flex flex-col items-center justify-center h-full">
-            <h1 className="font-['Aclonica'] text-white text-[48px] text-center mb-4">OTP Verification</h1>
-            <div className="text-[#BDBDBD] font-['comfortaa'] text-[24px] text-center max-w-[800px] mb-8">
+            <h1 className="font-['Aclonica'] text-white text-[24px] sm:text-[30px] text-center mb-3 sm:mb-2">
+              OTP Verification
+            </h1>
+            <div className="text-white font-['comfortaa'] text-[14px] sm:text-[16px] text-center max-w-[600px] mb-3">
               <p>OTP has been sent to your registered email.</p>
               <p>Please enter it below to verify your account.</p>
-              <p>For your security, OTPs are valid for {formatTime(timeLeft)} only.</p>
+              <p>For your security, OTPs are valid for {formatTime(timeLeft)} minutes only.</p>
             </div>
 
-            <form onSubmit={handleVerify} className="space-y-8">
-              <div className="flex gap-4 justify-center">
+            <form onSubmit={handleVerify} className="space-y-4 sm:space-y-2">
+              <div className="flex gap-2 sm:gap-3 justify-center mt-4">
                 {otp.map((digit, index) => (
                   <input
                     key={index}
                     ref={(el) => (inputRefs.current[index] = el)}
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     maxLength={1}
                     value={digit}
                     onChange={(e) => handleInputChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    className="w-[94px] h-[102px] bg-white/40 rounded-[20px] text-center text-white text-4xl font-['comfortaa'] focus:outline-none focus:ring-2 focus:ring-white/60"
+                    className="w-[40px] h-[50px] sm:w-[50px] sm:h-[60px] bg-white/40 rounded-[10px] text-center text-white text-xl sm:text-2xl font-['comfortaa'] focus:outline-none focus:ring-2 focus:ring-white/60"
                   />
                 ))}
               </div>
 
-              {error && <p className="text-red-500 text-center font-['comfortaa'] text-sm">{error}</p>}
+              <div className="h-4">
+                {error && <p className="text-red-500 text-center font-['comfortaa'] text-xs sm:text-sm">{error}</p>}
+              </div>
 
-              <div className="flex flex-col items-center gap-4">
+              <div className="flex flex-col items-center gap-1 sm:gap-2 mt-2">
                 <button
                   type="submit"
-                  className="w-[539px] h-[82px] rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[32px] hover:bg-white/60 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isExpired}
+                  className="w-[200px] h-[40px] sm:h-[45px] rounded-[25px] bg-white/50 text-white font-['comfortaa'] text-[16px] sm:text-[18px] hover:bg-white/60 transition-colors shadow-lg"
                 >
                   Verify
                 </button>
 
-                <p className="text-white font-['comfortaa'] text-[20px] text-center">
-                  Didn't you receive the OTP? Check your Spam folder or{" "}
+                <p className="text-white font-['comfortaa'] text-[12px] sm:text-[14px] text-center px-4 mt-2">
+                  Didn't you receive the OTP? <br />
+                  <span className="font-bold">Check your Spam folder or </span>
                   {isResendLocked ? (
                     <span className="text-gray-400">Resend locked for {formatTime(lockTimeLeft)}</span>
                   ) : (
-                    <button type="button" onClick={handleResendOTP} className="underline hover:text-gray-200">
-                      Resend OTP {resendCount > 0 ? `(${resendCount}/3)` : ""}
+                    <button type="button" onClick={handleResendOTP} className="font-bold underline hover:text-gray-200">
+                      Resend OTP {showAttempts && resendCount > 0 ? `(${resendCount}/3)` : ""}
                     </button>
                   )}
                 </p>
               </div>
             </form>
-
-            <button
-              onClick={() => navigate("../signup", { state: { formData } })}
-              className="absolute left-8 bottom-8 w-10 h-10 rounded-full bg-white flex items-center justify-center"
-            >
-              <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
-                <path d="M15 18l-6-6 6-6" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
           </div>
         </div>
       </div>

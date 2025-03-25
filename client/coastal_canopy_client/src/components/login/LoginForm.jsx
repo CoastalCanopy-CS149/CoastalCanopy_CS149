@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Eye, EyeOff, Lock, Mail } from "lucide-react"
+import { Eye, EyeOff, Lock, Mail, X } from "lucide-react"
 import { signInWithGoogle } from "./firebaseConfig"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
@@ -24,6 +24,7 @@ const Login = () => {
   })
   const [isLocked, setIsLocked] = useState(false)
   const [lockTimeLeft, setLockTimeLeft] = useState(0)
+  const [isPasswordExpired, setIsPasswordExpired] = useState(false)
   const lockTimerRef = { current: null }
 
   // Check if the form is locked on component mount
@@ -129,6 +130,21 @@ const Login = () => {
     const user = users.find((u) => u.email === email && u.password === password)
 
     if (user) {
+      // Check if password is expired (180 days)
+      const isExpired = false
+      if (user.passwordChangeDate) {
+        const passwordChangeDate = new Date(user.passwordChangeDate)
+        const today = new Date()
+        const diffTime = Math.abs(today - passwordChangeDate)
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+        if (diffDays >= 180) {
+          // Password is expired
+          setIsPasswordExpired(true)
+          return
+        }
+      }
+
       // Login successful
       localStorage.setItem("currentUser", JSON.stringify(user))
 
@@ -201,6 +217,15 @@ const Login = () => {
         console.error("Google Sign-In Failed:", error.message)
       }
     }
+  }
+
+  const handleChangePassword = () => {
+    setIsPasswordExpired(false)
+    navigate("/login/change-password")
+  }
+
+  const handleCancelPasswordExpired = () => {
+    setIsPasswordExpired(false)
   }
 
   return (
@@ -365,6 +390,40 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {/* Password Expired Modal */}
+      {isPasswordExpired && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100]">
+          <div className="bg-black/80 backdrop-blur-md rounded-lg p-6 max-w-sm w-[90%] relative">
+            <button
+              onClick={handleCancelPasswordExpired}
+              className="absolute top-2 right-2 text-white hover:text-gray-300 hidden sm:block"
+            >
+              <X size={20} />
+            </button>
+            <h3 className="text-white font-['comfortaa'] text-xl font-bold mb-4 text-center">
+              Your password has expired
+            </h3>
+            <p className="text-white font-['comfortaa'] text-center mb-6">
+              For your security, you need to reset your password to continue accessing your account
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleChangePassword}
+                className="px-6 py-2 bg-white/50 hover:bg-white/60 text-white font-['comfortaa'] font-bold rounded-full animate-pulse"
+              >
+                Change Password
+              </button>
+              <button
+                onClick={handleCancelPasswordExpired}
+                className="px-6 py-2 bg-white/20 hover:bg-white/30 text-white font-['comfortaa'] font-bold rounded-full sm:hidden"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

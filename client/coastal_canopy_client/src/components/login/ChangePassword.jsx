@@ -25,7 +25,11 @@ const ChangePassword = () => {
 
   // Load user data
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
+    // const user = JSON.parse(localStorage.getItem("currentUser"))
+    const user = JSON.parse(localStorage.getItem("username"))
+
+
+    console.log(user)
 
     if (!user) {
       navigate("/login")
