@@ -70,6 +70,7 @@ const Navbar = () => {
     const checkUserLoggedIn = () => {
       const user = JSON.parse(localStorage.getItem("currentUser") || "null")
       const authUser = JSON.parse(localStorage.getItem("authUser") || "null")
+      const loginSts = JSON.parse(localStorage.getItem("loginStatus") || "null")
 
       if (user) {
         setCurrentUser(user)

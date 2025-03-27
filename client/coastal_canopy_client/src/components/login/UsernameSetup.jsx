@@ -31,7 +31,7 @@ const UsernameSetup = () => {
         // User already has a username, redirect to home
         navigate("/")
       }
-    } else {
+  } else {
       // No authenticated user, redirect to login
       navigate("../username-setup")
     }

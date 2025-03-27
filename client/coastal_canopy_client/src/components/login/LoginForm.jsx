@@ -83,24 +83,42 @@ const Login = () => {
   useEffect(() => {
     const rememberedEmail = localStorage.getItem("rememberedEmail")
     const rememberedExpiry = localStorage.getItem("rememberedExpiry")
+    //const loginState = localStorage.getItem("loginState"); 
 
     if (rememberedEmail && rememberedExpiry) {
       const expiryDate = new Date(rememberedExpiry)
+      const currentDate = new Date()
+      console.log("Expired date " + expiryDate)
+      console.log("Current Date " + currentDate)
       if (expiryDate > new Date()) {
+        console.log("NOT")
+        return
         // Not expired yet
-        setEmail(rememberedEmail)
-        setRememberMe(true)
+        // setEmail(rememberedEmail)
+        setRememberMe(false)
         // Auto-login if we have the credentials
         const users = JSON.parse(localStorage.getItem("users") || "[]")
         const user = users.find((u) => u.email === rememberedEmail)
-        if (user) {
+        if (!user) {
           navigate("/")
         }
       } else {
+        console.log("Expired")
         // Expired, clear remembered login
         localStorage.removeItem("rememberedEmail")
         localStorage.removeItem("rememberedExpiry")
+        navigate("/login")
       }
+    }else{
+      console.log("test")
+      // localStorage.removeItem("rememberedEmail")
+      //   localStorage.removeItem("rememberedExpiry")
+      //   navigate("/login")
+      /*if (loginState !== "1") {
+        // If loginState is not 1, user must log in again
+        localStorage.removeItem("currentUser"); // Clear session
+        navigate("/login");
+      }*/
     }
   }, [navigate])
 
@@ -128,15 +146,20 @@ const Login = () => {
     // Get users from localStorage
     const users = JSON.parse(localStorage.getItem("users") || "[]")
     const user = users.find((u) => u.email === email && u.password === password)
-
+    const rememberedExpiry = localStorage.getItem("rememberedExpiry")
+    const expiryDate = new Date(rememberedExpiry)
     if (user) {
+
+      console.log("Expired date " + expiryDate)
       // Check if password is expired (180 days)
       const isExpired = false
-      if (user.passwordChangeDate) {
-        const passwordChangeDate = new Date(user.passwordChangeDate)
+      if (user.passwordChangedAt) {
+        const passwordChangeDate = new Date(user.passwordChangedAt)
         const today = new Date()
         const diffTime = Math.abs(today - passwordChangeDate)
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+        console.log("Date Difference " + diffDays)
 
         if (diffDays >= 180) {
           // Password is expired
@@ -152,19 +175,25 @@ const Login = () => {
       localStorage.removeItem("loginFailedAttempts")
       setFailedAttempts(0)
 
-      // Handle remember me
-      if (rememberMe) {
-        const twoWeeksFromNow = new Date()
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
-        localStorage.setItem("rememberedEmail", email)
-        localStorage.setItem("rememberedExpiry", twoWeeksFromNow.toISOString())
-      } else {
-        localStorage.removeItem("rememberedEmail")
-        localStorage.removeItem("rememberedExpiry")
-      }
+      if(user){
+        // Save the logged-in state
+        localStorage.setItem("loginState", "1"); // User is logged in
 
-      // Redirect to home page
-      navigate("/")
+        // Handle remember me
+        if (rememberMe) {
+          const twoWeeksFromNow = new Date()
+          twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
+          localStorage.setItem("rememberedEmail", email)
+          localStorage.setItem("rememberedExpiry", twoWeeksFromNow.toISOString())
+        } else {
+          localStorage.removeItem("rememberedEmail")
+          localStorage.removeItem("rememberedExpiry")
+        }
+
+        // Redirect to home page
+        navigate("/")
+      }
+      
     } else {
       // Login failed - increment failed attempts
       const newFailedAttempts = failedAttempts + 1
@@ -187,7 +216,7 @@ const Login = () => {
       }
     }
   }
-
+  
   const handleSocialLogin = async (platform) => {
     if (platform === "google") {
       try {

@@ -31,10 +31,10 @@ const ChangePassword = () => {
 
     console.log(user)
 
-    if (!user) {
-      navigate("/login")
-      return
-    }
+    // if (user) {
+    //   navigate("/login")
+    //   return
+    // }
 
     setCurrentUser(user)
   }, [navigate])

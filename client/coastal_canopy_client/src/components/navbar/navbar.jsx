@@ -257,7 +257,8 @@ const Navbar = () => {
   const handleChangePassword = () => {
     setCurrentPassword("")
     setPasswordError("")
-    setIsPasswordModalOpen(true)
+    navigate("/login/change-password")
+    // setIsPasswordModalOpen(true)
   }
 
   const verifyPassword = () => {
@@ -270,10 +271,12 @@ const Navbar = () => {
       setPasswordError("Please enter your current password")
       return
     }
-
+    console.log("NA")
     // Verify the password
     const user = JSON.parse(localStorage.getItem("currentUser"))
-    if (user && user.password === currentPassword) {
+    if (user.password === currentPassword) {
+        console.log("Password change screen")
+        return
       // Password is correct
       setIsPasswordModalOpen(false)
       setCurrentPassword("")

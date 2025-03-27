@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
+import axios from "axios"
 
 import "@fontsource/aclonica"
 import "@fontsource/comfortaa"
@@ -64,24 +65,8 @@ const OTPVerification = () => {
     // Set a flag to track that we're in OTP verification
     sessionStorage.setItem("inOtpVerification", "true")
 
-    // If coming from signup form, reset timer and generate new OTP
-    if (isFromSignup) {
-      // Reset timer to 7 minutes
-      setTimeLeft(420)
-      setIsExpired(false)
-      setOtp(["", "", "", "", "", ""])
-
-      // Generate new OTP (in a real app, this would be sent to the user's email)
-      console.log("Sending new OTP to:", formData.email)
-    }
-
-    // Start the timer
-    startTimer()
-
-    // Start lock timer if needed
-    if (isResendLocked && lockTimeLeft > 0) {
-      startLockTimer()
-    }
+    // Start the OTP timer
+    startOtpTimer()
 
     return () => {
       // Clear the OTP verification flag if navigating to signup
@@ -92,16 +77,59 @@ const OTPVerification = () => {
       if (timerRef.current) {
         clearInterval(timerRef.current)
       }
-      if (lockTimerRef.current) {
-        clearInterval(lockTimerRef.current)
-      }
       if (attemptTimerRef.current) {
         clearTimeout(attemptTimerRef.current)
       }
     }
-  }, [navigate, formData, isResendLocked, lockTimeLeft, isFromSignup])
+  }, [navigate, formData])
 
-  const startTimer = () => {
+  // Separate effect for lock timer
+  useEffect(() => {
+    // Check if we need to start the lock timer
+    if (isResendLocked && lockTimeLeft > 0) {
+      startLockTimer()
+    }
+
+    return () => {
+      if (lockTimerRef.current) {
+        clearInterval(lockTimerRef.current)
+      }
+    }
+  }, [isResendLocked, lockTimeLeft])
+
+  // Send OTP on first render
+  const isFirstRender = useRef(true)
+  useEffect(() => {
+    if (!formData || !formData.email) return
+
+    if (isFirstRender.current) {
+      // Skip the effect for the first render
+      isFirstRender.current = false
+
+      // Define an async function inside useEffect
+      const sendInitialOTP = async () => {
+        try {
+          // Perform asynchronous operation, such as fetching data
+          const response = await axios.post("http://127.0.0.1:5000/users/send-otp", {
+            email: formData.email,
+            otp: "123456", // For demo purposes
+          })
+          if (response.status === 200) {
+            console.log("OTP sent successfully! Please check your email.")
+          }
+        } catch (error) {
+          console.log("Failed to send OTP. Please try again.")
+        }
+      }
+
+      // Call the async function
+      sendInitialOTP()
+    }
+  }, [formData])
+
+  // OTP Timer function - completely separate from lock timer
+  const startOtpTimer = () => {
+    // Clear any existing timer
     if (timerRef.current) {
       clearInterval(timerRef.current)
     }
@@ -121,12 +149,9 @@ const OTPVerification = () => {
     }, 1000)
   }
 
+  // Lock Timer function - completely separate from OTP timer
   const startLockTimer = () => {
-    // 10 minutes in seconds
-    if (!lockTimeLeft) {
-      setLockTimeLeft(600)
-    }
-
+    // Clear any existing lock timer
     if (lockTimerRef.current) {
       clearInterval(lockTimerRef.current)
     }
@@ -201,6 +226,8 @@ const OTPVerification = () => {
     if (pendingSignupData) {
       // Get existing users or create empty array
       const users = JSON.parse(localStorage.getItem("users") || "[]")
+      const currentDate = new Date()
+      const formattedDate = currentDate.toISOString().split("T")[0]
 
       // Create new user object
       const newUser = {
@@ -209,6 +236,7 @@ const OTPVerification = () => {
         email: pendingSignupData.email,
         username: pendingSignupData.usernameOriginal || pendingSignupData.username, // Use original case for display
         password: pendingSignupData.password,
+        passwordChangeDate: formattedDate,
         uid: Date.now().toString(), // Generate a simple unique ID
         createdAt: new Date().toISOString(),
       }
@@ -227,7 +255,7 @@ const OTPVerification = () => {
     navigate("../verification-success")
   }
 
-  const handleResendOTP = () => {
+  const handleResendOTP = async () => {
     // Check if resend is locked
     if (isResendLocked) {
       return
@@ -249,31 +277,36 @@ const OTPVerification = () => {
     const newResendCount = resendCount + 1
     setResendCount(newResendCount)
 
-    // Check if we've reached the limit (3 attempts)
-    if (newResendCount >= 3) {
-      setIsResendLocked(true)
-      setLockTimeLeft(600) // 10 minutes
-      startLockTimer()
-    }
-
     // Reset OTP fields
     setOtp(["", "", "", "", "", ""])
     setError("")
 
-    // Reset timer - ensure it works for all attempts including the 3rd
+    // Reset OTP timer - ensure it works for all attempts including the 3rd
     setTimeLeft(420)
     setIsExpired(false)
+    startOtpTimer()
 
-    // Make sure to clear any existing timer before starting a new one
-    if (timerRef.current) {
-      clearInterval(timerRef.current)
+    // Check if we've reached the limit (3 attempts)
+    if (newResendCount >= 3) {
+      setIsResendLocked(true)
+      setLockTimeLeft(600) // 10 minutes in seconds
+      // Lock timer will start in the useEffect that watches isResendLocked
     }
 
-    // Start a new timer
-    startTimer()
-
     // Here you would typically call your backend to resend OTP
-    console.log("Resending OTP to:", formData?.email)
+    try {
+      if (formData && formData.email) {
+        const response = await axios.post("http://127.0.0.1:5000/users/send-otp", {
+          email: formData.email,
+          otp: "123456", // For demo purposes
+        })
+        if (response.status === 200) {
+          console.log("OTP resent successfully! Please check your email.")
+        }
+      }
+    } catch (error) {
+      console.log("Failed to resend OTP. Please try again.")
+    }
   }
 
   const formatTime = (seconds) => {
