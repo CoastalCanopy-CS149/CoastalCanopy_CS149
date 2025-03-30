@@ -1,290 +1,199 @@
-"use client"
+"use client";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { User, Mail, Edit, Check } from "lucide-react";
+import axios from "axios";
+import Navbar from "../navbar/navbar";
+import Footer from "../footer/footer";
+import { useAuth } from '../../context/AuthContext';
+import { siteConfig } from "../../constant/siteConfig";
 
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { User, Mail, Edit, Check } from "lucide-react"
-import Navbar from "../navbar/navbar"
-import Footer from "../footer/footer"
-
-import "@fontsource/aclonica"
-import "@fontsource/comfortaa"
-import "@fontsource/acme"
+import "@fontsource/aclonica";
+import "@fontsource/comfortaa";
+import "@fontsource/acme";
 
 const EditProfile = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { user , logout} = useAuth(); // Using useAuth to get and set user
+  console.log('user in profile', user);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     username: "",
-  })
+  });
   const [originalData, setOriginalData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     username: "",
-  })
+  });
   const [editableFields, setEditableFields] = useState({
     firstName: false,
     lastName: false,
     email: false,
     username: false,
-  })
+  });
   const [validFields, setValidFields] = useState({
     firstName: true,
     lastName: true,
     email: true,
     username: true,
-  })
-  const [errors, setErrors] = useState({})
-  const [success, setSuccess] = useState(false)
-  const [currentUser, setCurrentUser] = useState(null)
+  });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Load user data
+  // Load user data from useAuth
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-    const authUser = JSON.parse(localStorage.getItem("authUser"))
-
-    if (!user && !authUser) {
-      navigate("/login")
-      return
+    if (!user) {
+      navigate("/login");
+      return;
     }
+    console.log(user);
 
-    let userData = {}
+    const userData = {
+      firstName: user.user.firstName || "",
+      lastName: user.user.lastName || "",
+      email: user.user.email || "",
+      username: user.user.username || "",
+    };
+    setFormData(userData);
+    setOriginalData(userData);
+  }, [user, navigate]);
 
-    if (user) {
-      userData = {
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        email: user.email || "",
-        username: user.username || "",
-      }
-      setCurrentUser(user)
-    } else if (authUser) {
-      // For Google sign-in users
-      const username = localStorage.getItem(`username_${authUser.uid}`)
-      const nameParts = authUser.displayName ? authUser.displayName.split(" ") : ["", ""]
+  const validateName = (name) => /^[A-Za-z]{2,50}$/.test(name);
 
-      userData = {
-        firstName: nameParts[0] || "",
-        lastName: nameParts.slice(1).join(" ") || "",
-        email: authUser.email || "",
-        username: username || "",
-      }
-      setCurrentUser({
-        ...authUser,
-        username: username,
-        firstName: nameParts[0] || "",
-        lastName: nameParts.slice(1).join(" ") || "",
-      })
-    }
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-    setFormData(userData)
-    setOriginalData(userData)
-  }, [navigate])
-
-  const validateName = (name) => {
-    return /^[A-Za-z]{2,50}$/.test(name)
-  }
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
-
-  const validateUsername = (username) => {
-    return /^(?!.*[._]{2})[a-z0-9](?:[a-z0-9._]{2,18})[a-z0-9]$/.test(username.toLowerCase())
-  }
-
-  const checkExistingUsername = (username) => {
-    if (username.toLowerCase() === originalData.username.toLowerCase()) {
-      return false // Same username, no conflict
-    }
-
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    return users.some((user) => user.username.toLowerCase() === username.toLowerCase())
-  }
-
-  const checkExistingEmail = (email) => {
-    if (email.toLowerCase() === originalData.email.toLowerCase()) {
-      return false // Same email, no conflict
-    }
-
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    return users.some((user) => user.email.toLowerCase() === email.toLowerCase())
-  }
+  const validateUsername = (username) =>
+    /^(?!.*[._]{2})[a-z0-9](?:[a-z0-9._]{2,18})[a-z0-9]$/.test(username.toLowerCase());
 
   const toggleEditable = (field) => {
     setEditableFields((prev) => ({
       ...prev,
       [field]: !prev[field],
-    }))
-
-    // Reset validation when toggling edit mode
+    }));
     if (!editableFields[field]) {
-      validateField(field, formData[field])
+      validateField(field, formData[field]);
     }
-  }
+  };
 
   const validateField = (field, value) => {
-    let isValid = true
-    let errorMessage = ""
+    let isValid = true;
+    let errorMessage = "";
 
     switch (field) {
       case "firstName":
       case "lastName":
         if (!value) {
-          isValid = false
-          errorMessage = `${field === "firstName" ? "First" : "Last"} name is required`
+          isValid = false;
+          errorMessage = `${field === "firstName" ? "First" : "Last"} name is required`;
         } else if (!validateName(value)) {
-          isValid = false
-          errorMessage = "Name must be 2-50 letters (A-Z, a-z) with no numbers or special characters"
+          isValid = false;
+          errorMessage = "Name must be 2-50 letters (A-Z, a-z) with no numbers or special characters";
         }
-        break
+        break;
 
       case "email":
         if (!value) {
-          isValid = false
-          errorMessage = "Email is required"
+          isValid = false;
+          errorMessage = "Email is required";
         } else if (!validateEmail(value)) {
-          isValid = false
-          errorMessage = "Please enter a valid email address"
-        } else if (checkExistingEmail(value)) {
-          isValid = false
-          errorMessage = "This email is already registered with another account. Please use another email"
+          isValid = false;
+          errorMessage = "Please enter a valid email address";
         }
-        break
+        break;
 
       case "username":
         if (!value) {
-          isValid = false
-          errorMessage = "Username is required"
+          isValid = false;
+          errorMessage = "Username is required";
         } else if (!validateUsername(value)) {
-          isValid = false
+          isValid = false;
           errorMessage =
-            "Username must be 4-20 characters, start & end with letters/numbers, can use dots or underscores along"
-        } else if (checkExistingUsername(value)) {
-          isValid = false
-          errorMessage = "This username is already taken. Please choose another one"
+            "Username must be 4-20 characters, start & end with letters/numbers, can use dots or underscores";
         }
-        break
+        break;
 
       default:
-        break
+        break;
     }
 
-    setValidFields((prev) => ({
-      ...prev,
-      [field]: isValid,
-    }))
-
-    setErrors((prev) => ({
-      ...prev,
-      [field]: errorMessage,
-    }))
-
-    return isValid
-  }
+    setValidFields((prev) => ({ ...prev, [field]: isValid }));
+    setErrors((prev) => ({ ...prev, [field]: errorMessage }));
+    return isValid;
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    validateField(name, value);
+  };
 
-    // Validate as user types
-    validateField(name, value)
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
-    // Check if all fields are valid
-    const allFieldsValid = Object.values(validFields).every((valid) => valid)
-
+    const allFieldsValid = Object.values(validFields).every((valid) => valid);
     if (!allFieldsValid) {
-      return
+      alert("Please correct the errors in the form before submitting.");
+      setIsLoading(false);
+      return;
     }
 
-    // Update user data
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-    const authUser = JSON.parse(localStorage.getItem("authUser"))
-
-    if (user) {
-      // Regular user
-      const updatedUser = {
-        ...user,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        username: formData.username,
+    const updatedFields = {};
+    Object.keys(formData).forEach((key) => {
+      if (formData[key] !== originalData[key]) {
+        updatedFields[key] = formData[key];
       }
+    });
 
-      // Update in users array
-      const users = JSON.parse(localStorage.getItem("users") || "[]")
-      const updatedUsers = users.map((u) => (u.email === originalData.email ? updatedUser : u))
+    if (Object.keys(updatedFields).length === 0) {
+      alert("No changes detected to update.");
+      setIsLoading(false);
+      return;
+    }
+    console.log('formData', formData);
 
-      localStorage.setItem("users", JSON.stringify(updatedUsers))
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser))
-    } else if (authUser) {
-      // Google sign-in user
-      const uid = authUser.uid
-      localStorage.setItem(`username_${uid}`, formData.username)
-      localStorage.setItem("currentUsername", formData.username)
+    try {
+      const response = await axios.post(
+        `${siteConfig.BASE_URL}api/users/update-user-details`,
+        { ...formData }, 
+        {
+          headers: { "Content-Type": "application/json" },
+          
+        }
+      );
 
-      // Update currentUser for Google users too
-      const updatedUser = {
-        ...authUser,
-        username: formData.username,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+      if (response.status === 200) {
+        
+        setOriginalData(formData);
+        alert("Profile updated successfully!, Please re login to see the changes.");
+        logout();
       }
-      localStorage.setItem("currentUser", JSON.stringify(updatedUser))
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Failed to update profile. Please try again.";
+      alert(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    // Show success message
-    setSuccess(true)
+  const getUserInitial = () =>
+    user?.user.firstName?.charAt(0).toUpperCase() ||
+    user?.user.username?.charAt(0).toUpperCase() ||
+    user?.user.email?.charAt(0).toUpperCase() ||
+    "U";
 
-    // Redirect to home after a short delay
-    setTimeout(() => {
-      navigate("/")
-    }, 1500)
-  }
-
-  // Get user's first name initial
-  const getUserInitial = () => {
-    if (!currentUser) return ""
-
-    if (currentUser.firstName) {
-      return currentUser.firstName.charAt(0).toUpperCase()
-    } else if (currentUser.username) {
-      return currentUser.username.charAt(0).toUpperCase()
-    } else if (currentUser.email) {
-      return currentUser.email.charAt(0).toUpperCase()
-    }
-
-    return "U"
-  }
-
-  // Check if all fields are valid and any field has been edited
-  const canSave = () => {
-    const allFieldsValid = Object.values(validFields).every((valid) => valid)
-    const anyFieldEdited =
-      formData.firstName !== originalData.firstName ||
-      formData.lastName !== originalData.lastName ||
-      formData.email !== originalData.email ||
-      formData.username !== originalData.username
-
-    return allFieldsValid && anyFieldEdited
-  }
+  const canSave = () =>
+    Object.values(validFields).every((valid) => valid) &&
+    Object.keys(formData).some((key) => formData[key] !== originalData[key]);
 
   return (
     <div
       className="min-h-screen w-full overflow-hidden bg-cover bg-center flex flex-col"
-      style={{
-        backgroundImage: `url('/imgs/login/Background.jpg')`,
-      }}
+      style={{ backgroundImage: `url('/imgs/login/Background.jpg')` }}
     >
       <Navbar />
 
@@ -298,14 +207,12 @@ const EditProfile = () => {
               Keep your info up to date
             </p>
 
-            {/* User Avatar */}
             <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/30 text-white font-['comfortaa'] text-2xl font-bold mb-4">
               {getUserInitial()}
             </div>
 
-            {/* Username Display */}
             <div className="text-white font-['comfortaa'] font-bold text-center mb-6 text-xl">
-              Hello {currentUser?.username || "User"}
+              Hello {user.user?.username || "User"}
             </div>
 
             <form onSubmit={handleSubmit} className="w-full max-w-[630px] space-y-4">
@@ -320,7 +227,7 @@ const EditProfile = () => {
                       placeholder="First Name"
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      disabled={!editableFields.firstName}
+                      disabled={!editableFields.firstName || isLoading}
                       className="w-full h-[45px] pl-10 pr-10 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] shadow-lg disabled:opacity-50"
                     />
                     {editableFields.firstName && validFields.firstName ? (
@@ -351,7 +258,7 @@ const EditProfile = () => {
                       placeholder="Last Name"
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      disabled={!editableFields.lastName}
+                      disabled={!editableFields.lastName || isLoading}
                       className="w-full h-[45px] pl-10 pr-10 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] shadow-lg disabled:opacity-50"
                     />
                     {editableFields.lastName && validFields.lastName ? (
@@ -382,7 +289,7 @@ const EditProfile = () => {
                       placeholder="Email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      disabled={!editableFields.email}
+                      disabled={!editableFields.email || isLoading}
                       className="w-full h-[45px] pl-10 pr-10 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] shadow-lg disabled:opacity-50"
                     />
                     {editableFields.email && validFields.email ? (
@@ -413,7 +320,7 @@ const EditProfile = () => {
                       placeholder="Username"
                       value={formData.username}
                       onChange={handleInputChange}
-                      disabled={!editableFields.username}
+                      disabled={!editableFields.username || isLoading}
                       className="w-full h-[45px] pl-10 pr-10 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] shadow-lg disabled:opacity-50"
                     />
                     {editableFields.username && validFields.username ? (
@@ -435,17 +342,13 @@ const EditProfile = () => {
                 </div>
               </div>
 
-              {success && (
-                <p className="text-green-500 text-center text-sm">Profile updated successfully! Redirecting...</p>
-              )}
-
               <div className="flex justify-center mt-6">
                 <button
                   type="submit"
-                  disabled={!canSave()}
-                  className="w-[50%] h-[45px] sm:h-[50px] rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[16px] sm:text-[18px] hover:bg-white/60 transition-colors shadow-lg disabled:opacity-50"
+                  disabled={!canSave() || isLoading}
+                  className="w-[50%] h-[45px] sm:h-[50px] rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[16px] sm:text-[18px] hover:bg-white/60 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Save
+                  {isLoading ? "Saving..." : "Save"}
                 </button>
               </div>
             </form>
@@ -455,8 +358,7 @@ const EditProfile = () => {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default EditProfile
-
+export default EditProfile;
