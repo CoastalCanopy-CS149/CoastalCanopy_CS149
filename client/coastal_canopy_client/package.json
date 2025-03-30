@@ -35,6 +35,7 @@
     "react-router-dom": "^7.1.5",
     "react-use": "^17.6.0",
     "recharts": "^2.15.1",
+    "sweetalert2": "^11.17.2",
     "swiper": "^11.2.2"
   },
   "devDependencies": {

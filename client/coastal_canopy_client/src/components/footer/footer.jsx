@@ -49,8 +49,9 @@ const Footer = () => {
   // Handle restricted navigation
   const handleRestrictedNavigation = (path) => {
     if (!currentUser) {
+      navigate(path)
       // If user is not logged in, show login popup
-      setIsLoginModalOpen(true)
+      // setIsLoginModalOpen(true)
     } else {
       // If user is logged in, navigate to the path
       navigate(path)

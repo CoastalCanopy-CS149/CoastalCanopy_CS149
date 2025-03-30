@@ -80,16 +80,15 @@ def reset_points():
     user = users_collection.find_one({'username': username})
 
     if user:
-        # Reset the points to 0 and increment treesPlanted by 1
+        # Decrease 1000 points and increase treesPlanted by 1
         users_collection.update_one(
             {'username': username},
             {
-                '$set': {'points': 0},
-                '$inc': {'treesPlanted': 1}
+                '$inc': {'points': -1000, 'treesPlanted': 1}
             }
         )
 
-        return jsonify({"success": "Points have been reset to 0"}), 200
+        return jsonify({"success": "Points have decreased by -1000"}), 200
     else:
         return jsonify({"error": "User not found"}), 404
 

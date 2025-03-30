@@ -23,4 +23,4 @@ COPY . .
 EXPOSE 5000
 
 # Command to run your application
-CMD ["gunicorn", "--bind", "0.0.0.0:${PORT}", "run:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT} run:app"]

@@ -1,339 +1,234 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Link, useNavigate, useLocation } from "react-router-dom"
-import { Eye, EyeOff, User, Mail, Lock, Check, X } from "lucide-react"
-import { signInWithGoogle } from "./firebaseConfig"
-import Navbar from "../navbar/navbar"
-import Footer from "../footer/footer"
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Eye, EyeOff, User, Mail, Lock, Check, X } from "lucide-react";
+import { signInWithGoogle } from "./firebaseConfig";
+import Navbar from "../navbar/navbar";
+import Footer from "../footer/footer";
 
-import "@fontsource/aclonica"
-import "@fontsource/comfortaa"
-import "@fontsource/acme"
-import "@fontsource/adamina"
+import "@fontsource/aclonica";
+import "@fontsource/comfortaa";
+import "@fontsource/acme";
+import "@fontsource/adamina";
+import axios from "axios";
+import { siteConfig } from "../../constant/siteConfig";
+import { useAuth } from "../../context/AuthContext";
+import { useAppContext } from "../../context/AppContext";
 
 const SignUp = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
+  const { newUserEmailInit, login } = useAuth();
+  const {addSuccess, addError} = useAppContext();
 
   // Track if this is a page refresh or a navigation
   const [isPageRefresh, setIsPageRefresh] = useState(() => {
     // Check if this is the first load or a refresh
-    return !sessionStorage.getItem("signupPageVisited")
-  })
+    return !sessionStorage.getItem("signupPageVisited");
+  });
 
   // Initialize form data from session storage or location state
-  const [formData, setFormData] = useState(() => {
-    // Check if we're coming back from OTP verification
-    const inOtpVerification = sessionStorage.getItem("inOtpVerification")
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: "",
+    password: "",
+    reenterPassword: "",
+  });
 
-    // If coming back from OTP, use location state
-    if (location.state?.formData) {
-      return location.state.formData
-    }
-
-    // If this is a page refresh, use session storage
-    const savedForm = sessionStorage.getItem("signupFormData")
-    if (savedForm) {
-      console.log("Loaded from session storage:", savedForm)
-      return JSON.parse(savedForm)
-    }
-
-    // Default empty form
-    return {
-      firstName: "",
-      lastName: "",
-      email: "",
-      username: "",
-      password: "",
-      reenterPassword: "",
-    }
-  })
-
-  const [showPassword, setShowPassword] = useState(false)
-  const [showReenterPassword, setShowReenterPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [showReenterPassword, setShowReenterPassword] = useState(false);
   const [agreeToTerms, setAgreeToTerms] = useState(() => {
     // Restore agreeToTerms state from location state if coming back from OTP page
     if (location.state?.formData && location.state.formData.agreeToTerms) {
-      return true
+      return true;
     }
 
     // Check if we're coming back from OTP verification
-    const inOtpVerification = sessionStorage.getItem("inOtpVerification")
+    const inOtpVerification = sessionStorage.getItem("inOtpVerification");
     if (inOtpVerification) {
-      return true
+      return true;
     }
 
-    return false
-  })
-  const [errors, setErrors] = useState({})
-  const [showTerms, setShowTerms] = useState(false)
+    return false;
+  });
+  const [errors, setErrors] = useState({});
+  const [showTerms, setShowTerms] = useState(false);
 
-  // Set a flag in sessionStorage to track page visits
-  useEffect(() => {
-    // Mark that we've visited this page
-    sessionStorage.setItem("signupPageVisited", "true")
-
-    // Handle navigation events
-    const handleNavigation = (e) => {
-      // Don't clear data if navigating to OTP verification
-      if (!window.location.pathname.includes("verify")) {
-        sessionStorage.removeItem("signupFormData")
-      }
-    }
-
-    // Listen for navigation events
-    window.addEventListener("beforeunload", handleNavigation)
-
-    // This will run when component unmounts (navigating away)
-    return () => {
-      // Clear the flag when navigating away
-      sessionStorage.removeItem("signupPageVisited")
-
-      // If not going to verification, clear form data
-      if (!window.location.pathname.includes("verify")) {
-        sessionStorage.removeItem("signupFormData")
-      }
-
-      window.removeEventListener("beforeunload", handleNavigation)
-    }
-  }, [])
-
-  // Save form data to session storage when it changes
-  useEffect(() => {
-    console.log("Saving form data:", formData)
-    sessionStorage.setItem("signupFormData", JSON.stringify(formData))
-  }, [formData])
-
-  // Clear data on tab close
-  useEffect(() => {
-    const clearSessionData = () => {
-      sessionStorage.removeItem("signupFormData")
-      sessionStorage.removeItem("signupPageVisited")
-    }
-
-    window.addEventListener("beforeunload", clearSessionData)
-    return () => window.removeEventListener("beforeunload", clearSessionData)
-  }, [])
-
-  // Persist form data only on refresh (not when navigating away)
-  useEffect(() => {
-    if (performance.navigation.type === 1) {
-      // Check if page is reloaded
-      sessionStorage.setItem("signupFormData", JSON.stringify(formData))
-    }
-  }, [formData])
-
-  // Clear form data when user leaves the page (except on refresh)
-  useEffect(() => {
-    const handleUnload = (event) => {
-      if (performance.navigation.type !== 1) {
-        // Not a refresh
-        sessionStorage.removeItem("signupFormData")
-      }
-    }
-
-    window.addEventListener("beforeunload", handleUnload)
-
-    return () => {
-      window.removeEventListener("beforeunload", handleUnload)
-    }
-  }, [])
-
-  // Handle back button on mobile for terms modal
-  useEffect(() => {
-    const handlePopState = (e) => {
-      if (showTerms && window.innerWidth < 768) {
-        e.preventDefault()
-        setShowTerms(false)
-        window.history.pushState(null, "", window.location.pathname)
-      }
-    }
-
-    if (showTerms && window.innerWidth < 768) {
-      window.history.pushState(null, "", window.location.pathname)
-      window.addEventListener("popstate", handlePopState)
-    }
-
-    return () => {
-      window.removeEventListener("popstate", handlePopState)
-    }
-  }, [showTerms])
+  
 
   const validateName = (name) => {
-    return /^[A-Za-z]{2,50}$/.test(name)
-  }
+    return /^[A-Za-z]{2,50}$/.test(name);
+  };
 
   const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!email) return "Email is required"
-    if (!emailRegex.test(email)) return "Please enter a valid email address (e.g., example@email.com)"
-    return ""
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) return "Email is required";
+    if (!emailRegex.test(email))
+      return "Please enter a valid email address (e.g., example@email.com)";
+    return "";
+  };
 
   const validateUsername = (username) => {
-    return /^(?!.*[._]{2})[a-z0-9](?:[a-z0-9._]{2,18})[a-z0-9]$/.test(username.toLowerCase())
-  }
+    return /^(?!.*[._]{2})[a-z0-9](?:[a-z0-9._]{2,18})[a-z0-9]$/.test(
+      username.toLowerCase()
+    );
+  };
 
   const validatePassword = (password) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)
-  }
-
-  const checkExistingEmail = (email) => {
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    return users.some((user) => user.email.toLowerCase() === email.toLowerCase())
-  }
-
-  const checkExistingUsername = (username) => {
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    return users.some((user) => user.username.toLowerCase() === username.toLowerCase())
-  }
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+      password
+    );
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
+    }));
 
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
-      }))
+      }));
     }
-  }
+  };
 
   const handleAgreeToTerms = () => {
-    setAgreeToTerms(!agreeToTerms)
+    setAgreeToTerms(!agreeToTerms);
     if (!agreeToTerms) {
-      setErrors((prev) => ({ ...prev, terms: "" }))
+      setErrors((prev) => ({ ...prev, terms: "" }));
     }
-  }
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const newErrors = {}
+    e.preventDefault();
+    const newErrors = {};
+    setIsLoading(true);
 
     // Required fields validation
     Object.keys(formData).forEach((key) => {
       if (!formData[key]) {
-        newErrors[key] = `${key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")} is required`
+        newErrors[key] = `${
+          key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")
+        } is required`;
       }
-    })
+    });
 
     // Name validation
     if (formData.firstName && !validateName(formData.firstName)) {
-      newErrors.firstName = "Name must be 2-50 letters (A-Z, a-z) with no numbers or special characters"
+      newErrors.firstName =
+        "Name must be 2-50 letters (A-Z, a-z) with no numbers or special characters";
     }
 
     if (formData.lastName && !validateName(formData.lastName)) {
-      newErrors.lastName = "Name must be 2-50 letters (A-Z, a-z) with no numbers or special characters"
+      newErrors.lastName =
+        "Name must be 2-50 letters (A-Z, a-z) with no numbers or special characters";
     }
 
     // Email validation
-    const emailError = validateEmail(formData.email)
+    const emailError = validateEmail(formData.email);
     if (emailError) {
-      newErrors.email = emailError
-    } else if (checkExistingEmail(formData.email)) {
-      newErrors.email = "This email is already registered. Please use another email or sign in."
+      newErrors.email = emailError;
     }
-
     // Username validation
     if (formData.username) {
       if (!validateUsername(formData.username)) {
         newErrors.username =
-          "Username must be 4-20 characters, start & end with letters/numbers, can use dots or underscores along"
-      } else if (checkExistingUsername(formData.username)) {
-        newErrors.username = "This username is already taken. Please choose another one"
+          "Username must be 4-20 characters, start & end with letters/numbers, can use dots or underscores along";
       }
     }
 
     // Password validation
     if (formData.password && !validatePassword(formData.password)) {
       newErrors.password =
-        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
+        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character";
     }
 
     // Password match validation
     if (formData.password !== formData.reenterPassword) {
-      newErrors.reenterPassword = "Passwords do not match"
+      newErrors.reenterPassword = "Passwords do not match";
     }
 
     // Terms agreement validation
     if (!agreeToTerms) {
-      newErrors.terms = "You must agree to the terms and conditions"
+      newErrors.terms = "You must agree to the terms and conditions";
     }
 
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
+      setErrors(newErrors);
+      return;
     }
 
-    // Store form data in sessionStorage for OTP verification
-    // Store both original case username and lowercase version
-    sessionStorage.setItem(
-      "pendingSignupData",
-      JSON.stringify({
-        ...formData,
-        agreeToTerms: true, // Store agreement state
-        usernameOriginal: formData.username, // Keep original case for display
-        username: formData.username.toLowerCase(), // Store lowercase for uniqueness check
-      }),
-    )
+    saveUser();
+  };
+  // call to backend api
+  const saveUser = async () => {
+    try {
+      const response = await axios.post(
+        `${siteConfig.BASE_URL}api/users/register`,
+        {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          username: formData.username,
+          password: formData.password,
+          email: formData.email,
+          role: "user",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    // Clear any existing OTP timer and data when submitting from signup form
-    sessionStorage.removeItem("otpTimeLeft")
-    sessionStorage.removeItem("otpExpiryTime")
-
-    // Navigate to OTP verification with form data and fromSignup flag
-    navigate("../verify", {
-      state: {
-        formData: { ...formData, agreeToTerms: true },
-        fromSignup: true, // Add flag to indicate coming from signup form
-      },
-    })
-  }
+      if (response.status === 201) {
+        setIsLoading(false);
+        newUserEmailInit(formData.email);
+        console.log(response);
+        addSuccess(response.data.message);
+        
+        localStorage.removeItem("otpTimeLeft");
+        localStorage.removeItem("otpResendCount");
+        localStorage.removeItem("otpIsResendLocked");
+        localStorage.removeItem("otpLockTimeLeft");
+        navigate("/login/verify");
+      }
+    } catch (error) {
+      addError(error.response.data.message);
+      
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
 
   const handleSocialLogin = async (platform) => {
     if (platform === "google") {
       try {
         const user = await signInWithGoogle()
 
-        if (!user) {
-          console.warn("Google Sign-Up was cancelled or failed.")
-          return
-        }
-
-        console.log("Logged in user:", user)
-
-        // Save user to localStorage
-        localStorage.setItem("authUser", JSON.stringify(user))
-
-        // Check if username exists
-        const existingUsername = localStorage.getItem(`username_${user.uid}`)
-
-        if (existingUsername) {
-          console.log("Username found! Redirecting to home.")
-          navigate("/")
-        } else {
-          console.log("No username found. Redirecting to username setup.")
-          navigate("../username-setup")
-        }
+        login(user.data)
+        
+        
       } catch (error) {
-        console.error("Google Sign-Up Failed:", error.message)
+        console.error("Google Sign-In Failed:", error.message)
       }
     }
   }
 
   const handleEmailClick = () => {
-    window.location.href = "mailto:coastalcanopy.lk@gmail.com"
-  }
+    window.location.href = "mailto:coastalcanopy.lk@gmail.com";
+  };
 
   const closeTerms = () => {
-    setShowTerms(false)
-  }
+    setShowTerms(false);
+  };
 
   return (
     <div
@@ -354,7 +249,10 @@ const SignUp = () => {
               style={{ pointerEvents: "all" }}
             ></div>
             <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[450px] h-[80vh] max-h-[600px] bg-white/90 rounded-[25px] z-[101] shadow-lg overflow-y-auto">
-              <div className="absolute top-2 right-2 cursor-pointer p-2" onClick={closeTerms}>
+              <div
+                className="absolute top-2 right-2 cursor-pointer p-2"
+                onClick={closeTerms}
+              >
                 <X size={28} />
               </div>
               <div className="w-full max-w-[400px] bg-white/85 mx-auto mt-4 p-4 border border-gray-200">
@@ -366,65 +264,113 @@ const SignUp = () => {
                 </h2>
                 <div className="space-y-3">
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">01) Acceptance of Terms</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      01) Acceptance of Terms
+                    </h3>
                     <p className="font-['Comfortaa'] text-[12px] text-black ml-3">
-                      • By signing up, you agree to follow these terms and conditions.
+                      • By signing up, you agree to follow these terms and
+                      conditions.
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">02) User Responsibilities</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      02) User Responsibilities
+                    </h3>
                     <div className="ml-3 font-['Comfortaa'] text-[12px] text-black space-y-1">
-                      <p>• Provide accurate and valid information during signup.</p>
-                      <p>• Do not misuse the platform (e.g., false reports, spam, harmful content).</p>
+                      <p>
+                        • Provide accurate and valid information during signup.
+                      </p>
+                      <p>
+                        • Do not misuse the platform (e.g., false reports, spam,
+                        harmful content).
+                      </p>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">03) Privacy & Data Protection</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      03) Privacy & Data Protection
+                    </h3>
                     <div className="ml-3 font-['Comfortaa'] text-[12px] text-black space-y-1">
-                      <p>• Your personal information (email, name, etc.) is securely stored.</p>
-                      <p>• We do not sell or share your data with third parties.</p>
+                      <p>
+                        • Your personal information (email, name, etc.) is
+                        securely stored.
+                      </p>
+                      <p>
+                        • We do not sell or share your data with third parties.
+                      </p>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">04) Account Security</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      04) Account Security
+                    </h3>
                     <div className="ml-3 font-['Comfortaa'] text-[12px] text-black space-y-1">
                       <p>• Never share your OTP with anyone.</p>
-                      <p>• You are responsible for keeping your login details secure.</p>
+                      <p>
+                        • You are responsible for keeping your login details
+                        secure.
+                      </p>
                       <p>• Report any suspicious activity immediately.</p>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">05) Content Ownership & Usage</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      05) Content Ownership & Usage
+                    </h3>
                     <div className="ml-3 font-['Comfortaa'] text-[12px] text-black space-y-1">
-                      <p>• Any reports, images, or data you submit remain your property.</p>
-                      <p>• By posting, you allow CoastalCanopy.org.lk to use it for conservation purposes.</p>
+                      <p>
+                        • Any reports, images, or data you submit remain your
+                        property.
+                      </p>
+                      <p>
+                        • By posting, you allow CoastalCanopy.org.lk to use it
+                        for conservation purposes.
+                      </p>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">06) Prohibited Activities</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      06) Prohibited Activities
+                    </h3>
                     <div className="ml-3 font-['Comfortaa'] text-[12px] text-black space-y-1">
-                      <p>• No illegal, abusive, or harmful actions on the platform.</p>
+                      <p>
+                        • No illegal, abusive, or harmful actions on the
+                        platform.
+                      </p>
                       <p>• No unauthorized data access or security breaches.</p>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">07) Account Suspension & Termination</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      07) Account Suspension & Termination
+                    </h3>
                     <p className="font-['Comfortaa'] text-[12px] text-black ml-3">
-                      • Violating these terms may result in account suspension or termination.
+                      • Violating these terms may result in account suspension
+                      or termination.
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">08) Updates to Terms</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      08) Updates to Terms
+                    </h3>
                     <div className="ml-3 font-['Comfortaa'] text-[12px] text-black space-y-1">
                       <p>• We may update these terms from time to time.</p>
-                      <p>• Continued use of the platform means you accept any changes.</p>
+                      <p>
+                        • Continued use of the platform means you accept any
+                        changes.
+                      </p>
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-['Adamina'] text-[14px] text-black">09) Contact Information</h3>
+                    <h3 className="font-['Adamina'] text-[14px] text-black">
+                      09) Contact Information
+                    </h3>
                     <p className="font-['Comfortaa'] text-[12px] text-black ml-3">
                       • If you have any questions, contact us at{" "}
-                      <button onClick={handleEmailClick} className="text-blue-600 underline hover:text-blue-800">
+                      <button
+                        onClick={handleEmailClick}
+                        className="text-blue-600 underline hover:text-blue-800"
+                      >
                         coastalcanopy.lk@gmail.com
                       </button>
                     </p>
@@ -444,11 +390,18 @@ const SignUp = () => {
               Create your own account
             </p>
 
-            <form onSubmit={handleSubmit} noValidate className="space-y-1 w-full max-w-[600px]">
+            <form
+              onSubmit={handleSubmit}
+              noValidate
+              className="space-y-1 w-full max-w-[600px]"
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3">
                 <div>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={16} />
+                    <User
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                      size={16}
+                    />
                     <input
                       type="text"
                       name="firstName"
@@ -459,12 +412,17 @@ const SignUp = () => {
                     />
                   </div>
                   <div className="h-7 ml-4">
-                    {errors.firstName && <p className="text-red-500 text-xs">{errors.firstName}</p>}
+                    {errors.firstName && (
+                      <p className="text-red-500 text-xs">{errors.firstName}</p>
+                    )}
                   </div>
                 </div>
                 <div>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={16} />
+                    <User
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                      size={16}
+                    />
                     <input
                       type="text"
                       name="lastName"
@@ -475,7 +433,9 @@ const SignUp = () => {
                     />
                   </div>
                   <div className="h-7 ml-4">
-                    {errors.lastName && <p className="text-red-500 text-xs">{errors.lastName}</p>}
+                    {errors.lastName && (
+                      <p className="text-red-500 text-xs">{errors.lastName}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -483,7 +443,10 @@ const SignUp = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3">
                 <div>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={16} />
+                    <Mail
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                      size={16}
+                    />
                     <input
                       type="email"
                       name="email"
@@ -494,12 +457,17 @@ const SignUp = () => {
                     />
                   </div>
                   <div className="h-7 ml-4">
-                    {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
+                    {errors.email && (
+                      <p className="text-red-500 text-xs">{errors.email}</p>
+                    )}
                   </div>
                 </div>
                 <div>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={16} />
+                    <User
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                      size={16}
+                    />
                     <input
                       type="text"
                       name="username"
@@ -511,7 +479,9 @@ const SignUp = () => {
                   </div>
                   <div className="h-7 ml-4">
                     {errors.username && (
-                      <p className="text-red-500 text-xs max-w-[300px] leading-tight">{errors.username}</p>
+                      <p className="text-red-500 text-xs max-w-[300px] leading-tight">
+                        {errors.username}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -520,7 +490,10 @@ const SignUp = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3">
                 <div>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={16} />
+                    <Lock
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                      size={16}
+                    />
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
@@ -538,12 +511,17 @@ const SignUp = () => {
                     </button>
                   </div>
                   <div className="h-7 ml-4">
-                    {errors.password && <p className="text-red-500 text-xs">{errors.password}</p>}
+                    {errors.password && (
+                      <p className="text-red-500 text-xs">{errors.password}</p>
+                    )}
                   </div>
                 </div>
                 <div>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={16} />
+                    <Lock
+                      className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                      size={16}
+                    />
                     <input
                       type={showReenterPassword ? "text" : "password"}
                       name="reenterPassword"
@@ -554,14 +532,24 @@ const SignUp = () => {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowReenterPassword(!showReenterPassword)}
+                      onClick={() =>
+                        setShowReenterPassword(!showReenterPassword)
+                      }
                       className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white z-10"
                     >
-                      {showReenterPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+                      {showReenterPassword ? (
+                        <Eye size={16} />
+                      ) : (
+                        <EyeOff size={16} />
+                      )}
                     </button>
                   </div>
                   <div className="h-7 ml-4">
-                    {errors.reenterPassword && <p className="text-red-500 text-xs">{errors.reenterPassword}</p>}
+                    {errors.reenterPassword && (
+                      <p className="text-red-500 text-xs">
+                        {errors.reenterPassword}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -573,7 +561,9 @@ const SignUp = () => {
                       ${agreeToTerms ? "bg-white" : ""}`}
                     onClick={handleAgreeToTerms}
                   >
-                    {agreeToTerms && <Check className="w-2 h-2 sm:w-3 sm:h-3 text-black" />}
+                    {agreeToTerms && (
+                      <Check className="w-2 h-2 sm:w-3 sm:h-3 text-black" />
+                    )}
                   </div>
                   <span>Agree with terms & conditions</span>
                 </div>
@@ -586,7 +576,9 @@ const SignUp = () => {
                 </button>
               </div>
               <div className="h-4 text-center">
-                {errors.terms && <p className="text-red-500 text-xs">{errors.terms}</p>}
+                {errors.terms && (
+                  <p className="text-red-500 text-xs">{errors.terms}</p>
+                )}
               </div>
 
               <div className="flex justify-center mt-4">
@@ -594,7 +586,17 @@ const SignUp = () => {
                   type="submit"
                   className="w-[55%] h-[45px] rounded-[25px] bg-white/50 text-white font-['comfortaa'] text-[16px] sm:text-[18px] hover:bg-white/60 transition-colors shadow-lg"
                 >
-                  Sign Up
+                  {isLoading ? (
+                    <div className="flex items-center justify-center">
+                      <svg
+                        className="animate-spin h-5 w-5 mr-3 ..."
+                        viewBox="0 0 24 24"
+                      ></svg>
+                      Processing...
+                    </div>
+                  ) : (
+                    "Sign Up"
+                  )}
                 </button>
               </div>
             </form>
@@ -639,8 +641,7 @@ const SignUp = () => {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default SignUp
-
+export default SignUp;

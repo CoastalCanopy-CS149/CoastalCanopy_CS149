@@ -7,6 +7,7 @@ import { ArrowUpRight, Share2, Coins, ArrowUp} from 'lucide-react';
 import Progress from "./progress";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer";
+// import { useAuth } from "../../context/AuthContext";
 
 
 
@@ -21,9 +22,9 @@ export default function GamificationMain() {
       progress: 0,
       avatar: "/imgs/gamification/default.png",
     });
-
+    // const {user} = useAuth();
     const username = "Tharushi"
-    
+    //const username = user?.user.username || "Tharushi";
     useEffect(() => {
       // Send POST request to backend with the username
       axios
