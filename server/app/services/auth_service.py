@@ -33,7 +33,7 @@ class AuthService:
             msg = Message("Your OTP Code", 
                          sender=current_app.config['MAIL_USERNAME'],
                          recipients=[email])
-            msg.body = f"Your OTP code is: {otp}. It expires in 10 minutes."
+            msg.body = f"Your OTP code is: {otp}. It expires in 7 minutes."
             current_app.mail.send(msg)
 
             return {"status": "success", "message": "User registered. Please verify OTP sent to your email."}, 201
