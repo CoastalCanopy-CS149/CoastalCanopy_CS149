@@ -35,14 +35,14 @@ export const AuthProvider = ({ children }) => {
         { headers: { "Content-Type": "application/json" } }
       );
       if (res.status === 200 && res.data.message[0].valid) {
-        console.log("Token verified:", res.data.message[0].valid);
+        
         return true; 
       }else{
         return false;
       }
 
     } catch (error) {
-      console.log("Token verification failed:", error);
+      
       return false; 
     }
   };
@@ -57,10 +57,10 @@ export const AuthProvider = ({ children }) => {
         const accessToken = userData.token;
         if (!accessToken) return
         if(!await isNotExpired(accessToken)){
-          console.log("Token expired");
+          
           logout();
         }
-        console.log("Token verified:", await isNotExpired(accessToken));
+        
       }
     };
 
@@ -87,9 +87,6 @@ export const AuthProvider = ({ children }) => {
     window.location.href = "/login";
   };
 
-  useEffect(() => {
-    console.log("Auth state updated:", { isUserLoggedIn, user, newUserEmail });
-  }, [isUserLoggedIn, user, newUserEmail]);
 
   return (
     <AuthContext.Provider
