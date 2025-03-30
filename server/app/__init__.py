@@ -25,7 +25,7 @@ from app.utils.jwt_util import JWTHandler
 def create_app():
     app = Flask(__name__)
     # Allows all routes from any origin
-    CORS(app)
+    CORS(app, resources={r"/*": {"origins": "https://coastalcanopy.org.lk"}})
     
 
     # Configure Flask-Mail
