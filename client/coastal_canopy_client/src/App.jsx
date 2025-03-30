@@ -13,27 +13,29 @@ import Monitoring from "./components/monitoring/monitoring";
 import Shop from "./components/shop/shop";
 import SignUp from "./components/sign_up/sign_up";
 import SocialMedia from "./components/social_media/social_media";
+import ProtectedRoute from "./helper/ProtectedRoute";
 
 const App = () => {
   return (
     <Router>
-      
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/aim" element={<Aim />} />
-          <Route path="/reporting/*" element={<Reporting />} />
-          <Route path="/aboutUs" element={<AboutUs />} />
-          <Route path="/education/*" element={<Education />} />
-          <Route path="/monitoring/*" element={<Monitoring />} />
-          <Route path="/gamification/*" element={<Gamification />} />
-          <Route path="/shop/*" element={<Shop />} />
-          <Route path="/ar" element={<AR />} />
-          <Route path="/login/*" element={<Login />} />
-          <Route path="/signUp/*" element={<SignUp />} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/aim" element={<Aim />} />
+        <Route path="/aboutUs" element={<AboutUs />} />
+        <Route path="/monitoring/*" element={<Monitoring />} />
+        <Route path="/ar" element={<AR />} />
+        <Route path="/login/*" element={<Login />} />
+        <Route path="/signUp/*" element={<SignUp />} />
+        <Route path="/mapping/*" element={<Mapping />} />
+        {/* protected routes */}
+        <Route element={<ProtectedRoute />}>
           <Route path="/socialMedia/*" element={<SocialMedia />} />
-          <Route path="/mapping/*" element={<Mapping />} />  
-        </Routes>
-       
+          <Route path="/shop/*" element={<Shop />} />
+          <Route path="/gamification/*" element={<Gamification />} />
+          <Route path="/education/*" element={<Education />} />
+          <Route path="/reporting/*" element={<Reporting />} />
+        </Route>
+      </Routes>
     </Router>
   );
 };

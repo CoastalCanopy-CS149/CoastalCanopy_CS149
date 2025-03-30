@@ -1,15 +1,9 @@
+import axios from "axios"
 import { initializeApp } from "firebase/app"
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"
+import { getAuth, GoogleAuthProvider, ProviderId, signInWithPopup } from "firebase/auth"
+import { siteConfig,firebaseConfig } from "../../constant/siteConfig"
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAnSZI7AnQ1exK5gPCMyhgrkDofw_n7H4w",
-  authDomain: "coastalcanopy-auth-731ef.firebaseapp.com",
-  projectId: "coastalcanopy-auth-731ef",
-  storageBucket: "coastalcanopy-auth-731ef.appspot.com",
-  messagingSenderId: "720040173391",
-  appId: "1:720040173391:web:86a90280ca2eb695e62f3a",
-  measurementId: "G-RSSP4PCP6H",
-}
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)
@@ -21,24 +15,33 @@ const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
+    console.log(user.providerId);
+    const {email, displayName, providerId} = user;
 
-    console.log("User Signed In:", user);
+    const username = email.split("@")[0];
 
-    // Check if username exists in localStorage
-    const userKey = `username_${user.uid}`;
-    const hasUsername = localStorage.getItem(userKey);
+    // store in database
+    const res = await axios.post(`${siteConfig.BASE_URL}api/users/google-login`, {
+      firstName: displayName.split(" ")[0],
+      lastName: displayName.split(" ")[1],
+      username: username,
+      email: email,
+      role: "user",
+      provider: providerId
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-    console.log(`Checking localStorage for key: ${userKey}, found:`, hasUsername);
-
-    if (!hasUsername || hasUsername === "undefined" || hasUsername === "null") {
-      console.log("No username found. Redirecting to username setup.");
-      return { ...user, needsUsername: true };
+    if (res.status === 200) {
+      return res.data;
     }
-
-    console.log("Username found. Redirecting to home.");
-    return user;
+    
+    
   } catch (error) {
-    console.error("Google Sign-In Error:", error.message);
+    console.error("Google Sign-In Error:", error);
+    alert(error.response.data.message);
     return null;
   }
 }

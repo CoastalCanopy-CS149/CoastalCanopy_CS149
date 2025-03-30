@@ -20,6 +20,11 @@ def get_mangrove_locations():
 
 #Gets reference to the 'Users' collection in MongoDB
 def get_users_collection():
+    
     return g.get('users_collection') or current_app.db['Users']
+
+# get app users collection
+def get_app_users_collection():
+     return g.get('app_users_collection') or current_app.db['App_Users']
 
 

@@ -6,9 +6,13 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react"
 import { signInWithGoogle } from "./firebaseConfig"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
+import axios from "axios";
+import { siteConfig } from "../../constant/siteConfig";
+import { useAuth } from "../../context/AuthContext";
 
 import "@fontsource/aclonica"
 import "@fontsource/comfortaa"
+import { useAppContext } from "../../context/AppContext"
 
 const Login = () => {
   const navigate = useNavigate()
@@ -18,102 +22,21 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false)
   const [errors, setErrors] = useState({})
   const [invalidCredentials, setInvalidCredentials] = useState(false)
-  const [failedAttempts, setFailedAttempts] = useState(() => {
-    const attempts = localStorage.getItem("loginFailedAttempts")
-    return attempts ? Number.parseInt(attempts) : 0
-  })
+  const [isLoading, setIsLoading] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
-  const [lockTimeLeft, setLockTimeLeft] = useState(0)
-  const lockTimerRef = { current: null }
 
-  // Check if the form is locked on component mount
-  useEffect(() => {
-    const lockedUntil = localStorage.getItem("loginLockedUntil")
+  
+  const {login} = useAuth();
+  const {addSuccess, addError} = useAppContext();
 
-    if (lockedUntil) {
-      const lockTime = Number.parseInt(lockedUntil)
-      const currentTime = new Date().getTime()
 
-      if (lockTime > currentTime) {
-        // Form is still locked
-        setIsLocked(true)
-        const timeLeft = Math.ceil((lockTime - currentTime) / 1000)
-        setLockTimeLeft(timeLeft)
-        startLockTimer()
-      } else {
-        // Lock has expired
-        localStorage.removeItem("loginLockedUntil")
-        localStorage.removeItem("loginFailedAttempts")
-        setFailedAttempts(0)
-        setIsLocked(false)
-      }
-    }
-  }, [])
-
-  // Start the lock timer
-  const startLockTimer = () => {
-    if (lockTimerRef.current) {
-      clearInterval(lockTimerRef.current)
-    }
-
-    lockTimerRef.current = setInterval(() => {
-      setLockTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(lockTimerRef.current)
-          setIsLocked(false)
-          localStorage.removeItem("loginLockedUntil")
-          localStorage.removeItem("loginFailedAttempts")
-          setFailedAttempts(0)
-          return 0
-        }
-        return prevTime - 1
-      })
-    }, 1000)
-  }
-
-  // Format time for display
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = seconds % 60
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
-  }
-
-  // Check for remembered login on component mount
-  useEffect(() => {
-    const rememberedEmail = localStorage.getItem("rememberedEmail")
-    const rememberedExpiry = localStorage.getItem("rememberedExpiry")
-
-    if (rememberedEmail && rememberedExpiry) {
-      const expiryDate = new Date(rememberedExpiry)
-      if (expiryDate > new Date()) {
-        // Not expired yet
-        setEmail(rememberedEmail)
-        setRememberMe(true)
-        // Auto-login if we have the credentials
-        const users = JSON.parse(localStorage.getItem("users") || "[]")
-        const user = users.find((u) => u.email === rememberedEmail)
-        if (user) {
-          navigate("/")
-        }
-      } else {
-        // Expired, clear remembered login
-        localStorage.removeItem("rememberedEmail")
-        localStorage.removeItem("rememberedExpiry")
-      }
-    }
-  }, [navigate])
 
   const handleSubmit = (e) => {
     e.preventDefault()
     const newErrors = {}
     setInvalidCredentials(false)
 
-    // Check if form is locked
-    if (isLocked) {
-      setInvalidCredentials(true)
-      setErrors({ form: `Account locked. Please try again in ${formatTime(lockTimeLeft)}.` })
-      return
-    }
+   
 
     // Basic validation
     if (!email) newErrors.email = "Email is required"
@@ -124,79 +47,56 @@ const Login = () => {
       return
     }
 
-    // Get users from localStorage
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    const user = users.find((u) => u.email === email && u.password === password)
-
-    if (user) {
-      // Login successful
-      localStorage.setItem("currentUser", JSON.stringify(user))
-
-      // Reset failed attempts
-      localStorage.removeItem("loginFailedAttempts")
-      setFailedAttempts(0)
-
-      // Handle remember me
-      if (rememberMe) {
-        const twoWeeksFromNow = new Date()
-        twoWeeksFromNow.setDate(twoWeeksFromNow.getDate() + 14)
-        localStorage.setItem("rememberedEmail", email)
-        localStorage.setItem("rememberedExpiry", twoWeeksFromNow.toISOString())
-      } else {
-        localStorage.removeItem("rememberedEmail")
-        localStorage.removeItem("rememberedExpiry")
-      }
-
-      // Redirect to home page
-      navigate("/")
-    } else {
-      // Login failed - increment failed attempts
-      const newFailedAttempts = failedAttempts + 1
-      setFailedAttempts(newFailedAttempts)
-      localStorage.setItem("loginFailedAttempts", newFailedAttempts)
-
-      // Check if we should lock the form
-      if (newFailedAttempts >= 5) {
-        // Lock for 10 minutes (600 seconds)
-        const lockUntil = new Date().getTime() + 10 * 60 * 1000
-        localStorage.setItem("loginLockedUntil", lockUntil)
-        setIsLocked(true)
-        setLockTimeLeft(600)
-        startLockTimer()
-        setErrors({ form: "Too many failed attempts. Account locked for 10 minutes." })
-      } else {
-        // Show invalid credentials message
-        setInvalidCredentials(true)
-        setErrors({ form: `Invalid email or password. (Attempt ${newFailedAttempts}/5)` })
-      }
-    }
+    loginUser();
+    
   }
+  const loginUser = async () => {
+    try {
+      const response = await axios.post(
+        `${siteConfig.BASE_URL}api/users/login`,
+        {
+          email: email,
+          password: password,
+          remember: rememberMe
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setIsLoading(false);
+        
+        console.log(response);
+        addSuccess(response.data.message);
+        localStorage.removeItem("otpTimeLeft");
+        localStorage.removeItem("otpResendCount");
+        localStorage.removeItem("otpIsResendLocked");
+        localStorage.removeItem("otpLockTimeLeft");
+        
+        login(response.data.data);
+
+        navigate("/");
+      }
+    } catch (error) {
+      alert(error.response.data.message);
+      addError(error.response.data.message);
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+
 
   const handleSocialLogin = async (platform) => {
     if (platform === "google") {
       try {
         const user = await signInWithGoogle()
 
-        if (!user) {
-          console.warn("Google Sign-In was cancelled or failed.")
-          return
-        }
-
-        console.log("Logged in user:", user)
-
-        // Save user to localStorage
-        localStorage.setItem("authUser", JSON.stringify(user))
-
-        // Check if username exists
-        const existingUsername = localStorage.getItem(`username_${user.uid}`)
-
-        if (existingUsername) {
-          console.log("Username found! Redirecting to home.")
-          navigate("/")
-        } else {
-          console.log("No username found. Redirecting to username setup.")
-          navigate("../username-setup")
-        }
+        login(user.data)
+        
+        
       } catch (error) {
         console.error("Google Sign-In Failed:", error.message)
       }
@@ -282,7 +182,7 @@ const Login = () => {
                 )}
                 {isLocked && (
                   <p className="text-red-500 text-xs sm:text-sm">
-                    Account locked. Try again in {formatTime(lockTimeLeft)}
+                    Account locked. Try again in {}
                   </p>
                 )}
               </div>

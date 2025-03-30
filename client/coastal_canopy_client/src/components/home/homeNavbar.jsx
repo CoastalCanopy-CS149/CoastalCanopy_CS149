@@ -1,55 +1,49 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Menu, User, Settings, LogOut, ChevronDown, ChevronUp, Edit, Lock, X } from "lucide-react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useState, useEffect, useRef } from "react";
+import { Menu, User, Settings, LogOut, ChevronDown, ChevronUp, Edit, Lock, X } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext"; // Import useAuth to access AuthProvider
+import { getLoggedUser } from "../../helper/auth.helper";
+import {getUserInitial, getUsername} from '../../helper/user.helper';
 
-import "@fontsource/aclonica"
-import "@fontsource/comfortaa"
+import "@fontsource/aclonica";
+import "@fontsource/comfortaa";
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
-  const [isSettingsExpanded, setIsSettingsExpanded] = useState(false)
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
-  const [currentPassword, setCurrentPassword] = useState("")
-  const [passwordError, setPasswordError] = useState("")
-  const [passwordAttempts, setPasswordAttempts] = useState(() => {
-    const attempts = localStorage.getItem("passwordChangeAttempts")
-    return attempts ? Number.parseInt(attempts) : 0
-  })
-  const [isPasswordLocked, setIsPasswordLocked] = useState(() => {
-    const lockedUntil = localStorage.getItem("passwordChangeLockUntil")
-    if (lockedUntil) {
-      return new Date().getTime() < Number.parseInt(lockedUntil)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isSettingsExpanded, setIsSettingsExpanded] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordAttempts, setPasswordAttempts] = useState(0); // Simplified, no localStorage
+  const [isPasswordLocked, setIsPasswordLocked] = useState(false); // Simplified, no timer
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+
+  const menuRef = useRef(null);
+  const menuButtonRef = useRef(null);
+  const userMenuRef = useRef(null);
+  const userButtonRef = useRef(null);
+  const modalRef = useRef(null);
+  const passwordModalRef = useRef(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const {  logout } = useAuth(); // Use AuthProvider for user state and logout
+
+  useEffect(() => {
+    const user = getLoggedUser();
+    if (user) {
+      setUser(user);
+      setIsUserLoggedIn(true);
     }
-    return false
-  })
-  const [lockTimeLeft, setLockTimeLeft] = useState(() => {
-    const lockedUntil = localStorage.getItem("passwordChangeLockUntil")
-    if (lockedUntil) {
-      const timeLeft = Math.max(0, Math.floor((Number.parseInt(lockedUntil) - new Date().getTime()) / 1000))
-      return timeLeft
-    }
-    return 0
-  })
-  const [currentUser, setCurrentUser] = useState(null)
-  // Add a new state for the login popup
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
-
-  const menuRef = useRef(null)
-  const menuButtonRef = useRef(null)
-  const userMenuRef = useRef(null)
-  const userButtonRef = useRef(null)
-  const modalRef = useRef(null)
-  const passwordModalRef = useRef(null)
-  const lockTimerRef = useRef(null)
-
-  const location = useLocation()
-  const navigate = useNavigate()
-
+  },[])
   const menuItems = [
     { name: "Home", path: "/" },
     { name: "Map", path: "/mapping" },
@@ -61,103 +55,39 @@ const Navbar = () => {
     { name: "Social Hub", path: "/socialMedia" },
     { name: "Shop", path: "/shop" },
     { name: "About Us", path: "/aboutUs" },
-  ]
+  ];
 
-  const navItems = menuItems.slice(0, 4)
+  const navItems = menuItems.slice(0, 4);
 
-  // Check if user is logged in - run this on every render to ensure it's always up to date
-  useEffect(() => {
-    const checkUserLoggedIn = () => {
-      const user = JSON.parse(localStorage.getItem("currentUser") || "null")
-      const authUser = JSON.parse(localStorage.getItem("authUser") || "null")
+  // Remove the useEffect for checking user login via localStorage
+  // We now rely on AuthProvider's isUserLoggedIn and user
 
-      if (user) {
-        setCurrentUser(user)
-      } else if (authUser) {
-        // For Google sign-in users
-        const username = localStorage.getItem(`username_${authUser.uid}`)
-        if (username) {
-          setCurrentUser({
-            ...authUser,
-            username: username,
-            firstName: authUser.displayName?.split(" ")[0] || "User",
-          })
-        } else {
-          setCurrentUser(null)
-        }
-      } else {
-        setCurrentUser(null)
-      }
-    }
-
-    // Check immediately on component mount and location change
-    checkUserLoggedIn()
-
-    // Listen for storage changes (for when user logs in/out in another tab)
-    window.addEventListener("storage", checkUserLoggedIn)
-
-    return () => {
-      window.removeEventListener("storage", checkUserLoggedIn)
-    }
-  }, [location.pathname])
-
-  // Start the lock timer for password attempts
-  useEffect(() => {
-    if (isPasswordLocked && lockTimeLeft > 0) {
-      startLockTimer()
-    }
-  }, [isPasswordLocked, lockTimeLeft])
-
-  const startLockTimer = () => {
-    if (lockTimerRef.current) {
-      clearInterval(lockTimerRef.current)
-    }
-
-    lockTimerRef.current = setInterval(() => {
-      setLockTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(lockTimerRef.current)
-          setIsPasswordLocked(false)
-          setPasswordAttempts(0)
-          localStorage.removeItem("passwordChangeLockUntil")
-          localStorage.removeItem("passwordChangeAttempts")
-          return 0
-        }
-        return prevTime - 1
-      })
-    }, 1000)
-  }
-
-  // Format time for display
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = seconds % 60
-    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
-  }
+  // Remove the lock timer logic since we're simplifying password change attempts
+  // No need for lockTimeLeft, startLockTimer, or related localStorage
 
   const isCurrentPath = (path) => {
-    if (path === "/" && location.pathname === "/") return true
-    if (path !== "/" && location.pathname.startsWith(path)) return true
-    return false
-  }
+    if (path === "/" && location.pathname === "/") return true;
+    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   // Handle hover and click events for menu
   useEffect(() => {
     const handleMouseEnter = () => {
-      setIsMenuOpen(true)
-      setIsUserMenuOpen(false) // Close user menu when opening main menu
-    }
+      setIsMenuOpen(true);
+      setIsUserMenuOpen(false); // Close user menu when opening main menu
+    };
 
     const handleUserMouseEnter = () => {
-      if (currentUser) {
-        setIsUserMenuOpen(true)
-        setIsMenuOpen(false) // Close main menu when opening user menu
+      if (isUserLoggedIn) {
+        setIsUserMenuOpen(true);
+        setIsMenuOpen(false); // Close main menu when opening user menu
       }
-    }
+    };
 
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsMenuOpen(false)
+        setIsMenuOpen(false);
       }
 
       if (
@@ -166,210 +96,158 @@ const Navbar = () => {
         userButtonRef.current &&
         !userButtonRef.current.contains(event.target)
       ) {
-        setIsUserMenuOpen(false)
-        setIsSettingsExpanded(false)
+        setIsUserMenuOpen(false);
+        setIsSettingsExpanded(false);
       }
-    }
+    };
 
-    const menuButton = menuButtonRef.current
-    const userButton = userButtonRef.current
-    const menuElement = menuRef.current
-    const userMenuElement = userMenuRef.current
+    const menuButton = menuButtonRef.current;
+    const userButton = userButtonRef.current;
 
     if (menuButton) {
-      menuButton.addEventListener("mouseenter", handleMouseEnter)
+      menuButton.addEventListener("mouseenter", handleMouseEnter);
     }
 
-    if (userButton && currentUser) {
-      userButton.addEventListener("mouseenter", handleUserMouseEnter)
+    if (userButton && isUserLoggedIn) {
+      userButton.addEventListener("mouseenter", handleUserMouseEnter);
     }
 
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       if (menuButton) {
-        menuButton.removeEventListener("mouseenter", handleMouseEnter)
+        menuButton.removeEventListener("mouseenter", handleMouseEnter);
       }
-      if (userButton && currentUser) {
-        userButton.removeEventListener("mouseenter", handleUserMouseEnter)
+      if (userButton && isUserLoggedIn) {
+        userButton.removeEventListener("mouseenter", handleUserMouseEnter);
       }
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [currentUser])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isUserLoggedIn]);
 
   // Handle click outside for modals
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Don't close modals when clicking outside
-      // But also don't close the dropdown when modals are open
       if (isLogoutModalOpen || isPasswordModalOpen) {
-        event.stopPropagation()
+        event.stopPropagation();
       }
-    }
+    };
 
     if (isLogoutModalOpen || isPasswordModalOpen) {
-      document.addEventListener("mousedown", handleClickOutside, true)
+      document.addEventListener("mousedown", handleClickOutside, true);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside, true)
-    }
-  }, [isLogoutModalOpen, isPasswordModalOpen])
+      document.removeEventListener("mousedown", handleClickOutside, true);
+    };
+  }, [isLogoutModalOpen, isPasswordModalOpen]);
 
   const handleMenuToggle = () => {
-    setIsMenuOpen(!isMenuOpen)
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-    setIsUserMenuOpen(false) // Close user menu when toggling main menu
-  }
+    setIsMenuOpen(!isMenuOpen);
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsUserMenuOpen(false);
+  };
 
-  const handleUserMenuToggle = () => {
-    if (currentUser) {
-      setIsUserMenuOpen(!isUserMenuOpen)
-      setIsMenuOpen(false) // Close main menu when toggling user menu
-      if (!isUserMenuOpen) {
-        setIsSettingsExpanded(false)
-      }
-    } else {
-      navigate("/login")
-    }
-  }
+  
 
   const handleSettingsToggle = () => {
-    setIsSettingsExpanded(!isSettingsExpanded)
-  }
+    setIsSettingsExpanded(!isSettingsExpanded);
+  };
 
   const handleLogout = () => {
-    setIsLogoutModalOpen(true)
-  }
+    setIsLogoutModalOpen(true);
+  };
 
   const confirmLogout = () => {
-    localStorage.removeItem("currentUser")
-    setCurrentUser(null)
-    setIsUserMenuOpen(false)
-    setIsLogoutModalOpen(false)
-    navigate("/login")
-  }
+    logout(); // Use AuthProvider's logout function
+    setIsUserMenuOpen(false);
+    setIsLogoutModalOpen(false);
+  };
 
   const cancelLogout = () => {
-    setIsLogoutModalOpen(false)
-  }
+    setIsLogoutModalOpen(false);
+  };
 
   const handleChangePassword = () => {
-    setCurrentPassword("")
-    setPasswordError("")
-    setIsPasswordModalOpen(true)
-  }
+    setCurrentPassword("");
+    setPasswordError("");
+    setIsPasswordModalOpen(true);
+  };
 
   const verifyPassword = () => {
     if (isPasswordLocked) {
-      setPasswordError(`Please wait ${formatTime(lockTimeLeft)} before trying again.`)
-      return
+      setPasswordError("Too many failed attempts. Please try again later.");
+      return;
     }
 
     if (!currentPassword) {
-      setPasswordError("Please enter your current password")
-      return
+      setPasswordError("Please enter your current password");
+      return;
     }
 
     // Verify the password
-    const user = JSON.parse(localStorage.getItem("currentUser"))
     if (user && user.password === currentPassword) {
       // Password is correct
-      setIsPasswordModalOpen(false)
-      setCurrentPassword("")
-      setPasswordError("")
-      setPasswordAttempts(0)
-      localStorage.removeItem("passwordChangeAttempts")
-      navigate("/login/change-password")
+      setIsPasswordModalOpen(false);
+      setCurrentPassword("");
+      setPasswordError("");
+      setPasswordAttempts(0);
+      navigate("/login/change-password");
     } else {
       // Password is incorrect
-      const newAttempts = passwordAttempts + 1
-      setPasswordAttempts(newAttempts)
-      localStorage.setItem("passwordChangeAttempts", newAttempts.toString())
+      const newAttempts = passwordAttempts + 1;
+      setPasswordAttempts(newAttempts);
 
       if (newAttempts >= 5) {
-        // Lock for 10 minutes
-        const lockUntil = new Date().getTime() + 10 * 60 * 1000
-        localStorage.setItem("passwordChangeLockUntil", lockUntil.toString())
-        setIsPasswordLocked(true)
-        setLockTimeLeft(600) // 10 minutes in seconds
-        startLockTimer()
-        setPasswordError("Too many failed attempts. Please try again in 10 minutes.")
+        setIsPasswordLocked(true);
+        setPasswordError("Too many failed attempts. Please try again later.");
       } else {
-        setPasswordError(`Invalid password. Please try again. (Attempt ${newAttempts}/5)`)
+        setPasswordError(`Invalid password. Please try again. (Attempt ${newAttempts}/5)`);
       }
     }
-  }
+  };
 
   const cancelPasswordVerify = () => {
-    setIsPasswordModalOpen(false)
-    setCurrentPassword("")
-    setPasswordError("")
-  }
+    setIsPasswordModalOpen(false);
+    setCurrentPassword("");
+    setPasswordError("");
+  };
 
-  // Get user's first name initial
-  const getUserInitial = () => {
-    if (!currentUser) return ""
-
-    if (currentUser.firstName) {
-      return currentUser.firstName.charAt(0).toUpperCase()
-    } else if (currentUser.username) {
-      return currentUser.username.charAt(0).toUpperCase()
-    } else if (currentUser.email) {
-      return currentUser.email.charAt(0).toUpperCase()
-    }
-
-    return "U"
-  }
-
+  
   // Get username for display
-  const getUsername = () => {
-    if (!currentUser) return ""
+  
 
-    if (currentUser.username) {
-      // Return the username as it was entered (not lowercase)
-      return currentUser.username
-    } else if (currentUser.firstName) {
-      return currentUser.firstName
-    } else if (currentUser.email) {
-      return currentUser.email.split("@")[0]
-    }
-
-    return "User"
-  }
-
-  // Handle user icon click - either open dropdown or navigate to login
+  // Handle user icon click
   const handleUserIconClick = () => {
-    if (currentUser) {
-      setIsUserMenuOpen(!isUserMenuOpen)
-      setIsMenuOpen(false)
+    if (isUserLoggedIn) {
+      setIsUserMenuOpen(!isUserMenuOpen);
+      setIsMenuOpen(false);
     } else {
-      navigate("/login")
+      navigate("/login");
     }
-  }
+  };
 
-  // Add a function to handle restricted navigation
+  // Handle restricted navigation
   const handleRestrictedNavigation = (path) => {
-    if (!currentUser) {
-      navigate(path)
-      // If user is not logged in, show login popup
-      // setIsLoginModalOpen(true)
+    if (!isUserLoggedIn) {
+      navigate(path);
     } else {
-      // If user is logged in, navigate to the path
-      navigate(path)
+      navigate(path);
     }
-  }
+  };
 
-  // Add a function to handle login button click in the popup
+  // Handle login button click in the popup
   const handleLoginRedirect = () => {
-    setIsLoginModalOpen(false)
-    navigate("/login")
-  }
+    setIsLoginModalOpen(false);
+    navigate("/login");
+  };
+
+  console.log('loggedIn', user);
 
   return (
     <div className="w-full top-0 z-50">
       <nav className="w-full">
-        <div className="relative flex items-center justify-between px-4 sm:px-8 py-4 backdrop-blur-sm">
+        <div className="relative flex items-center justify-between px-4 sm:px-8 py-2 ">
           <Link to="/" className="flex items-center gap-1">
             <img
               src="/imgs/navbar/logo.png"
@@ -382,11 +260,7 @@ const Navbar = () => {
           <div className="flex items-center gap-4 sm:gap-8">
             <div className="hidden md:flex items-center gap-4 sm:gap-8">
               {navItems.map((item) => {
-                // const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some((path) =>
-                //   item.path.includes(path),
-                // )
-                const isRestricted = false;
-
+                const isRestricted = false; // Simplified for now
                 return isRestricted ? (
                   <button
                     key={item.name}
@@ -407,7 +281,7 @@ const Navbar = () => {
                   >
                     {item.name}
                   </Link>
-                )
+                );
               })}
             </div>
             <div className="relative z-50" ref={menuRef}>
@@ -428,7 +302,7 @@ const Navbar = () => {
                     {menuItems.map((item) => {
                       const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some(
                         (path) => item.path.includes(path),
-                      )
+                      );
 
                       return isRestricted ? (
                         <button
@@ -436,8 +310,8 @@ const Navbar = () => {
                           className={`block w-full px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-black/50 transition-colors text-center
                             ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
                           onClick={() => {
-                            setIsMenuOpen(false)
-                            handleRestrictedNavigation(item.path)
+                            setIsMenuOpen(false);
+                            handleRestrictedNavigation(item.path);
                           }}
                         >
                           {item.name}
@@ -452,7 +326,7 @@ const Navbar = () => {
                         >
                           {item.name}
                         </Link>
-                      )
+                      );
                     })}
                   </div>
                 </div>
@@ -460,12 +334,12 @@ const Navbar = () => {
 
               {/* Mobile Menu Overlay */}
               {isMobileMenuOpen && (
-                <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 md:hidden">
+                <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-black/100 shadow-lg z-50 md:hidden">
                   <div className="py-1">
                     {menuItems.map((item) => {
                       const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some(
                         (path) => item.path.includes(path),
-                      )
+                      );
 
                       return isRestricted ? (
                         <button
@@ -473,8 +347,8 @@ const Navbar = () => {
                           className={`block w-full px-3 py-2 font-['comfortaa'] text-[18px] font-bold text-white hover:bg-white/50 transition-colors text-center
                             ${isCurrentPath(item.path) ? "bg-white/52" : ""}`}
                           onClick={() => {
-                            setIsMobileMenuOpen(false)
-                            handleRestrictedNavigation(item.path)
+                            setIsMobileMenuOpen(false);
+                            handleRestrictedNavigation(item.path);
                           }}
                         >
                           {item.name}
@@ -489,22 +363,22 @@ const Navbar = () => {
                         >
                           {item.name}
                         </Link>
-                      )
+                      );
                     })}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* User Profile Button - Show circle if logged in, user icon if not */}
+            {/* User Profile Button */}
             <div className="relative z-50" ref={userMenuRef}>
-              {currentUser ? (
+              {isUserLoggedIn ? (
                 <button
                   ref={userButtonRef}
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-white/50 text-white font-['comfortaa'] font-bold hover:bg-white/60 transition-colors"
                   onClick={handleUserIconClick}
                 >
-                  <span className="flex items-center justify-center w-full h-full">{getUserInitial()}</span>
+                  <span className="flex items-center justify-center w-full h-full">{getUserInitial(isUserLoggedIn,user)}</span>
                 </button>
               ) : (
                 <button className="text-white hover:text-gray-300 transition-colors z-50" onClick={handleUserIconClick}>
@@ -512,16 +386,16 @@ const Navbar = () => {
                 </button>
               )}
 
-              {/* User Menu Dropdown - Only show if logged in */}
-              {isUserMenuOpen && currentUser && (
+              {/* User Menu Dropdown */}
+              {isUserMenuOpen && isUserLoggedIn && (
                 <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-white/10 shadow-lg z-50">
                   <div className="py-3 px-4">
-                    {/* User Avatar and Name - Vertical Layout */}
+                    {/* User Avatar and Name */}
                     <div className="flex flex-col items-center gap-2 mb-3">
                       <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/60 text-white font-['comfortaa'] text-lg font-bold">
-                        {getUserInitial()}
+                        {getUserInitial(isUserLoggedIn,user)}
                       </div>
-                      <div className="text-white font-['comfortaa'] font-bold text-center">Hello {getUsername()}</div>
+                      <div className="text-white font-['comfortaa'] font-bold text-center">Hello {getUsername(isUserLoggedIn,user)}</div>
                     </div>
 
                     {/* Settings */}
@@ -632,11 +506,6 @@ const Navbar = () => {
               {passwordError && (
                 <p className="text-red-500 text-sm mt-2 text-center font-['comfortaa']">{passwordError}</p>
               )}
-              {isPasswordLocked && (
-                <p className="text-red-500 text-sm mt-2 text-center font-['comfortaa']">
-                  Try again in {formatTime(lockTimeLeft)}
-                </p>
-              )}
             </div>
 
             <div className="flex justify-center gap-4 mt-6">
@@ -657,6 +526,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
       {/* Login Required Modal */}
       {isLoginModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100]">
@@ -683,8 +553,7 @@ const Navbar = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Navbar
-
+export default Navbar;
