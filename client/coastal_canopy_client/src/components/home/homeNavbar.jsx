@@ -242,7 +242,6 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  console.log('loggedIn', user);
 
   return (
     <div className="w-full top-0 z-50">
