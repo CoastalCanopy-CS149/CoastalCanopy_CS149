@@ -24,11 +24,9 @@ const Login = () => {
   const [invalidCredentials, setInvalidCredentials] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
-
   
   const {login} = useAuth();
   const {addSuccess, addError} = useAppContext();
-
 
 
   const handleSubmit = (e) => {
@@ -46,7 +44,6 @@ const Login = () => {
       setErrors(newErrors)
       return
     }
-
     loginUser();
     
   }
@@ -75,8 +72,9 @@ const Login = () => {
         localStorage.removeItem("otpResendCount");
         localStorage.removeItem("otpIsResendLocked");
         localStorage.removeItem("otpLockTimeLeft");
-        
-        login(response.data.data);
+        const userData = {...response.data.data, provider: "email"};
+
+        login(userData);
 
         navigate("/");
       }
@@ -88,13 +86,15 @@ const Login = () => {
     }
   };
 
-
+  
   const handleSocialLogin = async (platform) => {
     if (platform === "google") {
       try {
         const user = await signInWithGoogle()
-
-        login(user.data)
+        
+        const userData = {...user.data, provider: "google"};
+        login(userData);
+        
         
         
       } catch (error) {

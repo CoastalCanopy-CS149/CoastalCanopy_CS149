@@ -1,127 +1,119 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { Eye, EyeOff, Lock } from "lucide-react"
-import Navbar from "../navbar/navbar"
-import Footer from "../footer/footer"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Lock } from "lucide-react";
+import Navbar from "../navbar/navbar";
+import Footer from "../footer/footer";
 
-import "@fontsource/aclonica"
-import "@fontsource/comfortaa"
+import "@fontsource/aclonica";
+import "@fontsource/comfortaa";
+import axios from "axios";
+import { siteConfig } from "../../constant/siteConfig";
+import { useAuth } from "../../context/AuthContext";
 
 const ChangePassword = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    currentPassword: "",
     newPassword: "",
     confirmPassword: "",
-  })
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
-  const [showNewPassword, setShowNewPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [success, setSuccess] = useState(false)
-  const [currentUser, setCurrentUser] = useState(null)
+  });
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const { user, addSuccess, addError } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Load user data
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"))
-
     if (!user) {
-      navigate("/login")
-      return
+      navigate("/login");
+      return;
     }
-
-    setCurrentUser(user)
-  }, [navigate])
+    setCurrentUser(user?.user);
+  }, [navigate, user]);
 
   const validatePassword = (password) => {
-    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)
-  }
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+      password
+    );
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
+    }));
 
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
         [name]: "",
-      }))
+      }));
     }
 
-    setSuccess(false)
-  }
+    setSuccess(false);
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const newErrors = {}
+
+    const newErrors = {};
 
     // Required fields validation
-    if (!formData.currentPassword) newErrors.currentPassword = "Current password is required"
-    if (!formData.newPassword) newErrors.newPassword = "New password is required"
-    if (!formData.confirmPassword) newErrors.confirmPassword = "Please confirm your new password"
-
-    // Verify current password
-    if (formData.currentPassword && formData.currentPassword !== currentUser.password) {
-      newErrors.currentPassword = "Current password is incorrect"
-    }
+    if (!formData.newPassword)
+      newErrors.newPassword = "New password is required";
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "Please confirm your new password";
 
     // Password validation
     if (formData.newPassword && !validatePassword(formData.newPassword)) {
       newErrors.newPassword =
-        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character"
-    }
-
-    // Check if new password is same as current
-    if (formData.newPassword && formData.currentPassword && formData.newPassword === formData.currentPassword) {
-      newErrors.newPassword = "New password must be different from current password"
+        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character";
     }
 
     // Password match validation
     if (formData.newPassword !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
-      return
+      setErrors(newErrors);
+      return;
     }
 
-    // Update user password
-    const updatedUser = {
-      ...currentUser,
-      password: formData.newPassword,
-      passwordChangedAt: new Date().toISOString(),
+    try {
+      setIsLoading(true)
+      // Make Axios call to reset-password endpoint
+      const res = await axios.post(
+        `${siteConfig.BASE_URL}api/users/reset-password`,
+        {
+          email: currentUser.email,
+          password: formData.newPassword,
+        }
+      );
+      console.log(res)
+      
+      setSuccess(true);
+      
+
+      // Clear form
+      setFormData({
+        newPassword: "",
+        confirmPassword: "",
+      });
+      navigate("/");
+    } catch (error) {
+      console.log(error)
+      setErrors({ api: error.response?.data?.message ||
+        "An error occurred while updating password" });
     }
-
-    // Update in users array
-    const users = JSON.parse(localStorage.getItem("users") || "[]")
-    const updatedUsers = users.map((u) => (u.email === currentUser.email ? updatedUser : u))
-
-    localStorage.setItem("users", JSON.stringify(updatedUsers))
-    localStorage.setItem("currentUser", JSON.stringify(updatedUser))
-
-    // Show success message
-    setSuccess(true)
-
-    // Clear form
-    setFormData({
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    })
-
-    // Redirect after a short delay
-    setTimeout(() => {
-      navigate("/")
-    }, 3000)
-  }
+  };
 
   return (
     <div
@@ -142,36 +134,16 @@ const ChangePassword = () => {
               Update your password to keep your account secure
             </p>
 
-            <form onSubmit={handleSubmit} className="w-full max-w-[400px] space-y-4">
+            <form
+              onSubmit={handleSubmit}
+              className="w-full max-w-[400px] space-y-4"
+            >
               <div>
                 <div className="relative h-[45px] sm:h-[55px]">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={20} />
-                  <input
-                    type={showCurrentPassword ? "text" : "password"}
-                    name="currentPassword"
-                    placeholder="Current Password"
-                    value={formData.currentPassword}
-                    onChange={handleInputChange}
-                    className="w-full h-full pl-12 pr-12 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] sm:text-[16px] shadow-lg"
+                  <Lock
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                    size={20}
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white z-10"
-                  >
-                    {showCurrentPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-                  </button>
-                </div>
-                <div className="h-5 ml-4">
-                  {errors.currentPassword && (
-                    <p className="text-red-500 text-xs sm:text-sm">{errors.currentPassword}</p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <div className="relative h-[45px] sm:h-[55px]">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={20} />
                   <input
                     type={showNewPassword ? "text" : "password"}
                     name="newPassword"
@@ -189,13 +161,20 @@ const ChangePassword = () => {
                   </button>
                 </div>
                 <div className="h-5 ml-4">
-                  {errors.newPassword && <p className="text-red-500 text-xs sm:text-sm">{errors.newPassword}</p>}
+                  {errors.newPassword && (
+                    <p className="text-red-500 text-xs sm:text-sm">
+                      {errors.newPassword}
+                    </p>
+                  )}
                 </div>
               </div>
 
               <div>
                 <div className="relative h-[45px] sm:h-[55px]">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10" size={20} />
+                  <Lock
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white z-10"
+                    size={20}
+                  />
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
@@ -209,18 +188,30 @@ const ChangePassword = () => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white z-10"
                   >
-                    {showConfirmPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+                    {showConfirmPassword ? (
+                      <Eye size={20} />
+                    ) : (
+                      <EyeOff size={20} />
+                    )}
                   </button>
                 </div>
                 <div className="h-5 ml-4">
                   {errors.confirmPassword && (
-                    <p className="text-red-500 text-xs sm:text-sm">{errors.confirmPassword}</p>
+                    <p className="text-red-500 text-xs sm:text-sm">
+                      {errors.confirmPassword}
+                    </p>
                   )}
                 </div>
               </div>
 
+              {errors.api && (
+                <p className="text-red-500 text-center text-sm">{errors.api}</p>
+              )}
+
               {success && (
-                <p className="text-green-500 text-center text-sm">Password changed successfully! Redirecting...</p>
+                <p className="text-green-500 text-center text-sm">
+                  Password changed successfully! Redirecting...
+                </p>
               )}
 
               <div className="flex justify-center mt-6">
@@ -228,7 +219,7 @@ const ChangePassword = () => {
                   type="submit"
                   className="w-[60%] h-[45px] sm:h-[50px] rounded-[50px] bg-white/50 text-white font-['comfortaa'] text-[16px] sm:text-[18px] hover:bg-white/60 transition-colors shadow-lg"
                 >
-                  Update Password
+                 {isLoading ? "Loading..." : "Change Password"}
                 </button>
               </div>
             </form>
@@ -238,8 +229,7 @@ const ChangePassword = () => {
 
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default ChangePassword
-
+export default ChangePassword;
