@@ -289,7 +289,7 @@ const EditProfile = () => {
                       placeholder="Email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      disabled={!editableFields.email || isLoading}
+                      disabled={true}
                       className="w-full h-[45px] pl-10 pr-10 rounded-[50px] bg-white/30 text-white placeholder-white font-['comfortaa'] text-[14px] shadow-lg disabled:opacity-50"
                     />
                     {editableFields.email && validFields.email ? (

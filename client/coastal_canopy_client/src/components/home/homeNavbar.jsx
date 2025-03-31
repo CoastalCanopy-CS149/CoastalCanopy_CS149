@@ -1,14 +1,25 @@
-"use client"
+"use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Menu, User, Settings, LogOut, ChevronDown, ChevronUp, Edit, Lock, X } from "lucide-react";
+import {
+  Menu,
+  User,
+  Settings,
+  LogOut,
+  ChevronDown,
+  ChevronUp,
+  Edit,
+  Lock,
+  X,
+} from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext"; // Import useAuth to access AuthProvider
-import { getLoggedUser } from "../../helper/auth.helper";
-import {getUserInitial, getUsername} from '../../helper/user.helper';
+import { getUserInitial, getUsername } from "../../helper/user.helper";
+import { siteConfig } from "../../constant/siteConfig";
 
 import "@fontsource/aclonica";
 import "@fontsource/comfortaa";
+import axios from "axios";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,9 +33,7 @@ const Navbar = () => {
   const [passwordAttempts, setPasswordAttempts] = useState(0); // Simplified, no localStorage
   const [isPasswordLocked, setIsPasswordLocked] = useState(false); // Simplified, no timer
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-
+  const [remainingTime, setRemainingTime] = useState(0);
 
   const menuRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -35,15 +44,9 @@ const Navbar = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const {  logout } = useAuth(); // Use AuthProvider for user state and logout
+  const { logout, user, isUserLoggedIn } = useAuth();
+  const provider = user?.provider;
 
-  useEffect(() => {
-    const user = getLoggedUser();
-    if (user) {
-      setUser(user);
-      setIsUserLoggedIn(true);
-    }
-  },[])
   const menuItems = [
     { name: "Home", path: "/" },
     { name: "Map", path: "/mapping" },
@@ -59,17 +62,41 @@ const Navbar = () => {
 
   const navItems = menuItems.slice(0, 4);
 
-  // Remove the useEffect for checking user login via localStorage
-  // We now rely on AuthProvider's isUserLoggedIn and user
-
-  // Remove the lock timer logic since we're simplifying password change attempts
-  // No need for lockTimeLeft, startLockTimer, or related localStorage
-
   const isCurrentPath = (path) => {
     if (path === "/" && location.pathname === "/") return true;
     if (path !== "/" && location.pathname.startsWith(path)) return true;
     return false;
   };
+
+  useEffect(() => {
+    const checkLockout = () => {
+      const lockoutData = JSON.parse(localStorage.getItem("passwordLockout") || "{}");
+      
+      if (lockoutData?.lockoutTime) {
+        const now = Date.now();
+        const timeLeft = Math.max(0, Math.floor((lockoutData.lockoutTime - now) / 1000));
+        
+        setRemainingTime(timeLeft);
+        
+        if (timeLeft > 0) {
+          setIsPasswordLocked(true);
+        } else {
+          // Lockout expired
+          localStorage.removeItem("passwordLockout");
+          setIsPasswordLocked(false);
+          setPasswordError("");
+        }
+      }
+    };
+  
+    // Check immediately
+    checkLockout();
+    
+    // Set up interval to update every second
+    const interval = setInterval(checkLockout, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   // Handle hover and click events for menu
   useEffect(() => {
@@ -148,7 +175,17 @@ const Navbar = () => {
     setIsUserMenuOpen(false);
   };
 
-  
+  // const handleUserMenuToggle = () => {
+  //   if (isUserLoggedIn) {
+  //     setIsUserMenuOpen(!isUserMenuOpen);
+  //     setIsMenuOpen(false);
+  //     if (!isUserMenuOpen) {
+  //       setIsSettingsExpanded(false);
+  //     }
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
 
   const handleSettingsToggle = () => {
     setIsSettingsExpanded(!isSettingsExpanded);
@@ -159,7 +196,7 @@ const Navbar = () => {
   };
 
   const confirmLogout = () => {
-    logout(); // Use AuthProvider's logout function
+    logout();
     setIsUserMenuOpen(false);
     setIsLogoutModalOpen(false);
   };
@@ -185,26 +222,60 @@ const Navbar = () => {
       return;
     }
 
-    // Verify the password
-    if (user && user.password === currentPassword) {
-      // Password is correct
-      setIsPasswordModalOpen(false);
-      setCurrentPassword("");
-      setPasswordError("");
-      setPasswordAttempts(0);
-      navigate("/login/change-password");
-    } else {
-      // Password is incorrect
-      const newAttempts = passwordAttempts + 1;
-      setPasswordAttempts(newAttempts);
-
-      if (newAttempts >= 5) {
+    const checkCurrentPassword = async () => {
+      // Check lockout status before making any requests
+      const lockoutData = JSON.parse(localStorage.getItem("passwordLockout") || "{}");
+      if (lockoutData?.lockoutTime && Date.now() < lockoutData.lockoutTime) {
+        const remainingTime = Math.ceil((lockoutData.lockoutTime - Date.now()) / 1000 / 60);
+        setPasswordError(`Too many failed attempts. Try again in ${remainingTime} minutes.`);
         setIsPasswordLocked(true);
-        setPasswordError("Too many failed attempts. Please try again later.");
-      } else {
-        setPasswordError(`Invalid password. Please try again. (Attempt ${newAttempts}/5)`);
+        return;
       }
-    }
+    
+      try {
+        const res = await axios.post(
+          `${siteConfig.BASE_URL}api/users/check-current-password`,
+          { email: user?.user?.email, password: currentPassword },
+          { headers: { "Content-Type": "application/json" } }
+        );
+    
+        if (res.status === 200) {
+          // Reset everything on success
+          setIsPasswordModalOpen(false);
+          setCurrentPassword("");
+          setPasswordError("");
+          localStorage.removeItem("passwordLockout");
+          navigate("/login/change-password");
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error) && (error.response?.status === 400 || error.response?.status === 401)) {
+          const lockoutData = JSON.parse(localStorage.getItem("passwordLockout") || "{}");
+          const currentAttempts = lockoutData.attempts || 0;
+          const newAttempts = currentAttempts + 1;
+          
+          // Update lockout data
+          const newLockoutData = {
+            attempts: newAttempts,
+            ...(newAttempts >= 5 && { lockoutTime: Date.now() + 30 * 60 * 1000 }) // 30 minutes lockout
+          };
+          
+          localStorage.setItem("passwordLockout", JSON.stringify(newLockoutData));
+          setPasswordAttempts(newAttempts);
+    
+          if (newAttempts >= 5) {
+            setIsPasswordLocked(true);
+            const remainingTime = Math.ceil(30 - (Date.now() - newLockoutData.lockoutTime) / 1000 / 60);
+            setPasswordError(`Too many failed attempts. Please try again in ${remainingTime} minutes.`);
+          } else {
+            setPasswordError(`Invalid password. Please try again. (Attempt ${newAttempts}/5)`);
+          }
+        } else {
+          setPasswordError("An error occurred. Please try again.");
+        }
+      }
+    };
+    
+    checkCurrentPassword();
   };
 
   const cancelPasswordVerify = () => {
@@ -212,10 +283,6 @@ const Navbar = () => {
     setCurrentPassword("");
     setPasswordError("");
   };
-
-  
-  // Get username for display
-  
 
   // Handle user icon click
   const handleUserIconClick = () => {
@@ -242,7 +309,6 @@ const Navbar = () => {
     navigate("/login");
   };
 
-
   return (
     <div className="w-full top-0 z-50">
       <nav className="w-full">
@@ -253,7 +319,9 @@ const Navbar = () => {
               alt="CoastalCanopy Logo"
               className="h-12 w-12 sm:h-16 sm:w-16 rounded-full"
             />
-            <span className="font-['Aclonica'] text-lg sm:text-2xl text-white">CoastalCanopy</span>
+            <span className="font-['Aclonica'] text-lg sm:text-2xl text-white">
+              CoastalCanopy
+            </span>
           </Link>
 
           <div className="flex items-center gap-4 sm:gap-8">
@@ -299,9 +367,13 @@ const Navbar = () => {
                 <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-white/100 shadow-lg z-50 hidden md:block">
                   <div className="py-1">
                     {menuItems.map((item) => {
-                      const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some(
-                        (path) => item.path.includes(path),
-                      );
+                      const isRestricted = [
+                        "reporting",
+                        "education",
+                        "gamification",
+                        "socialMedia",
+                        "shop",
+                      ].some((path) => item.path.includes(path));
 
                       return isRestricted ? (
                         <button
@@ -336,9 +408,13 @@ const Navbar = () => {
                 <div className="absolute right-0 top-10 w-[220px] bg-black/40 backdrop-blur-sm rounded-[10px] border border-black/100 shadow-lg z-50 md:hidden">
                   <div className="py-1">
                     {menuItems.map((item) => {
-                      const isRestricted = ["reporting", "education", "gamification", "socialMedia", "shop"].some(
-                        (path) => item.path.includes(path),
-                      );
+                      const isRestricted = [
+                        "reporting",
+                        "education",
+                        "gamification",
+                        "socialMedia",
+                        "shop",
+                      ].some((path) => item.path.includes(path));
 
                       return isRestricted ? (
                         <button
@@ -377,10 +453,15 @@ const Navbar = () => {
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-white/50 text-white font-['comfortaa'] font-bold hover:bg-white/60 transition-colors"
                   onClick={handleUserIconClick}
                 >
-                  <span className="flex items-center justify-center w-full h-full">{getUserInitial(isUserLoggedIn,user)}</span>
+                  <span className="flex items-center justify-center w-full h-full">
+                    {getUserInitial(isUserLoggedIn, user)}
+                  </span>
                 </button>
               ) : (
-                <button className="text-white hover:text-gray-300 transition-colors z-50" onClick={handleUserIconClick}>
+                <button
+                  className="text-white hover:text-gray-300 transition-colors z-50"
+                  onClick={handleUserIconClick}
+                >
                   <User size={24} />
                 </button>
               )}
@@ -392,9 +473,11 @@ const Navbar = () => {
                     {/* User Avatar and Name */}
                     <div className="flex flex-col items-center gap-2 mb-3">
                       <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/60 text-white font-['comfortaa'] text-lg font-bold">
-                        {getUserInitial(isUserLoggedIn,user)}
+                        {getUserInitial(isUserLoggedIn, user)}
                       </div>
-                      <div className="text-white font-['comfortaa'] font-bold text-center">Hello {getUsername(isUserLoggedIn,user)}</div>
+                      <div className="text-white font-['comfortaa'] font-bold text-center">
+                        Hello {getUsername(isUserLoggedIn, user)}
+                      </div>
                     </div>
 
                     {/* Settings */}
@@ -407,7 +490,11 @@ const Navbar = () => {
                           <Settings size={18} />
                           <span>Settings</span>
                         </div>
-                        {isSettingsExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                        {isSettingsExpanded ? (
+                          <ChevronUp size={18} />
+                        ) : (
+                          <ChevronDown size={18} />
+                        )}
                       </button>
 
                       {/* Settings Submenu */}
@@ -421,13 +508,15 @@ const Navbar = () => {
                             <Edit size={16} />
                             <span>Edit Profile</span>
                           </Link>
-                          <button
-                            className="flex items-center gap-2 py-1 text-white font-['comfortaa'] font-bold hover:bg-black/30 rounded-md px-2 w-full text-left"
-                            onClick={handleChangePassword}
-                          >
-                            <Lock size={16} />
-                            <span>Change Password</span>
-                          </button>
+                          {provider === "email" && (
+                            <button
+                              className="flex items-center gap-2 py-1 text-white font-['comfortaa'] font-bold hover:bg-black/30 rounded-md px-2 w-full text-left"
+                              onClick={handleChangePassword}
+                            >
+                              <Lock size={16} />
+                              <span>Change Password</span>
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
@@ -453,14 +542,19 @@ const Navbar = () => {
       {/* Logout Confirmation Modal */}
       {isLogoutModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100]">
-          <div ref={modalRef} className="bg-black/80 backdrop-blur-md rounded-lg p-6 max-w-sm w-[90%] relative">
+          <div
+            ref={modalRef}
+            className="bg-black/80 backdrop-blur-md rounded-lg p-6 max-w-sm w-[90%] relative"
+          >
             <button
               onClick={cancelLogout}
               className="absolute top-2 right-2 text-white hover:text-gray-300 hidden sm:block"
             >
               <X size={20} />
             </button>
-            <h3 className="text-white font-['comfortaa'] text-xl font-bold mb-4 text-center">Do you want to logout?</h3>
+            <h3 className="text-white font-['comfortaa'] text-xl font-bold mb-4 text-center">
+              Do you want to logout?
+            </h3>
             <div className="flex justify-center gap-4 mt-6">
               <button
                 onClick={confirmLogout}
@@ -482,7 +576,10 @@ const Navbar = () => {
       {/* Password Verification Modal */}
       {isPasswordModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[100]">
-          <div ref={passwordModalRef} className="bg-black/80 backdrop-blur-md rounded-lg p-6 max-w-sm w-[90%] relative">
+          <div
+            ref={passwordModalRef}
+            className="bg-black/80 backdrop-blur-md rounded-lg p-6 max-w-sm w-[90%] relative"
+          >
             <button
               onClick={cancelPasswordVerify}
               className="absolute top-2 right-2 text-white hover:text-gray-300 hidden sm:block"
@@ -503,7 +600,9 @@ const Navbar = () => {
                 className="w-full px-4 py-2 rounded-full bg-white/30 text-white placeholder-white/70 font-['comfortaa'] disabled:opacity-50"
               />
               {passwordError && (
-                <p className="text-red-500 text-sm mt-2 text-center font-['comfortaa']">{passwordError}</p>
+                <p className="text-red-500 text-sm mt-2 text-center font-['comfortaa']">
+                  {passwordError}
+                </p>
               )}
             </div>
 
@@ -536,7 +635,9 @@ const Navbar = () => {
             >
               <X size={20} />
             </button>
-            <h3 className="text-white font-['comfortaa'] text-xl font-bold mb-4 text-center">Hey there!</h3>
+            <h3 className="text-white font-['comfortaa'] text-xl font-bold mb-4 text-center">
+              Hey there!
+            </h3>
             <p className="text-white font-['comfortaa'] text-center mb-6">
               Log in to unlock this feature and explore more cool stuff!
             </p>
