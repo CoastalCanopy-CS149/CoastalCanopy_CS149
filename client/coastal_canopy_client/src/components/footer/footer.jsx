@@ -1,10 +1,69 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { X } from 'lucide-react'
 
 import "@fontsource/aclonica"
 import "@fontsource/comfortaa"
 import "@fontsource/actor"
 
 const Footer = () => {
+  const navigate = useNavigate()
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+
+  // Check if user is logged in
+  useEffect(() => {
+    const checkUserLoggedIn = () => {
+      const user = JSON.parse(localStorage.getItem("currentUser") || "null")
+      const authUser = JSON.parse(localStorage.getItem("authUser") || "null")
+
+      if (user) {
+        setCurrentUser(user)
+      } else if (authUser) {
+        // For Google sign-in users
+        const username = localStorage.getItem(`username_${authUser.uid}`)
+        if (username) {
+          setCurrentUser({
+            ...authUser,
+            username: username,
+          })
+        } else {
+          setCurrentUser(null)
+        }
+      } else {
+        setCurrentUser(null)
+      }
+    }
+
+    // Check immediately on component mount
+    checkUserLoggedIn()
+
+    // Listen for storage changes (for when user logs in/out in another tab)
+    window.addEventListener("storage", checkUserLoggedIn)
+
+    return () => {
+      window.removeEventListener("storage", checkUserLoggedIn)
+    }
+  }, [])
+
+  // Handle restricted navigation
+  const handleRestrictedNavigation = (path) => {
+    if (!currentUser) {
+      navigate(path)
+      // If user is not logged in, show login popup
+      // setIsLoginModalOpen(true)
+    } else {
+      // If user is logged in, navigate to the path
+      navigate(path)
+    }
+  }
+
+  // Handle login button click in the popup
+  const handleLoginRedirect = () => {
+    setIsLoginModalOpen(false)
+    navigate("/login")
+  }
+
   const socialLinks = [
     {
       name: "Facebook",
@@ -45,58 +104,14 @@ const Footer = () => {
   ]
 
   return (
-    <div className="w-full bg-[#82889880] backdrop-blur-sm">
-      <div className="max-w-[1440px] mx-auto py-4 px-4 sm:px-8">
-        {/* Mobile layout */}
-        <div className="flex flex-col items-center gap-6 sm:hidden">
-          <Link to="/" className="font-['Aclonica'] text-white text-2xl hover:text-gray-200">
-            CoastalCanopy
-          </Link>
-          <div className="flex items-center gap-4">
-            {socialLinks.map((social) => (
-              <a
-                key={social.name}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-gray-200 transition-colors hover:scale-110"
-              >
-                {social.icon}
-              </a>
-            ))}
-          </div>
-          <div className="flex items-center gap-2 text-[#D9D9D9]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1.95-4.55c-1.41 0-2.56-1.15-2.56-2.56s1.15-2.56 2.56-2.56c.91 0 1.71.5 2.16 1.22h-1.14c-.31-.31-.71-.5-1.16-.5-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5c.45 0 .85-.19 1.16-.5h1.14c-.45.72-1.25 1.22-2.16 1.22z" />
-            </svg>
-            <span className="font-['Actor'] text-xl">CoastalCanopy 2025</span>
-          </div>
-        </div>
-
-        {/* Desktop layout */}
-        <div className="hidden sm:flex sm:flex-col sm:justify-between">
-          <div className="flex justify-between items-center">
+    <>
+      <div className="w-full bg-[#82889880] backdrop-blur-sm">
+        <div className="max-w-[1440px] mx-auto py-4 px-4 sm:px-8">
+          {/* Mobile layout */}
+          <div className="flex flex-col items-center gap-6 sm:hidden">
             <Link to="/" className="font-['Aclonica'] text-white text-2xl hover:text-gray-200">
               CoastalCanopy
             </Link>
-            <div className="flex items-center justify-end flex-1">
-              <div className="w-[300px] flex justify-between">
-                <Link
-                  to="/"
-                  className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
-                >
-                  Home
-                </Link>
-                <Link
-                  to="/monitoring"
-                  className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
-                >
-                  Monitoring
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-between items-center mt-4">
             <div className="flex items-center gap-4">
               {socialLinks.map((social) => (
                 <a
@@ -110,32 +125,107 @@ const Footer = () => {
                 </a>
               ))}
             </div>
-            <div className="flex items-center gap-2 text-[#D9D9D9] absolute left-1/2 transform -translate-x-1/2 bottom-4">
+            <div className="flex items-center gap-2 text-[#D9D9D9]">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-3c-2.76 0-5-2.24-5-5s2.24-5 5-5c1.59 0 3.05.75 3.98 1.91l-1.49 1.27A3.498 3.498 0 0 0 12 9.5c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5c1.07 0 2.03-.49 2.67-1.27l1.49 1.27A4.98 4.98 0 0 1 12 17z" />
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1.95-4.55c-1.41 0-2.56-1.15-2.56-2.56s1.15-2.56 2.56-2.56c.91 0 1.71.5 2.16 1.22h-1.14c-.31-.31-.71-.5-1.16-.5-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5c.45 0 .85-.19 1.16-.5h1.14c-.45.72-1.25 1.22-2.16 1.22z" />
               </svg>
               <span className="font-['Actor'] text-xl">CoastalCanopy 2025</span>
             </div>
-            <div className="flex items-center justify-end flex-1">
-              <div className="w-[300px] flex justify-between">
-                <Link
-                  to="/reporting"
-                  className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
-                >
-                  Reporting
-                </Link>
-                <Link
-                  to="/mapping"
-                  className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
-                >
-                  Map
-                </Link>
+          </div>
+
+          {/* Desktop layout */}
+          <div className="hidden sm:flex sm:flex-col sm:justify-between">
+            <div className="flex justify-between items-center">
+              <Link to="/" className="font-['Aclonica'] text-white text-2xl hover:text-gray-200">
+                CoastalCanopy
+              </Link>
+              <div className="flex items-center justify-end flex-1">
+                <div className="w-[300px] flex justify-between">
+                  <Link
+                    to="/"
+                    className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
+                  >
+                    Home
+                  </Link>
+                  <Link
+                    to="/monitoring"
+                    className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
+                  >
+                    Monitoring
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-between items-center mt-4">
+              <div className="flex items-center gap-4">
+                {socialLinks.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-gray-200 transition-colors hover:scale-110"
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+              <div className="flex items-center gap-2 text-[#D9D9D9] absolute left-1/2 transform -translate-x-1/2 bottom-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-3c-2.76 0-5-2.24-5-5s2.24-5 5-5c1.59 0 3.05.75 3.98 1.91l-1.49 1.27A3.498 3.498 0 0 0 12 9.5c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5c1.07 0 2.03-.49 2.67-1.27l1.49 1.27A4.98 4.98 0 0 1 12 17z" />
+                </svg>
+                <span className="font-['Actor'] text-xl">CoastalCanopy 2025</span>
+              </div>
+              <div className="flex items-center justify-end flex-1">
+                <div className="w-[300px] flex justify-between">
+                  {/* Replace Link with button for Reporting */}
+                  <button
+                    onClick={() => handleRestrictedNavigation("/reporting")}
+                    className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
+                  >
+                    Reporting
+                  </button>
+                  <Link
+                    to="/mapping"
+                    className="text-white font-['comfortaa'] text-base sm:text-[18px] font-bold hover:text-gray-200 transition-all duration-200 hover:scale-105"
+                  >
+                    Map
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Login Required Modal - Moved outside the footer container */}
+      {isLoginModalOpen && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999]">
+          <div className="bg-black/80 backdrop-blur-md rounded-lg p-6 max-w-sm w-[90%] relative">
+            <button
+              onClick={() => setIsLoginModalOpen(false)}
+              className="absolute top-2 right-2 text-white hover:text-gray-300 hidden sm:block"
+            >
+              <X size={20} />
+            </button>
+            <h3 className="text-white font-['comfortaa'] text-xl font-bold mb-4 text-center">
+              Hey there!
+            </h3>
+            <p className="text-white font-['comfortaa'] text-center mb-6">
+              Log in to unlock this feature and explore more cool stuff!
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={handleLoginRedirect}
+                className="px-6 py-2 bg-white/50 hover:bg-white/60 text-white font-['comfortaa'] font-bold rounded-full animate-pulse"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 

@@ -1,67 +1,59 @@
+"use client"
+
 import { useNavigate } from "react-router-dom"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
 
 import "@fontsource/aclonica"
 import "@fontsource/comfortaa"
-import "@fontsource/adamina"
+import "@fontsource/acme"
 
 const Welcome = () => {
   const navigate = useNavigate()
 
   return (
     <div
-      className="min-h-screen w-screen overflow-y-auto overflow-x-hidden bg-cover bg-center flex flex-col"
+      className="min-h-screen w-full overflow-hidden bg-cover bg-center flex flex-col"
       style={{
         backgroundImage: `url('/imgs/login/Background.jpg')`,
       }}
     >
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center py-10">
-        <div className="relative w-[1000px] h-[700px] bg-black/40 backdrop-blur-sm">
-          <div className="flex flex-col items-center justify-center h-full">
-            <h1 className="font-['Aclonica'] text-[#BDBDBD] text-[42px] text-center mb-4">Nature's Ally Awaits You</h1>
-            <p className="font-['Adamina'] text-[#BDBDBD] text-[32px] text-center mb-12">Login. Protect. Preserve</p>
+      <div className="flex-1 flex items-center justify-center py-6 px-4">
+        <div className="relative w-full max-w-[800px] bg-black/40 backdrop-blur-sm rounded-3xl p-4 sm:p-6 mt-12 mb-12">
+          <div className="flex flex-col items-center justify-center py-6">
+            <h1 className="font-['Aclonica'] text-white text-[24px] sm:text-[28px] md:text-[30px] text-center mb-4">
+              Nature's Ally Awaits You
+            </h1>
+
+            <p className="font-['Comfortaa'] text-white text-[14px] sm:text-[16px] md:text-[18px] text-center mb-6 leading-relaxed">
+              Step into the tide, where change takes root.
+              <br />
+              Let the journey begin, the mangroves
+              <br />
+              <span className="font-bold">await you.</span>
+            </p>
 
             <button
               onClick={() => navigate("./login")}
-              className="w-[539px] h-[82px] rounded-[50px] bg-white/30 text-white font-['comfortaa'] text-[36px] font-bold hover:bg-white/40 transition-colors shadow-lg mb-8"
+              className="w-[250px] sm:w-[300px] md:w-[250px] h-[40px] sm:h-[45px] rounded-[50px] bg-white/30 text-white font-['comfortaa'] text-[14px] sm:text-[16px] md:text-[18px] hover:bg-white/40 transition-colors shadow-lg mb-4"
             >
               Sign In
             </button>
 
             <button
               onClick={() => navigate("./signup")}
-              className="text-white font-['comfortaa'] text-[32px] underline hover:text-gray-200"
+              className="w-[250px] sm:w-[300px] md:w-[250px] h-[40px] sm:h-[45px] rounded-[50px] bg-white/30 text-white font-['comfortaa'] text-[14px] sm:text-[16px] md:text-[18px] hover:bg-white/40 transition-colors shadow-lg mb-6"
             >
-              Create an account
+              Create account
             </button>
 
-            <div className="absolute bottom-32 left-0 right-0 flex justify-between px-8">
-              <button
-                onClick={() => navigate("../..")}
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
-              >
-                <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
-                  <path
-                    d="M15 18l-6-6 6-6"
-                    stroke="black"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-              <button
-                onClick={() => navigate("./login")}
-                className="w-10 h-10 rounded-full bg-white flex items-center justify-center"
-              >
-                <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
-                  <path d="M9 18l6-6-6-6" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
+            <p className="font-['Acme'] text-white text-[12px] sm:text-[14px] md:text-[23px] text-center max-w-[700px] leading-relaxed">
+              Every ripple begins with a single drop. Every forest starts with a single root.
+              <br />
+              Stand with nature, let the roots of change grow strong.
+            </p>
           </div>
         </div>
       </div>

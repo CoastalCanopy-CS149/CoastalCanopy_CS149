@@ -3,10 +3,12 @@ from ultralytics import YOLO
 import cv2
 import base64
 import os
+import psutil
 from bson import ObjectId
 import cloudinary
 import cloudinary.uploader
 from dotenv import load_dotenv
+import numpy as np
 import io
 from app.database import get_reports_collection
 from app.config import RECEIVER_EMAIL
@@ -25,16 +27,11 @@ cloudinary.config(
 
 reports_bp = Blueprint('reports', __name__)
 
-#folder to save reports locally on the machine
-FOLDER = "reports"
-os.makedirs(FOLDER, exist_ok=True)
-
-
 # Get the directory where the current script is located
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
+# Load the YOLO model
 model_path = os.path.join(current_dir, 'best.onnx')
-# Load the YOLO model once when the application starts
 model = YOLO(model_path, task="detect")
 
 @reports_bp.route('/submit-report', methods=['POST'])
@@ -52,22 +49,24 @@ def submit_report():
 
     # Decode the Base64 string
     image_bytes = base64.b64decode(encoded)
+    np_arr = np.frombuffer(image_bytes, np.uint8)
+    img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-    # Define the image path
-    image_filename = f"{report_id}.jpg"
-    image_path = os.path.join(FOLDER, image_filename)
+    #resize the image to smaller resolution
+    img = cv2.resize(img, (640, 640))
 
-    # Save the image to the folder
-    with open(image_path, "wb") as image_file:
-        image_file.write(image_bytes)
+    # Log memory usage
+    process = psutil.Process(os.getpid())
+    print(f"Memory usage before inference: {process.memory_info().rss / 1024 / 1024} MB")
 
     # Process the image using the YOLO model
     try:
-        detection_result, result_image_path, class_name = detect(image_path, report_id)
-        delete_image(image_path)
-
+        detection_result, result_image_url, class_name = detect(img , report_id)
+    except MemoryError:
+        return jsonify({"error": "Insufficient memory to process the image"}), 500
     except Exception as e:
         return jsonify({"error": f"Failed to process image: {str(e)}"}), 500
+
 
     report = {
         "_id": report_id,
@@ -79,7 +78,7 @@ def submit_report():
         "longitude": data.get("longitude"),
         "destructionType": data.get("destructionType"),
         "image": data.get("image"),
-        "resultImagePath": result_image_path,
+        "resultImageURL": result_image_url,
         "detection_result": detection_result
     }
 
@@ -95,10 +94,11 @@ def submit_report():
         return jsonify({"error": "Failed to submit report"}), 500
 
 
-def detect(image_path, report_id):
+def detect(image, report_id):
     class_name = None
+
     # Run inference on the image
-    results = model(image_path, conf=0.2)
+    results = model(image, conf=0.2)
 
     # Get the original image
     img = None
@@ -107,8 +107,9 @@ def detect(image_path, report_id):
         break
 
     if img is None:
-        # If results doesn't contain any detection, load the image directly
-        img = cv2.imread(image_path)
+        # If results doesn't contain any detection, use the input image
+        img = image
+
 
     # Process results
     output = {
@@ -160,37 +161,50 @@ def detect(image_path, report_id):
         output["destruction_percentage"] = (destruction_pixels / total_pixels) * 100
     else:
         # No detections found
-        # Add text indicating no mangrove destruction detected
         cv2.putText(img, "No mangrove destruction detected", (20, 40),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-
     # Convert OpenCV image (NumPy array) to bytes
-    _, buffer = cv2.imencode(".jpg", img)  # Encode image to JPEG format
-    image_bytes = io.BytesIO(buffer)  # Create an in-memory buffer
+    _, buffer = cv2.imencode(".jpg", img)
+    image_bytes = io.BytesIO(buffer)
 
-    # Define the Cloudinary filename using report_id
-    cloudinary_filename = f"result_{report_id}"
-
-    # Upload to Cloudinary with a custom name to the Reports folder
+    # Upload to Cloudinary
     response = cloudinary.uploader.upload(image_bytes,
-                                          public_id=cloudinary_filename,
+                                          public_id=f"result_{report_id}",
                                           folder="ReportResults",
-                                          type="private",
-                                          )
+                                          type="private")
 
 
     return output, response["secure_url"], class_name
 
-def delete_image(image_path):
+
+def send_email(data):
     try:
-        if os.path.exists(image_path):
-            os.remove(image_path)
-            print(f"{image_path} has been deleted successfully.")
-        else:
-            print(f"The file {image_path} does not exist.")
+        recipient_email = RECEIVER_EMAIL  # Static recipient for the report
+        subject = "New Report Submitted"
+        message_body = f"""
+         First Name: {data.get('firstName')}
+         Last Name: {data.get('lastName')}
+         Email: {data.get('email')}
+         Contact Number: {data.get('contactNumber')}
+         Latitude: {data.get('latitude')}
+         Longitude: {data.get('longitude')}
+         Destruction Type: {data.get('destructionType')}
+         Detection Result: {data.get('detection_result')}
+         Result Image URL: {data.get('resultImageURL')}
+         """
+
+        with current_app.app_context():  # Ensure app context is active
+            msg = Message(subject=subject,
+                          sender=os.getenv("MAIL_USERNAME"),
+                          recipients=[recipient_email])
+            msg.body = message_body
+
+            current_app.extensions['mail'].send(msg)
+            print("Email sent successfully!")
     except Exception as e:
-        print(f"Error deleting file: {e}")
+        print(f"Failed to send email: {e}")
+
 
 
 
