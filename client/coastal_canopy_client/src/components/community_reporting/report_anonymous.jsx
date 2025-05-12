@@ -4,6 +4,7 @@ import {ArrowUp} from "lucide-react"
 import background from "/imgs/community_reporting/bg4.jpg"
 import Navbar from "../navbar/navbar"
 import Footer from "../footer/footer"
+import { useAuth } from "../../context/AuthContext";
 
 export default function CommunityReporting2() {
   const [image, setImage] = useState(null)
@@ -20,7 +21,9 @@ export default function CommunityReporting2() {
   const canvasRef = useRef(null)
   const [isCameraActive, setIsCameraActive] = useState(false)
 
-  const username = "Malsha"
+  const {user} = useAuth();
+  // const username = "Malsha"
+  const username = user?.user.username || "Tharushi";
   const points = 100
 
 
@@ -113,7 +116,7 @@ export default function CommunityReporting2() {
     }
 
     try {
-      const response = await fetch("https://coastalcanopy.up.railway.app/reports/submit-report", {
+      const response = await fetch("http://127.0.0.1:8080/reports/submit-report", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +140,7 @@ export default function CommunityReporting2() {
   
   const increasePoints = async (username, points) => {
     try {
-      const response = await fetch('https://coastalcanopy.up.railway.app/points/Increase_points', {
+      const response = await fetch('http://127.0.0.1:8080/points/Increase_points', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, points }),

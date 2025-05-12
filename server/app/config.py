@@ -12,8 +12,8 @@ MAIL_SERVER = os.getenv("MAIL_SERVER")
 MAIL_DEFAULT_SENDER = 'info@costal.com'    #os.getenv("MAIL_USERNAME")  # Default sender email
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL")
 MAIL_PORT = int(os.getenv("MAIL_PORT", 587))  # Default to 587 if not in .env
-MAIL_USE_TLS = bool(os.getenv("MAIL_USE_TLS" )) # Convert to boolean
-MAIL_USE_TLS = bool(int(os.getenv("MAIL_USE_TLS", 1)))
+MAIL_USE_TLS = os.getenv("MAIL_USE_TLS" ) # Convert to boolean
+
 
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 JWT_NORMAL_EXPIRE= os.getenv("JWT_NORMAL_EXPIRE")

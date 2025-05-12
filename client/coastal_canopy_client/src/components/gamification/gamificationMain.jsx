@@ -7,7 +7,7 @@ import { ArrowUpRight, Share2, Coins, ArrowUp} from 'lucide-react';
 import Progress from "./progress";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer";
-// import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 
 
@@ -22,13 +22,13 @@ export default function GamificationMain() {
       progress: 0,
       avatar: "/imgs/gamification/default.png",
     });
-    // const {user} = useAuth();
-    const username = "Tharushi"
-    //const username = user?.user.username || "Tharushi";
+    const {user} = useAuth();
+    // const username = "Tharushi"
+    const username = user?.user.username || "Tharushi";
     useEffect(() => {
       // Send POST request to backend with the username
       axios
-        .post("https://coastalcanopy.up.railway.app/gamification/getDetails", { username: username })
+        .post("http://127.0.0.1:8080/gamification/getDetails", { username: username })
         .then((response) => {
           console.log(response.data); // Log the response to check data structure
           setProfileDetails(response.data[0]); // Store user details in state (first element)

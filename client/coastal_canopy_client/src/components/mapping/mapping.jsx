@@ -35,7 +35,7 @@ function Mapping() {
     const fetchMangroveLocations = async () => {
       try {
         setIsLoading(true)
-        const response = await fetch("https://coastalcanopy.up.railway.app/api/mapping/mangrove-locations")
+        const response = await fetch("http://127.0.0.1:8080/api/mapping/mangrove-locations")
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
