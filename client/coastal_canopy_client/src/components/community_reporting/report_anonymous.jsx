@@ -22,7 +22,6 @@ export default function CommunityReporting2() {
   const [isCameraActive, setIsCameraActive] = useState(false)
 
   const {user} = useAuth();
-  // const username = "Malsha"
   const username = user?.user.username || "Tharushi";
   const points = 100
 

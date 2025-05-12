@@ -4,6 +4,7 @@ import cv2
 import base64
 import os
 import psutil
+import re
 from bson import ObjectId
 import cloudinary
 import cloudinary.uploader
@@ -24,7 +25,6 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
 
-
 reports_bp = Blueprint('reports', __name__)
 
 # Get the directory where the current script is located
@@ -37,6 +37,10 @@ model = YOLO(model_path, task="detect")
 @reports_bp.route('/submit-report', methods=['POST'])
 def submit_report():
     data = request.get_json()
+
+    validation_response = verify_form_data(data)
+    if validation_response:
+        return validation_response
 
     # Generate a unique ID for the report
     report_id = str(ObjectId())
@@ -66,6 +70,7 @@ def submit_report():
         return jsonify({"error": "Insufficient memory to process the image"}), 500
     except Exception as e:
         return jsonify({"error": f"Failed to process image: {str(e)}"}), 500
+
 
 
     report = {
@@ -207,36 +212,48 @@ def send_email(data):
 
 
 
+def verify_form_data(data):
+    # Basic validation rules
+    required_fields = ["latitude", "longitude", "destructionType", "image"]
+
+    # Check for missing fields
+    for field in required_fields:
+        if not data.get(field):
+            return jsonify({"error": f"'{field}' is required"}), 400
+
+    # First and Last name: only letters and spaces allowed
+    name_pattern = r"^[A-Za-z\s]+$"
+
+    if data.get("firstName") and not re.match(name_pattern, data["firstName"]):
+        return jsonify({"error": "First name should contain only letters and spaces"}), 400
+
+    if data.get("firstName") and not re.match(name_pattern, data["lastName"]):
+        return jsonify({"error": "Last name should contain only letters and spaces"}), 400
 
 
-def send_email(data):
+    # Email format validation
+    email_pattern = r"[^@]+@[^@]+\.[^@]+"
+    if data.get("email") and not re.match(email_pattern, data["email"]):
+        return jsonify({"error": "Invalid email format"}), 400
+
+    # Contact number: basic numeric check
+    if data.get("contactNumber") and not data["contactNumber"].isdigit() and data["contactNumber"].startswith("0") and len(data["contactNumber"]) == 10:
+        return jsonify({"error": "Contact number must contain digits only"}), 400
+
+    # Latitude and longitude: check they are convertible to float
     try:
-        recipient_email = RECEIVER_EMAIL # Static recipient for the report
-        subject = "New Report Submitted"
-        message_body = f"""
-        First Name: {data.get('firstName')}
-        Last Name: {data.get('lastName')}
-        Email: {data.get('email')}
-        Contact Number: {data.get('contactNumber')}
-        Latitude: {data.get('latitude')}
-        Longitude: {data.get('longitude')}
-        Destruction Type: {data.get('destructionType')}
-        Detection Result: {data.get('detection_result')}
-        Result Image Path: {data.get('result_image_path')}
-        """
+        float(data["latitude"])
+        float(data["longitude"])
+    except ValueError:
+        return jsonify({"error": "Latitude and Longitude must be valid numbers"}), 400
 
-        with current_app.app_context():  # Ensure app context is active
-            msg = Message(subject=subject,
-                          sender=os.getenv("MAIL_USERNAME"),
-                          recipients=[recipient_email])
-            msg.body = message_body
+    # Base64 image check (very basic)
+    if not data["image"].startswith("data:image/"):
+        return jsonify({"error": "Invalid image format (not base64 string)"})
 
-            current_app.extensions['mail'].send(msg)
-            print("Email sent successfully!")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
+    if data["destructionType"].isdigit():
+        return jsonify({"error": "Incorrect destruction type"}), 400
 
-
-
+    return None
 
 
