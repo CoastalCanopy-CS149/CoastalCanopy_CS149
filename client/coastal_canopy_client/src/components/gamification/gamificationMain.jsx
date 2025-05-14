@@ -14,6 +14,16 @@ import { useAuth } from "../../context/AuthContext";
 export default function GamificationMain() {
     const navigate = useNavigate();
     const [showProgress, setShowProgress] = useState(true);
+    const [showPPEdit, setShowPPEdit] = useState(false);
+    const [showProfileP, setShowProfileP] = useState(false);
+    const [changeProfileP, setChangeProfileP] = useState(false);
+
+    //image array
+    const images = [
+      "/imgs/gamification/user1.png",
+      "/imgs/gamification/user2.png",
+      "/imgs/gamification/user3.png"
+    ]
 
     // Declare profileDetails with useState and initialize it to an empty object
     const [profileDetails, setProfileDetails] = useState({
@@ -86,15 +96,15 @@ export default function GamificationMain() {
             </div>
     
             {/* Profile picture */}
-            <motion.dev 
+            <motion.div
             className="relative mb-20 h-24 w-24 overflow-hidden rounded-full border-4 border-green-400 bg-green-300" 
             variants={rollAnimation}
             animate="animate"
             style={{ transformStyle: "preserve-3d" }}>
-
-              <img src={profileImage} alt="Profile" className="h-full w-full object-cover" />
-
-            </motion.dev>
+              <button onClick={() => setShowPPEdit(true)}>
+                <img src={profileImage} alt="Profile" className="h-full w-full object-cover" />
+              </button>
+            </motion.div>
     
             {/* Stats card */}
             <div className="w-full max-w-md rounded-lg bg-green-500/80 border-2 border-green-600 shadow-lime-600 p-6 text-white">
@@ -164,6 +174,62 @@ export default function GamificationMain() {
                 className="absolute top-4 m-8 right-4 rounded-full py-2 px-3 text-green-600 hover:text-red-600"
                 onClick={() => setShowProgress(false)}
               >
+                X
+              </button>
+            </div>
+          </div>
+        )}
+        {showPPEdit && (
+          <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="relative z-30 ">
+              <ul className="flex flex-col items-center justify-center bg-white rounded-lg shadow-lg p-4">
+                <li><button onClick={() => setShowProfileP(true)}>View profile picture</button></li>
+                <li><button onClick={() => setChangeProfileP(true)}>Edit profile picture</button></li>
+              </ul>
+              <button
+                className="absolute bottom-10 m-8 right-8 rounded-full py-2 px-3 text-green-600 hover:text-red-600"
+                onClick={() => setShowPPEdit(false)}
+              >
+                X
+              </button>
+            </div>
+          </div>
+        )}
+        {showProfileP && (
+          <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="relative z-30 ">
+              <img src={profileImage } alt="Profile" className="h-full w-full object-cover" />
+              <button
+                className="absolute top-4 m-8 right-8 rounded-full py-2 px-3 text-green-600 hover:text-red-600"
+                onClick={() => setShowProfileP(false)}  
+              > 
+                X
+              </button>
+            </div>
+          </div>
+        )}
+        {changeProfileP && (
+          <div className="fixed inset-0 z-20 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="relative z-30 ">
+              {images.map((image, index) => (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Profile ${index + 1}`}
+                  className="h-24 w-24 object-cover"
+                  onClick={() => {
+                    setProfileDetails((prev) => ({
+                      ...prev,
+                      avatar: image,
+                    }));
+                    setChangeProfileP(false);
+                  }}
+                />
+              ))}
+              <button
+                className="absolute top-4 m-8 right-8 rounded-full py-2 px-3 text-green-600 hover:text-red-600"
+                onClick={() => setChangeProfileP(false)}  
+              > 
                 X
               </button>
             </div>
