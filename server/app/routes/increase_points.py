@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, current_app, Blueprint
-from app.database import get_users_collection
+from app.database import get_app_users_collection
 
 points_bp = Blueprint('points', __name__)
 
@@ -13,7 +13,7 @@ def increase_points():
         points = int(data.get('points', 0))
 
         # Access the 'Users' collection via the function
-        users_collection = get_users_collection()
+        users_collection = get_app_users_collection()
 
         # Find the user by username
         user = users_collection.find_one({'username': username})

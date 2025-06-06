@@ -1,5 +1,6 @@
 export const siteConfig = {
-  BASE_URL: "https://coastalcanopy.up.railway.app/",
+  // BASE_URL: "https://coastalcanopy.up.railway.app/",
+  BASE_URL : "http://127.0.0.1:8080/"
 };
 
 export const firebaseConfig = {

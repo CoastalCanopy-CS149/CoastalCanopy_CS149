@@ -1,13 +1,13 @@
 #gamification
 from flask import Flask, request, jsonify, current_app, Blueprint
-from app.database import get_users_collection
+from app.database import get_app_users_collection
 
 
 gamification_bp = Blueprint("users", __name__)
 
 @gamification_bp.route("/getRanks", methods=["GET"])
 def get_points():
-    users_collection = get_users_collection()
+    users_collection = get_app_users_collection()
 
     leaderboard = users_collection.find({}, {"_id": 1, "username": 1, "points": 1, "avatar": 1, "color": 1}).sort("points", -1)
 
@@ -43,7 +43,7 @@ def get_details():
     username = data.get('username')  # Extract username from the frontend requ
 
     # Access the 'Users' collection via the function
-    users_collection = get_users_collection()
+    users_collection = get_app_users_collection()
 
     # Find the user by username
     user = users_collection.find_one({'username': username})
@@ -75,7 +75,7 @@ def reset_points():
 
     username = data.get('username')
 
-    users_collection = get_users_collection()
+    users_collection = get_app_users_collection()
 
     user = users_collection.find_one({'username': username})
 

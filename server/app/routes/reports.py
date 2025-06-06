@@ -4,6 +4,7 @@ import cv2
 import base64
 import os
 import psutil
+import re
 from bson import ObjectId
 import cloudinary
 import cloudinary.uploader
@@ -37,6 +38,10 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 def submit_report():
     data = request.get_json()
 
+    validation_response = verify_form_data(data)
+    if validation_response:
+        return validation_response
+
     # Generate a unique ID for the report
     report_id = str(ObjectId())
 
@@ -67,6 +72,7 @@ def submit_report():
     #     return jsonify({"error": f"Failed to process image: {str(e)}"}), 500
 
 
+
     report = {
         "_id": report_id,
         "firstName": data.get("firstName"),
@@ -88,8 +94,10 @@ def submit_report():
         # if class_name == "Mangrove_Destruction":
         #     send_email(report)
         return jsonify({"message": "Report submitted successfully!", "report_id": report_id}), 201
+
     else:
         return jsonify({"error": "Failed to submit report"}), 500
+
 
 
 # def detect(image, report_id):
@@ -174,6 +182,7 @@ def submit_report():
 #     return output, response["secure_url"], class_name
 
 
+
 def send_email(data):
     try:
         recipient_email = RECEIVER_EMAIL  # Static recipient for the report
@@ -203,6 +212,48 @@ def send_email(data):
 
 
 
+def verify_form_data(data):
+    # Basic validation rules
+    required_fields = ["latitude", "longitude", "destructionType", "image"]
 
+    # Check for missing fields
+    for field in required_fields:
+        if not data.get(field):
+            return jsonify({"error": f"'{field}' is required"}), 400
+
+    # First and Last name: only letters and spaces allowed
+    name_pattern = r"^[A-Za-z\s]+$"
+
+    if data.get("firstName") and not re.match(name_pattern, data["firstName"]):
+        return jsonify({"error": "First name should contain only letters and spaces"}), 400
+
+    if data.get("firstName") and not re.match(name_pattern, data["lastName"]):
+        return jsonify({"error": "Last name should contain only letters and spaces"}), 400
+
+
+    # Email format validation
+    email_pattern = r"[^@]+@[^@]+\.[^@]+"
+    if data.get("email") and not re.match(email_pattern, data["email"]):
+        return jsonify({"error": "Invalid email format"}), 400
+
+    # Contact number: basic numeric check
+    if data.get("contactNumber") and not data["contactNumber"].isdigit() and data["contactNumber"].startswith("0") and len(data["contactNumber"]) == 10:
+        return jsonify({"error": "Contact number must contain digits only"}), 400
+
+    # Latitude and longitude: check they are convertible to float
+    try:
+        float(data["latitude"])
+        float(data["longitude"])
+    except ValueError:
+        return jsonify({"error": "Latitude and Longitude must be valid numbers"}), 400
+
+    # Base64 image check (very basic)
+    if not data["image"].startswith("data:image/"):
+        return jsonify({"error": "Invalid image format (not base64 string)"})
+
+    if data["destructionType"].isdigit():
+        return jsonify({"error": "Incorrect destruction type"}), 400
+
+    return None
 
 

@@ -25,7 +25,7 @@ from app.utils.jwt_util import JWTHandler
 def create_app():
     app = Flask(__name__)
     # Allows all routes from any origin
-    CORS(app, resources={r"/*": {"origins": "https://coastalcanopy.org.lk"}})
+    CORS(app, resources={r"/*": {"origins": ["https://coastalcanopy.org.lk", "http://localhost:5173"]}})
     
 
     # Configure Flask-Mail
@@ -48,7 +48,6 @@ def create_app():
     # seed_mangrove_data(app)
 
     # Register Blueprints (modular routes)
-    # app.register_blueprint(auth_bp, url_prefix="/users)
     app.register_blueprint(reports_bp, url_prefix="/reports")
     app.register_blueprint(gamification_bp, url_prefix="/gamification")
     app.register_blueprint(mapping_bp, url_prefix="/api/mapping")
