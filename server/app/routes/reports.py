@@ -59,12 +59,12 @@ def submit_report():
     print(f"Memory usage before inference: {process.memory_info().rss / 1024 / 1024} MB")
 
     # Process the image using the YOLO model
-    try:
-        detection_result, result_image_url, class_name = detect(img , report_id)
-    except MemoryError:
-        return jsonify({"error": "Insufficient memory to process the image"}), 500
-    except Exception as e:
-        return jsonify({"error": f"Failed to process image: {str(e)}"}), 500
+    # try:
+    #     detection_result, result_image_url, class_name = detect(img , report_id)
+    # except MemoryError:
+    #     return jsonify({"error": "Insufficient memory to process the image"}), 500
+    # except Exception as e:
+    #     return jsonify({"error": f"Failed to process image: {str(e)}"}), 500
 
 
     report = {
@@ -77,16 +77,16 @@ def submit_report():
         "longitude": data.get("longitude"),
         "destructionType": data.get("destructionType"),
         "image": data.get("image"),
-        "resultImageURL": result_image_url,
-        "detection_result": detection_result
+        # "resultImageURL": result_image_url,
+        # "detection_result": detection_result
     }
 
     reports_collection = get_reports_collection()
     result = reports_collection.insert_one(report)
 
     if result.acknowledged:
-        if class_name == "Mangrove_Destruction":
-            send_email(report)
+        # if class_name == "Mangrove_Destruction":
+        #     send_email(report)
         return jsonify({"message": "Report submitted successfully!", "report_id": report_id}), 201
     else:
         return jsonify({"error": "Failed to submit report"}), 500
