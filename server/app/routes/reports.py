@@ -1,16 +1,13 @@
 from flask import Blueprint, request, jsonify, current_app
-from ultralytics import YOLO
 import cv2
 import base64
 import os
 import psutil
 import re
 from bson import ObjectId
-import cloudinary
 import cloudinary.uploader
 from dotenv import load_dotenv
 import numpy as np
-import io
 from app.database import get_reports_collection
 from app.config import RECEIVER_EMAIL
 from flask_mail import Message
