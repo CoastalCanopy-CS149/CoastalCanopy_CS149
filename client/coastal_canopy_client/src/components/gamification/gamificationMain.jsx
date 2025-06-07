@@ -28,7 +28,7 @@ export default function GamificationMain() {
     useEffect(() => {
       // Send POST request to backend with the username
       axios
-        .post("http://127.0.0.1:8080/gamification/getDetails", { username: username })
+        .post("http://coastalcanopy149.up.railway.app/gamification/getDetails", { username: username })
         .then((response) => {
           console.log(response.data); // Log the response to check data structure
           setProfileDetails(response.data[0]); // Store user details in state (first element)

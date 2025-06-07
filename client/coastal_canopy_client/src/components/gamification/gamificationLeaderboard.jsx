@@ -20,7 +20,7 @@ export default function GamificationLeaderboard() {
   let index = 0;
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8080/gamification/getRanks")
+    axios.get("http://coastalcanopy149.up.railway.app/gamification/getRanks")
       .then((response) => setLeaderboard(response.data.leaderboard))
       .catch((error) => console.error("Error fetching leaderboard:", error));
   }, [])

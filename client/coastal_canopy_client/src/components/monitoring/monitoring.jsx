@@ -17,7 +17,7 @@ export default function MangroveAnalysis() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("https://coastalcanopy.up.railway.app/api/mangrove-data");
+        const response = await fetch("https://coastalcanopy149.up.railway.app/api/mangrove-data");
         if (!response.ok) throw new Error("Failed to fetch data from the server");
 
         const data = await response.json();

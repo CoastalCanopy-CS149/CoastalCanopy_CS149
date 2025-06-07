@@ -61,7 +61,7 @@ export default function Progress({ points, username })  {
     const handlePlantMangrove = async () => {
         try {
             const response = await axios.post(
-                'http://127.0.0.1:8080/gamification/plantMangrove',
+                'http://coastalcanopy149.up.railway.app/gamification/plantMangrove',
                 {
                     username: username
                 },
